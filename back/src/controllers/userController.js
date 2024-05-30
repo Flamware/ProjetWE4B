@@ -53,6 +53,7 @@ exports.login = async (req, res) => {
 };
 
 exports.getAccountInfo = async (req, res) => {
+  console.log('session:', req.session);
     const username = req.session.username;
     //return user from database
     const query = 'SELECT * FROM users WHERE username = $1';
@@ -81,6 +82,16 @@ exports.updateAccount = async (req, res) => {
         res.status(200).json({ success: 'User information updated successfully' });
     } catch (error) {
         console.error('Error updating user information:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const { rows } = await client.query('SELECT * FROM users');
+        res.status(200).json({ users: rows });
+    } catch (error) {
+        console.error('Error fetching users:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
