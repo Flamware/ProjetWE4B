@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {AsyncPipe} from "@angular/common";
 import {AuthService} from '@auth0/auth0-angular';
-import {LoginComponent} from "../pages/general/login/login.component";
+import {LoginButton} from "../components/buttons/login-button";
+import {LogoutButton} from "../components/buttons/logout-button";
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,8 @@ import {LoginComponent} from "../pages/general/login/login.component";
   imports: [
     CommonModule,
     RouterOutlet,
-    LoginComponent,
+    LoginButton,
+    LogoutButton,
     RouterLink,
     RouterLinkActive,
     AsyncPipe

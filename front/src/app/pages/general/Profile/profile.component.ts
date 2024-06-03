@@ -1,20 +1,18 @@
 import { Component } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import {AsyncPipe, NgIf} from "@angular/common";
+import {LogoutButton} from "../../../components/buttons/logout-button";
 
 @Component({
   selector: 'app-user-profile',
-  template: `
-    <ul *ngIf="auth.user$ | async as user">
-      <li>{{ user.name }}</li>
-      <li>{{ user.email }}</li>
-    </ul>`,
+  templateUrl: './profile.component.html',
   imports: [
     AsyncPipe,
-    NgIf
+    NgIf,
+    LogoutButton
   ],
   standalone: true
 })
-export class UserProfileComponent {
+export class ProfileComponent {
   constructor(public auth: AuthService) {}
 }

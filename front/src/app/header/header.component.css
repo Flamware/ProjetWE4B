@@ -1,34 +1,95 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header and Navigation Styles */
+.header {
+  background-color: #4cae50;
+  padding: 20px 0;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .header nav {
   display: flex;
   justify-content: space-around;
-  padding: 20px 0;
-  background-color: #f8f9fa; /* Add a light background color to the navigation bar */
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .header nav a {
-  color: #333;
+  color: #ffffff;
   text-decoration: none;
   font-size: 1.2em;
-  transition: color 0.3s ease; /* Add a transition effect when the link color changes */
+  transition: color 0.3s ease;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .header nav a:hover {
   color: #007BFF;
 }
 
+.header nav a.active {
+  background-color: #333333;
+}
+
+.header nav span {
+  color: #ffffff;
+  font-size: 1.2em;
+  padding: 10px;
+}
+
+.header nav button {
+  padding: 10px 20px;
+  background-color: #333333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 1em;
+  font-weight: bold;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header nav button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.header nav button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
+}
+
+.header nav button:active {
+  background-color: #3e8e41;
+  transform: translateY(0);
+}
+
+/* Main Content Styles */
 .main {
   padding: 20px;
   text-align: center;
-  background-color: #fff; /* Add a white background color to the main content */
-  border-radius: 5px; /* Add rounded corners to the main content */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the main content */
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 800px;
 }
 
 .input {
-  padding: 10px;
-  width: 60%;
+  padding: 5px;
+  width: 80%;
   margin-right: 10px;
-  border-radius: 5px; /* Add rounded corners to the input field */
+  border-radius: 5px;
+  border: 1px solid #ddd;
 }
 
 .button {
@@ -37,12 +98,14 @@
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 5px; /* Add rounded corners to the button */
-  transition: background-color 0.3s ease; /* Add a transition effect when the button background color changes */
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  font-size: 1em;
+  font-weight: bold;
 }
 
 .button:hover {
-  background-color: #45a049; /* Change the button background color when hovered over */
+  background-color: #45a049;
 }
 
 .results {
@@ -54,10 +117,10 @@
   border: 1px solid #ddd;
   margin-bottom: 10px;
   text-align: left;
-  border-radius: 5px; /* Add rounded corners to the result items */
-  transition: border-color 0.3s ease; /* Add a transition effect when the border color changes */
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
 }
 
 .result-item:hover {
-  border-color: #ccc; /* Change the border color of the result items when hovered over */
+  border-color: #ccc;
 }

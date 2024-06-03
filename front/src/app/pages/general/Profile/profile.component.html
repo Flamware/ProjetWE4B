@@ -1,0 +1,13 @@
+<div class="profile-container">
+  <h1>User Profile</h1>
+  <p>Welcome to your profile page! You can view your profile information here.</p>
+  <div *ngIf="auth.user$ | async as user" class="user-info">
+    <img [src]="user.picture" alt="User Image" class="userImg">
+    <ul>
+      <li><strong>Name:</strong> {{ user.name }}</li>
+      <li><strong>Email:</strong> {{ user.email }}</li>
+      <!-- Add more user information here -->
+    </ul>
+  </div>
+  <logout-button></logout-button>
+</div>
