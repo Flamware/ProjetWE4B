@@ -1,0 +1,63 @@
+.header nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 0;
+  background-color: #f8f9fa; /* Add a light background color to the navigation bar */
+}
+
+.header nav a {
+  color: #333;
+  text-decoration: none;
+  font-size: 1.2em;
+  transition: color 0.3s ease; /* Add a transition effect when the link color changes */
+}
+
+.header nav a:hover {
+  color: #007BFF;
+}
+
+.main {
+  padding: 20px;
+  text-align: center;
+  background-color: #fff; /* Add a white background color to the main content */
+  border-radius: 5px; /* Add rounded corners to the main content */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the main content */
+}
+
+.input {
+  padding: 10px;
+  width: 60%;
+  margin-right: 10px;
+  border-radius: 5px; /* Add rounded corners to the input field */
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px; /* Add rounded corners to the button */
+  transition: background-color 0.3s ease; /* Add a transition effect when the button background color changes */
+}
+
+.button:hover {
+  background-color: #45a049; /* Change the button background color when hovered over */
+}
+
+.results {
+  margin-top: 20px;
+}
+
+.result-item {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  text-align: left;
+  border-radius: 5px; /* Add rounded corners to the result items */
+  transition: border-color 0.3s ease; /* Add a transition effect when the border color changes */
+}
+
+.result-item:hover {
+  border-color: #ccc; /* Change the border color of the result items when hovered over */
+}
