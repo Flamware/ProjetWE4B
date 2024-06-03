@@ -2,9 +2,10 @@
   <nav>
     <a routerLink="/home" routerLinkActive="active">Home</a>
     <a routerLink="/about" routerLinkActive="active">About</a>
-    <a routerLink="/contact" routerLinkActive="active">Contact</a>
-    <a routerLink="/login" routerLinkActive="active">Login</a>
-    <a routerLink="/signup" routerLinkActive="active">Register</a>
+    <a routerLink="/profile" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async">Profile</a>
+    <a routerLink="/login" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Login</a>
+    <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Register</a>
+    <span *ngIf="auth.isAuthenticated$ | async">Logged in</span>
   </nav>
   <main class="main">
     <input
@@ -17,4 +18,3 @@
     </div>
   </main>
 </header>
-<router-outlet></router-outlet>
