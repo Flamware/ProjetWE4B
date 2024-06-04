@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import {AsyncPipe, NgIf} from "@angular/common";
 import {LogoutButton} from "../../../components/buttons/logout-button";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-user-profile',
@@ -9,7 +10,8 @@ import {LogoutButton} from "../../../components/buttons/logout-button";
   imports: [
     AsyncPipe,
     NgIf,
-    LogoutButton
+    LogoutButton,
+    ReactiveFormsModule
   ],
   standalone: true
 })

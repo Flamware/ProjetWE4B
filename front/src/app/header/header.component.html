@@ -3,9 +3,7 @@
     <a routerLink="/home" routerLinkActive="active">Home</a>
     <a routerLink="/about" routerLinkActive="active">About</a>
     <a routerLink="/profile" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async">Profile</a>
-    <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Register</a>
-    <span *ngIf="auth.isAuthenticated$ | async">Logged in</span>
-    <span *ngIf="!(auth.isAuthenticated$ | async)">Logged out</span>
+    <a routerLink="/mes-cours" routerLinkActive="active" *ngIf="(auth.isAuthenticated$ | async)">mes cours</a>
     <login-button *ngIf="!(auth.isAuthenticated$ | async)"></login-button>
     <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button> <!-- Corrected the typo here -->
   </nav>
