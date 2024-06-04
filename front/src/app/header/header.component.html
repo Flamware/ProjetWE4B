@@ -1,11 +1,11 @@
 <header class="header">
   <nav>
-    <a routerLink="/home" routerLinkActive="active">Home</a>
-    <a routerLink="/about" routerLinkActive="active">About</a>
-    <a routerLink="/profile" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async">Profile</a>
-    <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Register</a>
-    <span *ngIf="auth.isAuthenticated$ | async">Logged in</span>
-    <span *ngIf="!(auth.isAuthenticated$ | async)">Logged out</span>
+    <a routerLink="/home" routerLinkActive="active"><strong>Home</strong></a>
+    <a routerLink="/about" routerLinkActive="active"><strong>About</strong></a>
+    <a routerLink="/profile" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async"><strong>Profile</strong></a>
+    <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)"><strong>Register</strong></a>
+    <span *ngIf="auth.isAuthenticated$ | async"><strong>Logged in</strong></span>
+    <span *ngIf="!(auth.isAuthenticated$ | async)"><strong>Logged out</strong></span>
     <login-button *ngIf="!(auth.isAuthenticated$ | async)"></login-button>
     <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button> <!-- Corrected the typo here -->
   </nav>
@@ -13,7 +13,7 @@
     <input
       type="text"
       placeholder="Search for restaurants..."
-      class="input"
+      class="searchbar"
     />
     <button class="button">Search</button>
     <div class="results">
