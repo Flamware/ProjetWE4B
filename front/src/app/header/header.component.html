@@ -9,7 +9,7 @@
     <login-button *ngIf="!(auth.isAuthenticated$ | async)"></login-button>
     <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button> <!-- Corrected the typo here -->
   </nav>
-  <div class="main">
+  <div class="search">
     <input
       type="text"
       placeholder="Search for restaurants..."
