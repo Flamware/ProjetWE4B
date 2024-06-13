@@ -1,22 +1,20 @@
 <header class="header">
   <nav>
-    <a routerLink="/home" routerLinkActive="active"><strong>Home</strong></a>
-    <a routerLink="/about" routerLinkActive="active"><strong>About</strong></a>
-    <a routerLink="/profile" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async"><strong>Profile</strong></a>
-    <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)"><strong>Register</strong></a>
-    <span *ngIf="auth.isAuthenticated$ | async"><strong>Logged in</strong></span>
-    <span *ngIf="!(auth.isAuthenticated$ | async)"><strong>Logged out</strong></span>
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a routerLink="/about" routerLinkActive="active">About</a>
+    <a routerLink="/profile" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async">Profile</a>
+    <a routerLink="/mes-cours" routerLinkActive="active" *ngIf="(auth.isAuthenticated$ | async)">mes cours</a>
     <login-button *ngIf="!(auth.isAuthenticated$ | async)"></login-button>
     <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button> <!-- Corrected the typo here -->
   </nav>
-  <div class="search">
+  <main class="main">
     <input
       type="text"
       placeholder="Search for restaurants..."
-      class="searchbar"
+      class="input"
     />
     <button class="button">Search</button>
     <div class="results">
     </div>
-  </div>
+  </main>
 </header>

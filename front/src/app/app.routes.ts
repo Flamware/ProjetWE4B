@@ -4,12 +4,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/general/home/home.component';
 import { AboutComponent } from './pages/general/about/about.component';
 import { ProfileComponent } from './pages/general/Profile/profile.component';
+import {MesCoursComponent} from "./pages/general/mes-cours/mes-cours.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' }, // redirect to `home` route at startup
+  { path: 'mes-cours', component: MesCoursComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  // redirect to `home` route at startup
 ];
 
 @NgModule({

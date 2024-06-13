@@ -6,8 +6,13 @@
     <ul>
       <li><strong>Name:</strong> {{ user.name }}</li>
       <li><strong>Email:</strong> {{ user.email }}</li>
+      <li><strong>username:</strong> {{ user.name }}</li>
       <!-- Add more user information here -->
     </ul>
   </div>
+  <form > (1)
+    <input type="file" id="userFile"> (2)
+    <input type="button"  value="Envoyer"> (3)
+  </form>
   <logout-button></logout-button>
 </div>
