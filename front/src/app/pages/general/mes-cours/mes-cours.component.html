@@ -1,0 +1,13 @@
+<p>mes-cours works!</p>
+<div>
+  <div class="cour" *ngFor="let cour of ListeCours ;let i = index" >
+    {{cour.nom}}
+    <img ngSrc="{{cour.image}}" alt="image mal chager" fill />
+    <br/>
+    <p>{{cour.description}}</p>
+    <button>Supprimer</button>
+
+
+
+  </div>
+</div>
