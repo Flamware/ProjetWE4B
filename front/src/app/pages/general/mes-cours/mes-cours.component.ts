@@ -27,5 +27,4 @@ export class MesCoursComponent {
   cour2: cours = {id: 2, nom: "cours2", description: "description2", date: "date2", image: "image2"};
   cour3: cours = {id: 3, nom: "cours3", description: "description3", date: "date3", image: "image3"};
   ListeCours: cours[] = [this.cour1, this.cour2, this.cour3];
-
 }
