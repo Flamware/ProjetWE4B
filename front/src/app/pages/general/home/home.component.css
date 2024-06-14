@@ -1,0 +1,61 @@
+.home-main {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.best-mentors {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2em;
+    background-color: white;
+    border-radius: 0.5em;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
+    padding: 1em;
+}
+
+.mentor-list {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    gap: 1em;
+}
+
+.mentor {
+    display: flex;
+    flex-flow: column;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
+    border-radius: 0.5em;
+    padding: 1em;
+    transition: box-shadow 0.3s;
+}
+
+.mentor:hover {
+    box-shadow: 0.1em 0.1em 1.5em rgba(0, 0, 0, 0.2);
+}
+
+.mentor .email {
+    text-decoration: underline;
+}
+
+.mentor li {
+    cursor: text;
+}
+
+.mentor > ul {
+    padding: 0;
+}
+
+.mentor-attr {
+    list-style-type: none;
+}

@@ -1,4 +1,16 @@
 <main class="home-main">
     <h1>Welcome to the home page</h1>
-    
+    <div class="best-mentors">
+        <h2>Les 6 meilleurs parrains</h2>
+        <ul class="mentor-list">
+            <li *ngFor="let men of mentors" class="mentor">
+                <!-- <a [routerLink]="['/profile', par.id]">{{ par.name }}</a> -->
+                <img src={{men.profile_picture}} alt="{{men.firstname}}'s profile picture" *ngIf="men.profile_picture">
+                <ul class="mentor-attr">
+                    <li>{{ men.firstname }} {{ men.lastname }}</li>
+                    <li class="email">{{ men.email }}</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 </main>
