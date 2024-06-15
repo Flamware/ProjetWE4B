@@ -13,15 +13,27 @@ import {NgIf} from "@angular/common";
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  userInfo: any;
+
+  userInfo = {
+    first_name: 'John',
+    last_name: 'Doe',
+    email: 'john.doe@example.com',
+    username: 'johndoe',
+    bio: 'Hello, I am John Doe.',
+    role: 'User',
+    created_at: '2022-01-01'
+  };
 
 
   constructor(public auth: AuthService, private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get<any>('http://localhost:3000/api/getuserinfo')
+    this.http.get<any>('http://localhost:3000/getuserinfo')
       .subscribe((response) => {
         this.userInfo = response;
+
       });
   }
+
+
 }

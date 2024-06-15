@@ -3,13 +3,19 @@
     <a routerLink="/home" routerLinkActive="active">Home</a>
     <a routerLink="/about" routerLinkActive="active">About</a>
     <a routerLink="/profile" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async">Profile</a>
-    <a routerLink="/mes-cours" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async">Mes Cours</a>
+    <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Register</a>
+    <a routerLink="/mes-cours" routerLinkActive="active" *ngIf="(auth.isAuthenticated$ | async)">Mes Cours</a>
     <login-button *ngIf="!(auth.isAuthenticated$ | async)"></login-button>
-    <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button>
+    <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button> <!-- Corrected the typo here -->
   </nav>
   <main class="main">
-    <input type="text" placeholder="Search for restaurants..." class="input" />
+    <input
+      type="text"
+      placeholder="Search for restaurants..."
+      class="input"
+    />
     <button class="button">Search</button>
-    <div class="results"></div>
+    <div class="results">
+    </div>
   </main>
 </header>

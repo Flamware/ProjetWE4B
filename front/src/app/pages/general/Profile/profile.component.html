@@ -1,7 +1,7 @@
 <div class="profile-container">
   <h1>User Profile</h1>
   <p>Welcome to your profile page! You can view your profile information here.</p>
-  <div *ngIf="userInfo" class="user-info">
+  <div *ngIf="userInfo else noUserInfo" class="user-info">
     <img ngSrc="userInfo.profile_picture" alt="User Image" class="userImg">
     <ul>
       <li><strong>Name:</strong> {{ userInfo.first_name}}</li>
@@ -13,5 +13,8 @@
       <li><strong>Cree le:</strong> {{ userInfo.created_at }}</li>
     </ul>
   </div>
+  <ng-template #noUserInfo>
+    <p>No user information found!</p>
+  </ng-template>
   <!-- Rest of your HTML code -->
 </div>

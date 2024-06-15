@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgModule } from '@angular/core';
 import {NgForOf, NgOptimizedImage} from "@angular/common";
+import {FormCoursComponent} from "../../../components/form-cours/form-cours.component";
 
 class cours {
   id : number=0;
@@ -15,7 +16,8 @@ class cours {
   standalone: true,
   imports: [
     NgForOf,
-    NgOptimizedImage
+    NgOptimizedImage,
+    FormCoursComponent
   ],
   templateUrl: './mes-cours.component.html',
   styleUrl: './mes-cours.component.css'

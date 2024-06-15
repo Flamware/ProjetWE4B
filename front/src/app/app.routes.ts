@@ -10,9 +10,8 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'mes-cours', component: MesCoursComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  // redirect to `home` route at startup
+  {path: 'mes-cours', component: MesCoursComponent},
+  { path: '', redirectTo: '/home', pathMatch: 'full' }, // redirect to `home` route at startup
 ];
 
 @NgModule({

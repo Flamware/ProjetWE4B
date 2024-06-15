@@ -14,7 +14,9 @@ import { HeaderComponent } from "./header/header.component";
     FooterComponent,
     RouterOutlet,
     HeaderComponent,
-    HttpClientModule
+    RouterOutlet,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   styleUrls: ['./app.component.css']
 })
