@@ -45,9 +45,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.auth.idTokenClaims$.subscribe((claims: any) => {
       if (claims) {
         const token = claims.__raw;
+        console.log('JWT Token:', token);  // Log the token to the console
         const headers = { Authorization: `Bearer ${token}` };
         this.http
-          .get<any>(`http://localhost:3000/api/user-exists?email=${user.email}`, { headers })
+          .get<any>(`http://localhost:3000/user-exists?email=${user.email}`, { headers })
           .subscribe((response) => {
             if (response.exists) {
               console.log('User exists:', response);
@@ -61,7 +62,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   createUser(user: any, headers: any): void {
-    const apiUrl = 'http://localhost:3000/api/create-user';
+    const apiUrl = 'http://localhost:3000/create-user';
     const userData = {
       email: user.email,
       first_name: user.given_name,

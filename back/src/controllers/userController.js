@@ -80,6 +80,7 @@ exports.updateProfilePicture = async (req, res) => {
 
 // route user-exists
   exports.userExists = async (req, res) => {
+    console.log('Checking if user exists');
   const { email } = req.query; // Access email from query parameter
 
     try {
