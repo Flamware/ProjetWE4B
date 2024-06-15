@@ -1,11 +1,27 @@
 <div>
   <app-form-cours> </app-form-cours>
-  a
 </div>
+<div class="card-container">
 <div class="cour" *ngFor="let cour of ListeCours ;let i = index" >
-    {{cour.nom}}
-    <img src="" alt="image mal chager"/>
-    <br/>
-    <p>{{cour.description}}</p>
-    <button>Supprimer</button>
+  <div class="card">
+    <div class="card-image"></div>
+    <div class="card-content">
+      <h2 class="card-title">{{cour.nom}}</h2>
+      <div class="card-rating">
+        <span class="stars">★★★★☆</span> 4.5 (413)
+      </div>
+      <p class="card-text">cour.description</p>
+      <div class="card-theme">Theme</div>
+      <div class="themes">
+        <span class="theme">theme 1</span>
+        <span class="theme">theme 2</span>
+        <span class="theme">theme 3</span>
+        <span class="theme">theme 4</span>
+      </div>
+      <button class="card-action">Supprimer</button>
+      <a href="#" class="card-action">ACTION 1</a>
+    </div>
+  </div>
+</div>
+
   </div>
