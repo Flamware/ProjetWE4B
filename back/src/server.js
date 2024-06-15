@@ -16,7 +16,7 @@ const portHTTPS = 8445;
 // Middleware
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors({
-  origin: 'http://localhost:8080', // Adjust the origin as per your frontend setup
+  origin: 'http://localhost:4200', // Adjust the origin as per your frontend setup
   credentials: true,
 }));
 app.use(session({
@@ -35,29 +35,58 @@ const auth0Config = {
   clientId: process.env.AUTH0_CLIENT_ID,
   redirectUri: 'http://localhost:3000/callback', // Adjust callback URL as per your setup
 };
-
-// Auth0 callback route
-app.get('/callback', async (req, res) => {
-  // Handle Auth0 callback to store user information
+//route to check if user exists
+app.post('/api/checkUser', async (req, res) => {
+  const { email } = req.body;
   try {
-    const { email, given_name, family_name } = req.query; // Assuming Auth0 callback includes user information
+    const query = `
+      SELECT * FROM users WHERE email = $1;`;
 
-    // Example SQL query to insert user into PostgreSQL database
-    const insertQuery = `
-      INSERT INTO users (email, first_name, last_name, role, created_at, updated_at)
-      VALUES ($1, $2, $3, 'mentee', current_timestamp, current_timestamp)
-      ON CONFLICT (email) DO NOTHING;`;
-
-    await client.query(insertQuery, [email, given_name, family_name]);
-
-    // Optionally, generate a JWT token for the user
-    const token = jwt.sign({ email }, 'your-jwt-secret', { expiresIn: '1h' });
-
-    // Redirect or respond as needed
-    res.redirect('http://localhost:8080/dashboard'); // Example redirect to dashboard
+    const result = await client.query(query, [email]);
+    res.status(200).json(result.rows);
   } catch (error) {
-    console.error('Error handling Auth0 callback:', error);
+    console.error('Error checking user:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// route user-exists
+app.get('/api/user-exists', async (req, res) => {
+  const { email } = req.query; // Access email from query parameter
+
+  try {
+    const query = `
+      SELECT * FROM users WHERE email = $1;`;
+
+    const result = await client.query(query, [email]);
+    res.status(200).json({ exists: result.rows.length > 0 }); // Check if rows exist
+  } catch (error) {
+    console.error('Error checking user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/create-user', async (req, res) => {
+  const { email, first_name, last_name } = req.body;
+  console.log('Request body:', req.body);
+
+  try {
+    const insertQuery = `
+      INSERT INTO users (email, first_name, last_name, created_at, updated_at)
+      VALUES ($1, $2, $3, current_timestamp, current_timestamp);`;
+
+    await client.query(insertQuery, [email, first_name, last_name || '']); // Set last_name to empty string if missing
+
+    res.status(200).json({ message: 'User created successfully' });
+  } catch (error) {
+    console.error('Error creating user:', error);
+
+    // Handle specific errors (optional)
+    if (error.code === '23502') { // Handle potential unique constraint violation (e.g., duplicate email)
+      res.status(409).json({ error: 'Email already exists' });
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 });
 
@@ -79,6 +108,20 @@ app.post('/api/update-user-info', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+app.get('/api/getAllUsers', async (req, res) => {
+  try {
+    const query = `
+      SELECT * FROM users;`;
+
+    const result = await client.query
+    (query);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error getting all users:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }}
+);
+
 // Start the HTTP server
 app.listen(portHTTP, () => {
   console.log(`HTTP Server running on http://localhost:${portHTTP}`);
