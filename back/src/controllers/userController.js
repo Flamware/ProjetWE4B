@@ -79,21 +79,24 @@ exports.updateProfilePicture = async (req, res) => {
 
 
 // route user-exists
-  exports.userExists = async (req, res) => {
-    console.log('Checking if user exists');
-  const { email } = req.query; // Access email from query parameter
+exports.userExists = async (req, res) => {
+  console.log('Checking if user exists');
+  const { email } = req.query;
 
-    try {
-      const query = `
-      SELECT * FROM users WHERE email = $1;`;
+  // Print the JWT payload (i.e., the session info)
+  console.log('JWT payload:', req.user);
 
-      const result = await client.query(query, [email]);
-      res.status(200).json({ exists: result.rows.length > 0 }); // Check if rows exist
-    } catch (error) {
-      console.error('Error checking user:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  };
+  try {
+    const query = `
+    SELECT * FROM users WHERE email = $1;`;
+
+    const result = await client.query(query, [email]);
+    res.status(200).json({ exists: result.rows.length > 0 }); // Check if rows exist
+  } catch (error) {
+    console.error('Error checking user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 exports.createUser = async (req, res) => {
     const { email, first_name, last_name } = req.body;

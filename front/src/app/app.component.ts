@@ -1,25 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import {NgIf} from "@angular/common";
-import {FooterComponent} from "./footer/footer.component";
-import {HeaderComponent} from "./header/header.component";
-import {RouterOutlet} from "@angular/router";
-import {ReactiveFormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  imports: [
-    FooterComponent,
-    HeaderComponent,
-    RouterOutlet,
-    HttpClientModule,
-    ReactiveFormsModule
-  ],
-  standalone: true
+  standalone: true,
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | undefined;
@@ -28,6 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(public auth: AuthService, private http: HttpClient) {}
 
   ngOnInit(): void {
+    // Subscribe to user$ to handle user authentication state changes
     this.userSubscription = this.auth.user$.subscribe(
       (user) => {
         if (user) {
@@ -36,6 +25,21 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error('Error retrieving user information:', error);
+      }
+    );
+
+    // Handle the Auth0 redirect callback
+    this.handleAuthCallback();
+  }
+
+  handleAuthCallback(): void {
+    // Handle the redirect callback when the user returns from Auth0
+    this.auth.handleRedirectCallback().subscribe(
+      () => {
+        // Redirect callback complete, do nothing for now or add logic as needed
+      },
+      (error) => {
+        console.error('Error handling redirect callback:', error);
       }
     );
   }
