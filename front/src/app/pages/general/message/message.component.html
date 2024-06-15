@@ -1,25 +1,36 @@
-<!-- page pour la communication entre plusieur utilisateur -->
-
-
-<div *ngIf="messages.length > 0">
-  <h2>Messages envoyés par {{ sender }}</h2>
-
-    <li *ngFor="let message of messages">
-      <div *ngIf="message.sender==interlocuteur else messagelse" class="message_interlocuter">
-
-      </div>
-      {{ message.content }}
-
-      <ng-template #messagelse>
-        <div class="message_user">
-          {{ message.content }}
-        </div>
-      </ng-template>
-    </li>
-
-
-
-</div>
 <div *ngIf="messages.length === 0">
   <p>Aucun message trouvé pour {{ sender }}</p>
+</div>
+
+<div class="container" *ngIf="messages.length > 0">
+  <h2>Messages envoyés par {{ sender }}</h2>
+  <div class="chat-container">
+    <div class="chat-box">
+      <ul>
+        <li *ngFor="let message of messages">
+          <div *ngIf="message.sender == interlocuteur; else messagelse" class="message received">
+            {{ message.content }}
+          </div>
+          <ng-template #messagelse>
+            <div class="message sent">
+              {{ message.content }}
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div class="message-input">
+        <input type="text" placeholder="Type your message...">
+        <button type="button">Send</button>
+      </div>
+    </div>
+    <div class="contact-list">
+      <h2>Contacts</h2>
+      <ul>
+        <li>Contact 1</li>
+        <li>Contact 2</li>
+        <li>Contact 3</li>
+        <li>Contact 4</li>
+      </ul>
+    </div>
+  </div>
 </div>
