@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpClientModule, provideHttpClient} from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import {FooterComponent} from "./footer/footer.component";
 import {RouterOutlet} from "@angular/router";
@@ -13,7 +13,8 @@ import {HeaderComponent} from "./header/header.component";
   imports: [
     FooterComponent,
     RouterOutlet,
-    HeaderComponent
+    HeaderComponent,
+    HttpClientModule
   ],
   styleUrls: ['./app.component.css']
 })
