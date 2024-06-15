@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgModule } from '@angular/core';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {NgForOf, NgOptimizedImage} from "@angular/common";
 import {FormCoursComponent} from "../../../components/form-cours/form-cours.component";
 
@@ -17,7 +18,8 @@ class cours {
   imports: [
     NgForOf,
     NgOptimizedImage,
-    FormCoursComponent
+    FormCoursComponent,
+    RouterLink
   ],
   templateUrl: './mes-cours.component.html',
   styleUrl: './mes-cours.component.css'

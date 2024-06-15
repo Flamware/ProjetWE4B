@@ -1,11 +1,12 @@
 <div>
   <app-form-cours> </app-form-cours>
 </div>
-<div class="card-container">
-<div class="cour" *ngFor="let cour of ListeCours ;let i = index" >
-  <div class="card">
-    <div class="card-image"></div>
-    <div class="card-content">
+<div class="card-container" id="form">
+  <div class="cour" *ngFor="let cour of ListeCours ;let i = index" >
+    <div class="card">
+      <div class="card-image">
+      </div>
+      <div class="card-content">
       <h2 class="card-title">{{cour.nom}}</h2>
       <div class="card-rating">
         <span class="stars">★★★★☆</span> 4.5 (413)
@@ -19,7 +20,7 @@
         <span class="theme">theme 4</span>
       </div>
       <button class="card-action">Supprimer</button>
-      <a href="#" class="card-action">ACTION 1</a>
+        <a [routerLink]="['/cours', cour.id]" class="card-action">Voir cour</a>
     </div>
   </div>
 </div>

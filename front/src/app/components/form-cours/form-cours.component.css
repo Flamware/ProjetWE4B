@@ -1,19 +1,17 @@
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  background-color: #f8f1e4;
-  font-family: Arial, sans-serif;
-}
-
 .contact-form {
+  display: flex;
+  position: fixed;  /* This makes the form fixed on the screen */
+  top: 50%;  /* Positions the form vertically in the center */
+  left: 50%;  /* Positions the form horizontally in the center */
+  transform: translate(-50%, -50%);  /* Adjusts positioning based on top and left */
   background-color: white;
   border-radius: 8px;
+  flex-wrap: wrap;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 400px;
   padding: 20px;
+  z-index: 999;  /* High z-index ensures it appears on top */
+  justify-content: center;
 }
 
 .contact-form h2 {

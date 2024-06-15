@@ -3,11 +3,22 @@
 
 <div *ngIf="messages.length > 0">
   <h2>Messages envoyés par {{ sender }}</h2>
-  <ul>
+
     <li *ngFor="let message of messages">
+      <div *ngIf="message.sender==interlocuteur else messagelse" class="message_interlocuter">
+
+      </div>
       {{ message.content }}
+
+      <ng-template #messagelse>
+        <div class="message_user">
+          {{ message.content }}
+        </div>
+      </ng-template>
     </li>
-  </ul>
+
+
+
 </div>
 <div *ngIf="messages.length === 0">
   <p>Aucun message trouvé pour {{ sender }}</p>

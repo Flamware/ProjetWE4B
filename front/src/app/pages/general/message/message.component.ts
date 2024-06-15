@@ -9,16 +9,20 @@ import {AuthService} from "@auth0/auth0-angular";
   styleUrl: './message.component.css'
 })
 export class MessageComponent {
-  messages: any[] = [];
+
   sender: string = 'Alice'; // Changez cela pour filtrer par un autre expéditeur
 
 
   constructor(public auth: AuthService) {}
+  interlocuteur: string = "Bob";
+  messages = [{sender: "Alice", content: "Salut Bob, comment vas-tu ?"},{sender: "Bob", content: "Salut Alice"}];
+
+
   ngOnInit(): void {
-    this.getMessagesBySender(this.sender);
+    //this.getMessagesBySender(this.sender);
   }
 
   getMessagesBySender(sender: string): void {
-    this.messages = this.messageService.getMessages().filter(message => message.sender === sender);
+    //this.messages = this.messageService.getMessages().filter(message => message.sender === sender);
   }
 }
