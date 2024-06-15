@@ -5,6 +5,8 @@ const jwtCheck = require('./jwCheck'); // Import jwtCheck
 const userRoutes = require('./routes/users'); // Import user routes
 const client = require('./database');
 const port = process.env.PORT || 3000;
+const session = require('express-session');
+
 // cors
 const cors = require('cors');
 app.use(cors());

@@ -80,6 +80,7 @@ export class AppComponent implements OnInit, OnDestroy {
       email: user.email,
       first_name: user.given_name,
       last_name: user.family_name,
+      auth0_user_id: user.sub,  // Include the Auth0 user ID
     };
 
     this.http.post(apiUrl, userData, { headers }).subscribe(

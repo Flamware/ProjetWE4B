@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
 import {AuthService} from "@auth0/auth0-angular";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-message',
   standalone: true,
-  imports: [],
+  imports: [
+    NgIf,
+    NgForOf
+  ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.css'
 })
