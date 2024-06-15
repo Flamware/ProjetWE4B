@@ -8,4 +8,5 @@ router.post('/set-username', verifyToken, userController.setUsername);
 router.post('/set-profile-picture', verifyToken, userController.setProfilePicture);
 router.post('/update-info', verifyToken, userController.updatePassword);
 
+
 module.exports = router;
