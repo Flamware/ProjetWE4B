@@ -2,11 +2,19 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import {FooterComponent} from "./footer/footer.component";
+import {RouterOutlet} from "@angular/router";
+import {HeaderComponent} from "./header/header.component";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
+  imports: [
+    FooterComponent,
+    RouterOutlet,
+    HeaderComponent
+  ],
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
