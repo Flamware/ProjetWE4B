@@ -6,8 +6,8 @@
   <h2>Messages envoyés par {{ sender }}</h2>
   <div class="chat-container">
     <div class="chat-box">
-      <ul>
-        <li *ngFor="let message of messages">
+
+        <div *ngFor="let message of messages">
           <div *ngIf="message.sender == interlocuteur; else messagelse" class="message received">
             {{ message.content }}
           </div>
@@ -16,8 +16,8 @@
               {{ message.content }}
             </div>
           </ng-template>
-        </li>
-      </ul>
+        </div>
+
       <div class="message-input">
         <input type="text" placeholder="Type your message...">
         <button type="button">Send</button>

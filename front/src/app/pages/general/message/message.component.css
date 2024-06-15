@@ -6,14 +6,12 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 96%;
-  height: 30%;
-
-  padding: 10px;
+  height: 75%;  /* Set height to 100% */
+  margin: 20px;
+  border: 1px solid #ccc;
 }
 
 h2 {
-  margin-top: 0;
   font-size: 24px;
   text-align: center;
 }
@@ -21,19 +19,18 @@ h2 {
 .chat-container {
   display: flex;
   flex-direction: row;
+  justify-content: flex-end; /* Add this line */
   border-top: 1px solid #ccc;
-  margin-top: 20px;
-  padding-top: 20px;
-   /* Adjust height as needed */
+  height: 100%;
 }
 
 .chat-box {
   flex: 3;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  width: auto;
   padding: 20px;
-  border-right: 1px solid #ccc;
+  margin-top: auto; /* Add this line */
 }
 
 .chat-box ul {
@@ -46,11 +43,10 @@ h2 {
 
 .message {
   display: flex;
-  align-items: center;
   margin-bottom: 15px;
-  max-width: 60%;
   padding: 10px;
   border-radius: 10px;
+  max-width: max-content;
 }
 
 .message.received {
@@ -61,7 +57,7 @@ h2 {
 .message.sent {
   background-color: #4caf50;
   color: white;
-  align-self: flex-end;
+  margin-left: auto;
 }
 
 .message-input {
@@ -92,6 +88,8 @@ h2 {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  border-left: 1px solid #ccc;
+
 }
 
 .contact-list h2 {
