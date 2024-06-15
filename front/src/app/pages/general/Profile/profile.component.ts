@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {NgIf} from "@angular/common";
 
 @Component({
@@ -8,7 +8,8 @@ import {NgIf} from "@angular/common";
   templateUrl: './profile.component.html',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    HttpClientModule
   ],
   styleUrls: ['./profile.component.css']
 })

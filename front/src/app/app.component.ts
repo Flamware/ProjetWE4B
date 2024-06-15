@@ -1,24 +1,25 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { FooterComponent } from "./footer/footer.component";
-import { RouterOutlet } from "@angular/router";
-import { HeaderComponent } from "./header/header.component";
+import {NgIf} from "@angular/common";
+import {FooterComponent} from "./footer/footer.component";
+import {HeaderComponent} from "./header/header.component";
+import {RouterOutlet} from "@angular/router";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  standalone: true,
+  styleUrls: ['./app.component.css'],
   imports: [
     FooterComponent,
-    RouterOutlet,
     HeaderComponent,
     RouterOutlet,
     HttpClientModule,
     ReactiveFormsModule
   ],
-  styleUrls: ['./app.component.css']
+  standalone: true
 })
 export class AppComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | undefined;
@@ -28,9 +29,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.userSubscription = this.auth.user$.subscribe(
-      async (user) => {
+      (user) => {
         if (user) {
-          await this.handleUser(user);
+          this.handleUser(user);
         }
       },
       (error) => {
@@ -39,39 +40,42 @@ export class AppComponent implements OnInit, OnDestroy {
     );
   }
 
-  async handleUser(user: any): Promise<void> {
+  handleUser(user: any): void {
     console.log('Checking if user exists...');
-    try {
-      const userEmail = user.email; // Extract email from user object
-      this.http.get<any>(`http://localhost:3000/api/user-exists?email=${userEmail}`) // Include email in query parameter
-        .subscribe((response) => {
-          if (response.exists) {
-            console.log('User exists:', response);
-          } else {
-            console.log('User does not exist:', response);
-            this.createUser(user);
-          }
-        });
-    } catch (error) {
-      console.error('Error checking if user exists:', error);
-    }
+    this.auth.idTokenClaims$.subscribe((claims: any) => {
+      if (claims) {
+        const token = claims.__raw;
+        const headers = { Authorization: `Bearer ${token}` };
+        this.http
+          .get<any>(`http://localhost:3000/api/user-exists?email=${user.email}`, { headers })
+          .subscribe((response) => {
+            if (response.exists) {
+              console.log('User exists:', response);
+            } else {
+              console.log('User does not exist:', response);
+              this.createUser(user, headers);
+            }
+          });
+      }
+    });
   }
 
-
-  async createUser(user: any): Promise<void> {
+  createUser(user: any, headers: any): void {
     const apiUrl = 'http://localhost:3000/api/create-user';
     const userData = {
       email: user.email,
       first_name: user.given_name,
-      last_name: user.family_name
+      last_name: user.family_name,
     };
 
-    try {
-      const response = await this.http.post(apiUrl, userData).toPromise();
-      console.log('User created successfully:', response);
-    } catch (error) {
-      console.error('Error creating user:', error);
-    }
+    this.http.post(apiUrl, userData, { headers }).subscribe(
+      (response) => {
+        console.log('User created successfully:', response);
+      },
+      (error) => {
+        console.error('Error creating user:', error);
+      }
+    );
   }
 
   ngOnDestroy(): void {

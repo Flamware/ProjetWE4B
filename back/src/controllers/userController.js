@@ -41,6 +41,7 @@ exports.updateAccount = async (req, res) => {
 exports.updateProfilePicture = async (req, res) => {
   const { profile_picture } = req.body;
   const username = req.session.username; // Assuming username is stored in the session
+
   // retreive the profile picture url from db
   const query = 'SELECT profile_picture FROM users WHERE username = $1';
   const result = await client.query(query, [username]);
@@ -53,6 +54,7 @@ exports.updateProfilePicture = async (req, res) => {
       }
     });
   }
+
   // save the new profile picture in img/profile and update the db with only the filename
   const profilePictureFilename = `${username}-${Date.now()}.png`;
   const newProfilePicture = path.join(__dirname, `../public/img/profile/${profilePictureFilename}`);
@@ -67,7 +69,7 @@ exports.updateProfilePicture = async (req, res) => {
     await client.query(updateQuery, [profilePictureFilename, username]);
     res.status(200).json({ success: 'Profile picture updated successfully' });
   });
-
+};
 // Auth0 configuration (assuming you resolve the Angular issue)
   const auth0Config = {
     domain: process.env.AUTH0_DOMAIN,
@@ -146,9 +148,7 @@ exports.getAllUsers = async (req, res) => {
     } catch (error) {
       console.error('Error getting all users:', error);
       res.status(500).json({ error: 'Internal server error' });
-    }};
+    }
+};
 
-exports.getAccountInfo(req, res) {
 
-  }
-}

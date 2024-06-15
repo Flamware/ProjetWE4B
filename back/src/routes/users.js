@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
-const { verifyToken } = require('../middleware/authMiddleware');
+const { userExists, getAllUsers} = require('../controllers/userController');
+const checkJwt = require('../middleware/authMiddleware');
 
-router.get('/account-info', verifyToken, userController.getAccountInfo);
-router.post('/set-username', verifyToken, userController.setUsername);
-router.post('/set-profile-picture', verifyToken, userController.setProfilePicture);
-router.post('/update-info', verifyToken, userController.updatePassword);
+console.log(checkJwt);
+console.log(userExists);
+console.log(getAllUsers);
 
+router.get('/user-exist', checkJwt, userExists);
+router.get('/getAllUsers', getAllUsers);
 
 module.exports = router;

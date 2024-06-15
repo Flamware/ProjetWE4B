@@ -1,9 +1,11 @@
 <div>
-  <div class="cour" *ngFor="let cour of ListeCours ;let i = index" >
+  <app-form-cours> </app-form-cours>
+  a
+</div>
+<div class="cour" *ngFor="let cour of ListeCours ;let i = index" >
     {{cour.nom}}
-    <img ngSrc="{{cour.image}}" alt="image mal chager" fill />
+    <img src="" alt="image mal chager"/>
     <br/>
     <p>{{cour.description}}</p>
     <button>Supprimer</button>
   </div>
-</div>

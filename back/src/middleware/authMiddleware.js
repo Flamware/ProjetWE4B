@@ -1,21 +1,9 @@
-const jwt = require('jsonwebtoken');
+const { auth } = require('express-oauth2-jwt-bearer');
 
-exports.verifyToken = (req, res, next) => {
-    const token = req.headers.authorization;
-    if (!token) {
-        return res.status(403).json({ error: 'No token provided' });
-    }
+const jwtCheck = auth({
+  audience: 'http://localhost:3000/',
+  issuerBaseURL: 'https://dev-o6cd4ntq3e4xav4u.eu.auth0.com/',
+  tokenSigningAlg: 'RS256'
+});
 
-    const tokenWithoutBearer = token.replace('Bearer ', '');
-
-    jwt.verify(tokenWithoutBearer, 'YOUR_SECRET_KEY', (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ error: 'Invalid token' });
-        }
-
-        req.userId = decoded.userId;
-        req.username = decoded.username;
-
-        next();
-    });
-};
+module.exports = jwtCheck;
