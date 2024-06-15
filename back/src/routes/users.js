@@ -1,8 +1,9 @@
+// users.js
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken
+const jwtCheck = require('../jwCheck'); // Import jwtCheck
 const { userExists, getAllUsers} = require('../controllers/userController');
-const checkJwt = require('../middleware/authMiddleware');
-const jwt = require('jsonwebtoken');
 
 router.use((req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -17,7 +18,7 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/user-exists', checkJwt, userExists); // JWT verification applied here
-router.get('/getAllUsers', getAllUsers); // No JWT verification
+router.get('/user-exists', jwtCheck, userExists); // JWT verification applied here
+router.get('/getAllUsers', getAllUsers); // JWT verification applied here
 
 module.exports = router;

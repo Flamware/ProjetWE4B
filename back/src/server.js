@@ -1,29 +1,26 @@
 // server.js
 const express = require('express');
-const jwtCheck = require('./middleware/authMiddleware');
-const userRoutes = require('./routes/users'); // Import user routes
-const cors = require('cors');
-const {connect} = require("rxjs"); // Import cors module
-const database = require('./database'); // Import database module
-
 const app = express();
+const jwtCheck = require('./jwCheck'); // Import jwtCheck
+const userRoutes = require('./routes/users'); // Import user routes
+const client = require('./database');
 const port = process.env.PORT || 3000;
+// cors
+const cors = require('cors');
+app.use(cors());
+app.use(express.json());
 
-// Connect to the database
-database.connectDatabase().catch(console.error);
+client.connectDatabase().catch(err => {
+  console.error('Error connecting to the database:', err);
+  process.exit(1);
+})
 
-app.use(cors()); // Use cors middleware
 app.use(userRoutes); // Use user routes
 
-// Example endpoint that requires authentication
-app.get('/authorized', jwtCheck, (req, res) => {
-  res.status(200).send('You are authorized');
+app.get('/authorized', jwtCheck, function (req, res) {
+  res.send('Secured Resource');
 });
 
-app.get('', (req, res) => {
-  res.status(200).send('Hello World');
-});
+app.listen(port);
 
-app.listen(port, () => {
-  console.log('Running at http://localhost:' + port);
-});
+console.log('Running on http://localhost:' + port);
