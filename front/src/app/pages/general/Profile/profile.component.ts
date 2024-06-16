@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule, HttpHeaders} from '@angular/common/http';
 import {NgIf} from "@angular/common";
+import { take } from 'rxjs/operators'; // Don't forget to import 'take'
 
 @Component({
   selector: 'app-user-profile',
@@ -27,6 +28,29 @@ export class ProfileComponent implements OnInit {
 
 
   constructor(public auth: AuthService, private http: HttpClient) {}
+  onChangeRole($event : any){
+    const role = $event.role
+
+    this.userInfo.role = role;
+
+    const token = this.auth.idTokenClaims$ // get the token from Auth0
+
+    token.subscribe(t => {
+      const headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', `Bearer ${t}`);
+
+      this.http.post('http://localhost:3000/set-role',
+        {
+          username: this.userInfo.username,
+          role: role
+        },
+        { headers: headers }
+      ).subscribe(response => {
+        console.log(response);
+      }, error => {
+        console.error(error);
+      });
+    });
+  }
 
   ngOnInit() {
     this.http.get<any>('http://localhost:3000/getuserinfo')

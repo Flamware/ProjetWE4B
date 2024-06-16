@@ -10,6 +10,13 @@
       <li><strong>Username:</strong> {{ userInfo.username }}</li>
       <li><strong>Bio:</strong> {{ userInfo.bio }}</li>
       <li><strong>Role:</strong> {{ userInfo.role }}</li>
+      <li>
+        <strong>Change Role:</strong>
+        <select (change)="onChangeRole($event)">
+          <option value="TUTOR">Tutor</option>
+          <option value="STUDENT">Student</option>
+        </select>
+      </li>
       <li><strong>Cree le:</strong> {{ userInfo.created_at }}</li>
     </ul>
   </div>

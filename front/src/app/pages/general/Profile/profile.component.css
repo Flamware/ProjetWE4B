@@ -26,3 +26,19 @@
 .user-info ul li {
   margin-bottom: 10px;
 }
+.select {
+  width: 200px;
+  height: 35px;
+  background: white;
+  color: black;
+  padding-left: 5px;
+  font-size: 14px;
+  border: none;
+  margin-left: 10px;
+
+  border-radius: 5px;
+}
+
+.select:focus {
+  outline: none;
+}
