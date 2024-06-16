@@ -1,12 +1,21 @@
+
+
+
 <div *ngIf="messages.length === 0">
-  <p>Aucun message trouvé pour {{ sender }}</p>
+  <div class="chat-box">
+    <h2>Aucun message trouvé pour {{ sender }}</h2>
+  </div>
+
 </div>
+  <div class="container" *ngIf="messages.length > 0">
+    <h2>Messages envoyés par {{ sender }}</h2>
+    <div class="chat-container">
 
-<div class="container" *ngIf="messages.length > 0">
-  <h2>Messages envoyés par {{ sender }}</h2>
-  <div class="chat-container">
-    <div class="chat-box">
-
+      <h2 *ngIf="sender==null else senderdefine" class=" chat-box">
+        pas de contact selectionné
+      </h2>
+<ng-template #senderdefine>
+  <div class="chat-box">
         <div *ngFor="let message of messages">
           <div *ngIf="message.sender == interlocuteur; else messagelse" class="message received">
             {{ message.content }}
@@ -18,19 +27,22 @@
           </ng-template>
         </div>
 
-      <div class="message-input">
-        <input type="text" placeholder="Type your message...">
-        <button type="button">Send</button>
+        <div class="message-input">
+          <input type="text" placeholder="Type your message...">
+          <button type="button">Send</button>
+        </div>
+      </div>
+
+      </ng-template>
+
+      <div class="contact-list">
+        <h2>Contacts</h2>
+        <ul>
+          <a *ngFor="let contact of contacts">
+            <li [routerLink]="['/message', contact.name ]"  class="card-action">{{contact.name}}</li>
+          </a>
+        </ul>
       </div>
     </div>
-    <div class="contact-list">
-      <h2>Contacts</h2>
-      <ul>
-        <li>Contact 1</li>
-        <li>Contact 2</li>
-        <li>Contact 3</li>
-        <li>Contact 4</li>
-      </ul>
-    </div>
   </div>
-</div>
+

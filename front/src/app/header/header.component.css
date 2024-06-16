@@ -115,3 +115,14 @@ nav {
 .result-item:hover {
   border-color: #ccc;
 }
+input[type="file"] {
+  display: none;
+}
+
+input[type="text"] {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

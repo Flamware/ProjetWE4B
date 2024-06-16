@@ -15,7 +15,7 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   {path: 'mes-cours', component: MesCoursComponent},
   {path: 'cours/:id', component: CoursComponent},
-  {path: 'message', component: MessageComponent},
+  {path: 'message/:contact', component: MessageComponent},
   {path : 'mes-document', component: MesDocumentComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' }, // redirect to `home` route at startup
 ];

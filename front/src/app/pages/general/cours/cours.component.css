@@ -1,0 +1,42 @@
+.course-header {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.course-info {
+  text-align: center;
+}
+
+.course-info h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.course-info h3 {
+  margin: 5px 0;
+  font-size: 20px;
+  color: #666;
+}
+
+.course-info p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #888;
+}
+.rating button {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 3em;
+  transition: color .4s;
+}
+.rating button:hover,
+.rating button:focus {
+  color: orange;
+  cursor: pointer;
+}

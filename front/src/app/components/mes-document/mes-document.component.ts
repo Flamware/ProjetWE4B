@@ -15,7 +15,7 @@ import {NgForOf} from "@angular/common";
 export class MesDocumentComponent {
   uploadForm: FormGroup;
 
-  files= [{name:"file1",url:"url1"},{name:"file2",url:"url2"}];
+  files= [{name:"file1",url:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Lapin_belier_hollandais.jpg/1920px-Lapin_belier_hollandais.jpg"},{name:"file2",url:"C:\\Users\\Gachelin Estouan\\Documents\\test.txt"}];
 
   oninit(){
     this.files = this.getfiles();
