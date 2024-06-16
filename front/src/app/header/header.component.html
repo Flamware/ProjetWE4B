@@ -6,8 +6,8 @@
     <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Register</a>
     <a routerLink="/mes-cours" routerLinkActive="active" *ngIf="(auth.isAuthenticated$ | async)">Mes Cours</a>
     <a [routerLink]="['/message', '' ]" routerLinkActive="active" *ngIf="(auth.isAuthenticated$ | async)">Mes message</a>
-    <login-button *ngIf="!(auth.isAuthenticated$ | async)"></login-button>
-    <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button> <!-- Corrected the typo here -->
+    <a  routerLink="/login" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Login</a>
+     <!-- Corrected the typo here -->
   </nav>
   <main class="main">
     <input

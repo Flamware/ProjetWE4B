@@ -8,6 +8,7 @@ import {MesCoursComponent} from "./pages/general/mes-cours/mes-cours.component";
 import {CoursComponent} from "./pages/general/cours/cours.component";
 import {MessageComponent} from "./pages/general/message/message.component";
 import {MesDocumentComponent} from "./components/mes-document/mes-document.component";
+import {ConnexionComponent} from "./pages/general/connexion/connexion.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -17,6 +18,7 @@ export const routes: Routes = [
   {path: 'cours/:id', component: CoursComponent},
   {path: 'message/:contact', component: MessageComponent},
   {path : 'mes-document', component: MesDocumentComponent},
+  {path : 'login', component: ConnexionComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' }, // redirect to `home` route at startup
 ];
 

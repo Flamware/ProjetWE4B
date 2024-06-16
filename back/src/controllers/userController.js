@@ -22,7 +22,6 @@ exports.getAccountInfo = async (req, res) => {
   }
 };
 
-
 exports.updateAccount = async (req, res) => {
   const { email, first_name, last_name } = req.body;
   const username = req.session.username; // Assuming username is stored in the session
