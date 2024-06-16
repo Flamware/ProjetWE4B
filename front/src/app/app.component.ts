@@ -1,10 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { AuthService } from '@auth0/auth0-angular';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { AuthService } from '@auth0/auth0-angular';
 import {FooterComponent} from "./footer/footer.component";
 import {RouterOutlet} from "@angular/router";
 import {HeaderComponent} from "./header/header.component";
+import { HttpHeaders } from '@angular/common/http';
+
+interface UserResponse {
+  existing: boolean;
+}
 
 @Component({
   selector: 'app-root',
@@ -18,38 +23,45 @@ import {HeaderComponent} from "./header/header.component";
   ],
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnDestroy {
   private userSubscription: Subscription | undefined;
-  title: string = 'ProjetWE4B';
 
   constructor(public auth: AuthService, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.userSubscription = this.auth.isAuthenticated$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
-        this.auth.user$.subscribe(user => {
-          this.handleUser(user);
+        this.auth.idTokenClaims$.subscribe(tokenClaims => {
+          if (!tokenClaims || !tokenClaims.__raw) {
+            console.error('Token claims are missing or undefined');
+            return;
+          }
+          const token = tokenClaims.__raw;
+          this.checkForAndCreateUser(token);
         });
       }
     });
   }
 
-  handleUser(user: any): void {
-    console.log('User logged in...');
+  private async checkForAndCreateUser(token: string): Promise<void> {
+    const url = 'http://localhost:3000/user-logged-in';
 
-    const token = user?.__raw; // Assuming the raw token is accessible in user object
-    if (token) {
-      const headers = {
-        Authorization: `Bearer ${token}`
-      };
-      this.http
-        .get<any>(`http://localhost:3000/user-logged-in`, { headers })
-        .subscribe((response) => {
-          console.log(response);
-        });
-    } else {
-      console.error('Missing token for user object');
-      // Handle missing token scenario (optional)
+    // Define headers
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    try {
+      const response = await this.http.post<UserResponse>(url, { sub: token }, { headers }).toPromise();
+
+      if (response?.existing) {
+        console.log('User already exists');
+      } else {
+        console.log('New user created');
+      }
+    } catch (error) {
+      console.error('Error checking user or creating user:', error);
     }
   }
 

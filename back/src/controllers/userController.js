@@ -96,23 +96,28 @@ exports.updateProfilePicture = async (req, res) => {
       }
     }
   };
+
 exports.userLogged = async (req, res) => {
-  const {email} = req.body;
-  console.log('Request body:', req.body);
-  try {
-    const query = `
-      SELECT *
-      FROM users
-      WHERE email = $1;`;
+  // check the sub property in the request body to get the Auth0 user ID
+  const token = req.body.sub;
+  const payload = jwt.decode(token);
+  const authId = payload.sub;
+  const email = payload.email;
 
-    const result = await client.query(query, [email]);
-    res.status(200).json(result.rows[0]);
-  } catch (error) {
-    console.error('Error getting user information:', error);
-    res.status(500).json({error: 'Internal server error'});
+  console.log('Request body:', authId);
+  // check if the user exists in the database
+  const query = 'SELECT * FROM users WHERE auth0_user_id = $1';
+  const result = await client.query(query, [authId]); // Pass authId as an array
+
+  // if the user does not exist, create a new user
+  if (result.rows.length === 0) {
+    const insertQuery = 'INSERT INTO users (auth0_user_id, email) VALUES ($1, $2)';
+    await client.query(insertQuery, [authId, email]); // Pass authId and email as a single array
+    res.status(200).json({ existing: false }); // Respond with a UserResponse object
+  } else {
+    res.status(200).json({ existing: true }); // Respond with a UserResponse object
   }
-
-}
+};
 // Example route to handle updating user information
   exports.updateUser = async (req, res) => {
     const {email, first_name, last_name} = req.body;
