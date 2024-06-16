@@ -9,6 +9,12 @@ type mentor = {
     profile_picture?:any
 };
 
+type course = {
+    name : string,
+    desc : string,
+    picture?: string
+};
+
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
@@ -25,6 +31,15 @@ export class HomeComponent {
         {firstname : "Eliott", lastname : "Test", email : "test@test.fr"},
         {firstname : "Fabrice", lastname : "Test", email : "test@test.fr"}
     ];
+
+    courses: course[] = [
+        {name : "SI40", desc : "Database"},
+        {name : "WE4A", desc : "Web angular"},
+        {name : "LJ00", desc : "Japanese"},
+        {name : "RS40", desc : "Cybersecurity"},
+        {name : "IT41", desc : "Maths"},
+        {name : "SY43", desc : "Android developpement"}
+    ]
     constructor(public auth: AuthService) {}
 
     getMentors() {
