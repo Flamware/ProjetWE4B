@@ -1,29 +1,37 @@
 import { Component } from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormGroup, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
+import { AuthService } from '../../../auth.service';
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-register',
+  templateUrl: './register.component.html',
   standalone: true,
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf
   ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   formconnexion: FormGroup;
-  constructor() {
-    this.formconnexion = new FormGroup({
-      email: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-      nom: new FormControl('', [Validators.required]),
-      prenom: new FormControl('', [Validators.required]),
-      role:new FormControl('', [Validators.required]),
+  constructor(private formBuilder: FormBuilder, private authService: AuthService) {
+    this.formconnexion = this.formBuilder.group({
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      nom: ['', Validators.required],
+      prenom: ['', Validators.required],
+      role: ['', Validators.required]
     });
-
-  }
-  submit() {
-    console.log(this.formconnexion.value);
   }
 
+  submit(): void {
+    if (this.formconnexion.valid) {
+      this.authService.register(this.formconnexion.value.username, this.formconnexion.value.email, this.formconnexion.value.password, this.formconnexion.value.nom, this.formconnexion.value.prenom, this.formconnexion.value.role)
+        .subscribe(response => {
+          console.log(response);
+        });
+    }
+  }
 }

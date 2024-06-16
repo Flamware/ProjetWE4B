@@ -12,6 +12,13 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 
+app.use(session({
+  secret: 'your-secret-key', // Replace with your own secret key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set secure to true if you are using https
+}));
+
 client.connectDatabase().catch(err => {
   console.error('Error connecting to the database:', err);
   process.exit(1);

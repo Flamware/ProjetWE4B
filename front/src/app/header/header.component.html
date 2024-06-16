@@ -2,11 +2,11 @@
   <nav>
     <a routerLink="/home" routerLinkActive="active">Home</a>
     <a routerLink="/about" routerLinkActive="active">About</a>
-    <a routerLink="/profile" routerLinkActive="active" *ngIf="auth.isAuthenticated$ | async">Profile</a>
-    <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Register</a>
-    <a routerLink="/mes-cours" routerLinkActive="active" *ngIf="(auth.isAuthenticated$ | async)">Mes Cours</a>
-    <a [routerLink]="['/message', '' ]" routerLinkActive="active" *ngIf="(auth.isAuthenticated$ | async)">Mes message</a>
-    <a  routerLink="/login" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)">Login</a>
+    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+    <a routerLink="/register" routerLinkActive="active">Register</a>
+    <a routerLink="/mes-cours" routerLinkActive="active" >Mes Cours</a>
+    <a [routerLink]="['/message', '' ]" routerLinkActive="active" >Mes message</a>
+    <a  routerLink="/login" routerLinkActive="active">Login</a>
      <!-- Corrected the typo here -->
   </nav>
   <main class="main">

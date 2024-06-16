@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {AuthService} from "@auth0/auth0-angular";
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, RouterLink} from '@angular/router';
 
@@ -19,7 +18,7 @@ export class MessageComponent {
   sender: null | undefined ; // Changez cela pour filtrer par un autre expéditeur
 
 
-  constructor(public auth: AuthService,private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) {}
   interlocuteur: string = "Bob";
   messages = [{sender: "Alice", content: "Salut Bob, comment vas-tu ?"},{sender: "Bob", content: "Salut Alice"}];
   contacts = [{name: "Alice"},{name: "Bob"}];

@@ -3,7 +3,63 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const { client } = require('../database'); // Importing the 'client' property from database.js
 
-// ... rest of your code
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  console.log('Request body:', req.body);
+
+  try {
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const result = await client.query(query, [email]);
+
+    const user = result.rows[0];
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+
+    // Check if the password is correct
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ error: 'Incorrect password' });
+    }
+
+    // Store the user's email, username and user ID in the session
+    req.session.email = email;
+    req.session.username = user.username; // Assuming the user object has a username property
+    req.session.userId = user.id; // Assuming the user object has an id property
+
+    res.status(200).json({ message: 'Logged in successfully' });
+  } catch (error) {
+    console.error('Error logging in:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.register = async (req, res) => {
+  console.log('Registering user', req.body);
+  const { username, email, password, nom, prenom, role } = req.body;
+  try {
+    // Check if a user with the same username or email already exists
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const result = await client.query(query, [ email]);
+
+    if (result.rows.length > 0) {
+      return res.status(409).json({ error: 'User with this username or email already exists' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Store the new user's data in the database
+    const insertQuery = 'INSERT INTO users (username, first_name, last_name, email, password, role) VALUES ($1, $2, $3, $4, $5, $6)';
+    await client.query(insertQuery, [username, prenom, nom, email,  hashedPassword, role]);
+
+    res.status(200).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 exports.getAccountInfo = async (req, res) => {
   const username = req.session.username; // Assuming username is stored in the session
   try {
@@ -103,7 +159,7 @@ exports.userLogged = async (req, res) => {
   const authId = payload.sub;
   const email = payload.email;
 
-  console.log('Request body:', authId);
+  console.log('ID :', authId);
   // check if the user exists in the database
   const query = 'SELECT * FROM users WHERE auth0_user_id = $1';
   const result = await client.query(query, [authId]); // Pass authId as an array
@@ -153,22 +209,27 @@ exports.userLogged = async (req, res) => {
     }
   };
 
-  exports.setUserRole = async (req, res) => {
-    try {
-      const payload = jwt.decode(token);
-      const authId = payload.sub;
-      console.log('authId:', authId);
-      console.log('role to update:', req.body.role);
+exports.setUserRole = async (req, res) => {
+  try {
+    // Extract user information from req.user
+    const authId = req.user.sub; // Assuming sub contains the Auth0 user ID
+    const email = req.user.email;
+    console.log('User ID:', authId);
+    console.log('User email:', email);
+    // Extract role from request body
+    const role = req.body.role;
+    console.log('Role:', role);
 
-      // Prepared statement with parameterized queries
-      const updateQuery = 'UPDATE users SET role = $1 WHERE id = $2;';
-      const values = [req.body.role, authId];
 
-      await client.query(updateQuery, values);
+    // Example of updating user role in database
+    const updateQuery = 'UPDATE users SET role = $1 WHERE id = $2;';
+    const values = [role, authId];
 
-      res.status(200).json({ message: 'User role updated successfully' });
-    } catch (error) {
-      console.error('Error updating user role:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  };
+    await client.query(updateQuery, values);
+
+    res.status(200).json({ message: 'User role updated successfully' });
+  } catch (error) {
+    console.error('Error updating user role:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
