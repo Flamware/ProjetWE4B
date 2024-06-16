@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
     username: 'johndoe',
     bio: 'Hello, I am John Doe.',
     role: 'User',
-    created_at: '2022-01-01'
+    created_at: new Date('2022-01-01').toLocaleDateString() // S'adapte au pays du client
   };
 
 
