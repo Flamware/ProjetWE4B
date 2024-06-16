@@ -153,3 +153,23 @@ exports.userLogged = async (req, res) => {
       res.status(500).json({error: 'Internal server error'});
     }
   };
+
+  exports.setUserRole = async (req, res) => {
+    try {
+      const payload = jwt.decode(token);
+      const authId = payload.sub;
+      console.log('authId:', authId);
+      console.log('role to update:', req.body.role);
+
+      // Prepared statement with parameterized queries
+      const updateQuery = 'UPDATE users SET role = $1 WHERE id = $2;';
+      const values = [req.body.role, authId];
+
+      await client.query(updateQuery, values);
+
+      res.status(200).json({ message: 'User role updated successfully' });
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
