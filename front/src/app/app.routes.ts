@@ -7,7 +7,7 @@ import { ProfileComponent } from './pages/general/Profile/profile.component';
 import {MesCoursComponent} from "./pages/general/mes-cours/mes-cours.component";
 import {CoursComponent} from "./pages/general/cours/cours.component";
 import {MessageComponent} from "./pages/general/message/message.component";
-import {MesDocumentComponent} from "./pages/general/mes-document/mes-document.component";
+import {MesDocumentComponent} from "./components/mes-document/mes-document.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },

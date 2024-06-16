@@ -1,0 +1,119 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.container {
+  width: 90%;
+
+  background-color: #fff;
+
+  margin-left:5%;
+  margin-right:5%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  text-align: center;
+  color: #333;
+}
+
+.upload-section {
+  margin-bottom: 20px;
+}
+
+.droite {
+  display: flex;
+  justify-content: flex-end;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-file-upload {
+  display: inline-block;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  margin-bottom: 10px;
+}
+
+form input[type="file"] {
+  display: none;
+}
+
+form input[type="text"] {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #45a049;
+}
+
+.documents-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.documents-section li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.documents-section li:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.documents-section li .doc-title {
+  flex: 1;
+}
+
+.documents-section li .doc-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.doc-actions button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.doc-actions button.download {
+  background-color: #4caf50;
+  color: white;
+}
+
+.doc-actions button.delete {
+  background-color: #f44336;
+  color: white;
+}
