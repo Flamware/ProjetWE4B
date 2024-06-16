@@ -70,92 +70,81 @@ exports.updateProfilePicture = async (req, res) => {
     res.status(200).json({ success: 'Profile picture updated successfully' });
   });
 };
-// Auth0 configuration (assuming you resolve the Angular issue)
-  const auth0Config = {
-    domain: process.env.AUTH0_DOMAIN,
-    clientId: process.env.AUTH0_CLIENT_ID,
-    redirectUri: 'http://localhost:3000/callback', // Adjust callback URL as per your setup
+
+
+  exports.createUser = async (req, res) => {
+    console.log('Creating user')
+    const {email, first_name, last_name, auth0_user_id} = req.body;  // Include the Auth0 user ID
+    console.log('Request body:', req.body);
+
+    try {
+      const insertQuery = `
+        INSERT INTO users (auth0_user_id, email, first_name, last_name, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, current_timestamp, current_timestamp);`;
+
+      await client.query(insertQuery, [auth0_user_id, email, first_name, last_name || '']); // Set last_name to empty string if missing
+
+      res.status(200).json({message: 'User created successfully'});
+    } catch (error) {
+      console.error('Error creating user:', error);
+
+      // Handle specific errors (optional)
+      if (error.code === '23505') { // Handle potential unique constraint violation (e.g., duplicate email or id)
+        res.status(409).json({error: 'User already exists'});
+      } else {
+        res.status(500).json({error: 'Internal server error'});
+      }
+    }
   };
-
-
-// route user-exists
-exports.userExists = async (req, res) => {
-  console.log('Checking if user exists');
-  console.log('req.auth:', req.auth);
-  // Sanitize email (consider using a validation library)
-  const sanitizedEmail = encodeURIComponent(req.query.email.trim());
-  console.log('Sanitized email:', sanitizedEmail);
-  // Print the JWT payload (i.e., the session info)
-  console.log('JWT payload:', req.auth.payload.sub);
+exports.userLogged = async (req, res) => {
+  const {email} = req.body;
+  console.log('Request body:', req.body);
   try {
     const query = `
-    SELECT * FROM users WHERE email = $1;`;
+      SELECT *
+      FROM users
+      WHERE email = $1;`;
 
-    const result = await client.query(query, [sanitizedEmail]);
-    res.status(200).json({ exists: result.rows.length > 0 });
+    const result = await client.query(query, [email]);
+    res.status(200).json(result.rows[0]);
   } catch (error) {
-    console.error('Error checking user existence for email:', sanitizedEmail, error);
-    // Consider logging more details about the request or error for debugging
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error getting user information:', error);
+    res.status(500).json({error: 'Internal server error'});
   }
-};
 
-exports.createUser = async (req, res) => {
-  console.log('Creating user')
-  const { email, first_name, last_name, auth0_user_id } = req.body;  // Include the Auth0 user ID
-  console.log('Request body:', req.body);
-
-  try {
-    const insertQuery = `
-    INSERT INTO users (auth0_user_id, email, first_name, last_name, created_at, updated_at)
-    VALUES ($1, $2, $3, $4, current_timestamp, current_timestamp);`;
-
-    await client.query(insertQuery, [auth0_user_id, email, first_name, last_name || '']); // Set last_name to empty string if missing
-
-    res.status(200).json({ message: 'User created successfully' });
-  } catch (error) {
-    console.error('Error creating user:', error);
-
-    // Handle specific errors (optional)
-    if (error.code === '23505') { // Handle potential unique constraint violation (e.g., duplicate email or id)
-      res.status(409).json({ error: 'User already exists' });
-    } else {
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  }
-};
-
+}
 // Example route to handle updating user information
-exports.updateUser = async (req, res) => {
-  const { email, first_name, last_name } = req.body;
+  exports.updateUser = async (req, res) => {
+    const {email, first_name, last_name} = req.body;
     console.log('Request body:', req.body);
     try {
       const updateQuery = `
-      UPDATE users
-      SET first_name = $2, last_name = $3, updated_at = current_timestamp
-      WHERE email = $1;`;
+        UPDATE users
+        SET first_name = $2,
+            last_name  = $3,
+            updated_at = current_timestamp
+        WHERE email = $1;`;
 
       await client.query(updateQuery, [email, first_name, last_name]);
 
-      res.status(200).json({ message: 'User information updated successfully' });
+      res.status(200).json({message: 'User information updated successfully'});
     } catch (error) {
       console.error('Error updating user information:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({error: 'Internal server error'});
     }
   };
 
-exports.getAllUsers = async (req, res) => {
+  exports.getAllUsers = async (req, res) => {
     try {
       const query = `
-      SELECT * FROM users;`;
+        SELECT *
+        FROM users;`;
 
       const result = await client.query
       (query);
       res.status(200).json(result.rows);
     } catch (error) {
       console.error('Error getting all users:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({error: 'Internal server error'});
     }
-};
-
-
+  };
