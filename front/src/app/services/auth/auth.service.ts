@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {AbstractControl, ValidationErrors} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +13,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<any> {
+    console.log("login", email, password);
     return this.http.post<any>(this.loginUrl, { email, password }).pipe(
       tap(response => {
         if (response && response.token) {
@@ -25,10 +25,8 @@ export class AuthService {
     );
   }
 
-  register(username: string, email: string, password: string, nom: string, prenom: string,role :string): Observable<any> {
-   console.log("register", username, email, password, prenom, role);
-   //set to case minuscule role
-    role = role.toLowerCase();
-    return this.http.post<any>(this.registerUrl, { username, email, password, nom, prenom, role });
+  register(username: string, email: string, password: string, prenom: string, role: string): Observable<any> {
+    console.log("register", username, email, password, prenom, role);
+    return this.http.post<any>(this.registerUrl, { username, email, password, prenom, role });
   }
 }

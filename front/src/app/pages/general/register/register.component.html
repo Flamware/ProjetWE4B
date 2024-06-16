@@ -1,10 +1,12 @@
 <div>
   <div class="login-container">
     <div class="login-header">
-      <h2>Connexion</h2>
+      <h2>Créer un Compte</h2>
     </div>
     <div class="login-form">
       <form id="loginForm" [formGroup]="formconnexion" (ngSubmit)="submit()">
+        <label for="username">Nom d'utilisateur</label>
+        <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" formControlName="username">
         <label for="email">Adresse e-mail</label>
         <input type="email" id="email" placeholder="Entrez votre e-mail" formControlName="email">
         <label for="password">Mot de passe</label>
@@ -19,6 +21,27 @@
         </select>
         <button type="submit">Se connecter</button>
       </form>
+      <div *ngIf="formconnexion.get('username')?.invalid && formconnexion.get('username')?.touched">
+        Please enter a valid username.
+      </div>
+      <div *ngIf="formconnexion.get('email')?.invalid && formconnexion.get('email')?.touched">
+        Please enter a valid email.
+      </div>
+      <div *ngIf="formconnexion.get('password')?.invalid && formconnexion.get('password')?.touched">
+        Please enter a valid password.
+      </div>
+
+      <div *ngIf="formconnexion.get('nom')?.invalid && formconnexion.get('nom')?.touched">
+        Please enter a valid name.
+      </div>
+
+      <div *ngIf="formconnexion.get('prenom')?.invalid && formconnexion.get('prenom')?.touched">
+        Please enter a valid first name.
+      </div>
+
+      <div *ngIf="formconnexion.get('role')?.invalid && formconnexion.get('role')?.touched">
+        Please select a role.
+      </div>
     </div>
   </div>
 </div>
