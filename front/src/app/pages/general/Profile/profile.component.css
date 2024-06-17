@@ -26,13 +26,6 @@
   margin-bottom: 2em;
 }
 
-h3 {
-  margin: 0;
-}
-
-h3 > span {
-  text-decoration: underline;
-}
 
 .userImg {
   border-radius: 50%;
@@ -40,14 +33,38 @@ h3 > span {
   width: 6em;
 }
 
-.user-info ul {
-  list-style-type: none;
-  padding: 0;
+.user-data-form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1em;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1em;
+}
+
+.user-info > div {
+  margin: 0.5em 0;
   text-align: left;
 }
 
-.user-info ul li {
-  margin-bottom: 1em;
+.submit-user {
+  padding: 0.5em;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.25em;
+}
+
+input[type="text"] {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  width: fit-content;
 }
 
 .contact-but {

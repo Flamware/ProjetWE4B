@@ -14,8 +14,8 @@ body {
     color: white;
     border: none;
     border-radius: 0.5em;
+    padding: 0.5em;
     font-weight: bold;
-    padding: 1em;
     transition: background-color 0.3s;
 }
   

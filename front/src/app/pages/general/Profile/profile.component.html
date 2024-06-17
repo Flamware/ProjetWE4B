@@ -4,13 +4,16 @@
       <img ngSrc="userInfo.profile_picture" alt="User Image" class="userImg">
       <h2>Welcome to your profile <span>{{ userInfo.first_name}} {{userInfo.last_name}}</span>!</h2>
     </div>
-    <ul>
-      <li><strong>Email:</strong> {{ userInfo.email }}</li>
-      <li><strong>Username:</strong> {{ userInfo.username }}</li>
-      <li><strong>Bio:</strong> {{ userInfo.bio }}</li>
-      <li><strong>Role:</strong> {{ userInfo.role }}</li>
-      <li><strong>Here since:</strong> {{ userInfo.created_at }}</li>
-    </ul>
+    <div class="user-info">
+      <form *ngIf="userData" [formGroup]="userData" (ngSubmit)="onSubmit()" class="user-data-form">
+        <div><label for="email-input">Email:</label> <input name="email-input" type="text" formControlName="email"></div>
+        <div><label for="username-input">Username:</label> <input name="username-input" type="text" formControlName="username"></div>
+        <div><label for="bio-input">Biography:</label> <input name="bio-input" type="text" formControlName="biography"></div>
+        <button type="submit" class="btn submit-user">Save</button>
+      </form>
+      <span><strong>Role:</strong> {{ userInfo.role }}</span>
+      <span><strong>Here since:</strong> {{ userInfo.created_at.toLocaleDateString() }}</span>
+    </div>
     <!-- Button to contact the user (inutile sur le profil perso)-->
     <button class="contact-but">Contact</button>
   </div>
