@@ -1,5 +1,6 @@
 <div>
-  <app-form-cours> </app-form-cours>
+  <button (click)="this.showForm = !this.showForm" class="btn">Ajouter un cours</button>
+  <app-form-cours *ngIf="this.showForm"> </app-form-cours>
 </div>
 <div class="card-container">
 <div class="cour" *ngFor="let cour of ListeCours ;let i = index" >

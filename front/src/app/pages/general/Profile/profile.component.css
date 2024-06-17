@@ -49,3 +49,18 @@ h3 > span {
 .user-info ul li {
   margin-bottom: 1em;
 }
+
+.contact-but {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 0.5em 1em;
+  border: none;
+  font-weight: bold;
+  width: fit-content;
+  border-radius: 0.5em;
+}
+
+.contact-but:hover {
+  background-color: var(--accent-color-hover);
+  cursor: pointer;
+}

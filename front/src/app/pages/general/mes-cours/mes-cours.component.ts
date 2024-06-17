@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgModule } from '@angular/core';
-import {NgForOf, NgOptimizedImage} from "@angular/common";
+import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {FormCoursComponent} from "../../../components/form-cours/form-cours.component";
 
 class cours {
@@ -16,6 +16,7 @@ class cours {
   standalone: true,
   imports: [
     NgForOf,
+    NgIf,
     NgOptimizedImage,
     FormCoursComponent
   ],
@@ -25,6 +26,7 @@ class cours {
 
 
 export class MesCoursComponent {
+  showForm: boolean = false;
   cour1: cours = {id: 1, nom: "cours1", description: "description1", date: "date1", image: "image1"};
   cour2: cours = {id: 2, nom: "cours2", description: "description2", date: "date2", image: "image2"};
   cour3: cours = {id: 3, nom: "cours3", description: "description3", date: "date3", image: "image3"};

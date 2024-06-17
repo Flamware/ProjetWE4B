@@ -11,6 +11,8 @@
       <li><strong>Role:</strong> {{ userInfo.role }}</li>
       <li><strong>Here since:</strong> {{ userInfo.created_at }}</li>
     </ul>
+    <!-- Button to contact the user (inutile sur le profil perso)-->
+    <button class="contact-but">Contact</button>
   </div>
   <ng-template #noUserInfo>
     <p>No user information found!</p>
