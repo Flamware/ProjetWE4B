@@ -42,11 +42,11 @@ export class ProfileComponent implements OnInit {
   constructor(public auth: AuthService, private http: HttpClient) {}
 
   ngOnInit() {
-    // this.http.get<any>('http://localhost:3000/getuserinfo')
-    //   .subscribe((response) => {
-    //     this.userInfo = response;
+    this.http.get<any>('http://localhost:3000/getuserinfo')
+      .subscribe((response) => {
+        this.userInfo = response;
 
-    //   });
+      });
     this.userData = new FormGroup({
       username: new FormControl(this.userInfo.username),
       email: new FormControl(this.userInfo.email),

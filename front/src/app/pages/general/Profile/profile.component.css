@@ -51,7 +51,8 @@
 }
 
 .submit-user {
-  padding: 0.5em;
+  padding: 0.5em 2em;
+  width: fit-content;
 }
 
 label {
@@ -64,20 +65,10 @@ input[type="text"] {
   padding: 0.5em;
   border: 1px solid #ccc;
   border-radius: 0.5em;
-  width: fit-content;
+  width: 100%;
 }
 
 .contact-but {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 0.5em 1em;
-  border: none;
-  font-weight: bold;
   width: fit-content;
-  border-radius: 0.5em;
 }
 
-.contact-but:hover {
-  background-color: var(--accent-color-hover);
-  cursor: pointer;
-}

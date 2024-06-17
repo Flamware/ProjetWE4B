@@ -9,13 +9,13 @@
         <div><label for="email-input">Email:</label> <input name="email-input" type="text" formControlName="email"></div>
         <div><label for="username-input">Username:</label> <input name="username-input" type="text" formControlName="username"></div>
         <div><label for="bio-input">Biography:</label> <input name="bio-input" type="text" formControlName="biography"></div>
+        <span><strong>Role:</strong> {{ userInfo.role }}</span>
+        <span><strong>Here since:</strong> {{ userInfo.created_at.toLocaleDateString() }}</span>
         <button type="submit" class="btn submit-user">Save</button>
       </form>
-      <span><strong>Role:</strong> {{ userInfo.role }}</span>
-      <span><strong>Here since:</strong> {{ userInfo.created_at.toLocaleDateString() }}</span>
     </div>
     <!-- Button to contact the user (inutile sur le profil perso)-->
-    <button class="contact-but">Contact</button>
+    <button class="btn contact-but">Contact</button>
   </div>
   <ng-template #noUserInfo>
     <p>No user information found!</p>
