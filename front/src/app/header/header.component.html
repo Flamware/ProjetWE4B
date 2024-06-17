@@ -1,4 +1,18 @@
 <header class="header">
+  <div class="search">
+    <h2 class="title">Study helper</h2>
+    <input
+      type="text"
+      placeholder="Search for people/courses"
+      title="Search for people/courses"
+      class="searchbar"
+    />
+    <button class="button">Search</button>
+    <div class="results">
+    </div>
+    <login-button *ngIf="!(auth.isAuthenticated$ | async)"></login-button>
+    <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button> <!-- Corrected the typo here -->
+  </div>
   <nav>
     <a routerLink="/home" routerLinkActive="active"><strong>Home</strong></a>
     <a routerLink="/about" routerLinkActive="active"><strong>About</strong></a>
@@ -6,18 +20,5 @@
     <a routerLink="/signup" routerLinkActive="active" *ngIf="!(auth.isAuthenticated$ | async)"><strong>Register</strong></a>
     <span *ngIf="auth.isAuthenticated$ | async"><strong>Logged in</strong></span>
     <span *ngIf="!(auth.isAuthenticated$ | async)"><strong>Logged out</strong></span>
-    <login-button *ngIf="!(auth.isAuthenticated$ | async)"></login-button>
-    <logout-button *ngIf="auth.isAuthenticated$ | async"></logout-button> <!-- Corrected the typo here -->
   </nav>
-  <div class="search">
-    <input
-      type="text"
-      placeholder="Search for restaurants..."
-      title="Search for restaurants"
-      class="searchbar"
-    />
-    <button class="button">Search</button>
-    <div class="results">
-    </div>
-  </div>
 </header>

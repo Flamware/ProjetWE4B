@@ -3,7 +3,7 @@
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: lightgreen;
     border-radius: 0.5em;
     box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
     padding: 1em;
@@ -13,11 +13,11 @@
 }
 
 .home-container {
-    display: flex;
-    flex-flow: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     justify-content: center;
     align-items: center;
-    margin-top: 2em;
+    /* margin-top: 2em; */
     column-gap: 5em;
 }
 
@@ -26,7 +26,7 @@ p {
     width: fit-content;
 }
 
-.best-mentors {
+.best-mentors, .best-courses {
     display: flex;
     flex-flow: column;
     justify-content: center;
@@ -34,7 +34,7 @@ p {
     margin-top: 2em;
 }
 
-.mentor-list {
+.mentor-list, .courses-list {
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
@@ -42,22 +42,39 @@ p {
     align-items: center;
     list-style: none;
     padding: 0;
+    width: calc(100% - 4em);
+    margin: 0 2em;
     gap: 1em;
 }
 
-.mentor {
+.mentor, .course {
     display: flex;
     flex-flow: column;
     cursor: pointer;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     background-color: white;
-    box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
-    border-radius: 0.5em;
+    /* box-shadow: 0 0 1em rgba(0, 0, 0, 0.1); */
+    /* border-radius: 0.5em; */
     padding: 1em;
+    height: calc(100% - 2em);   
+    gap: 0.5em; 
     transition: box-shadow 0.3s;
 }
 
-.mentor:hover {
+.course > span {
+    display: inline;
+    /* white-space: nowrap; */
+}
+
+.course-description {
+    color: gray;
+}
+
+.course-title {
+    text-decoration: underline;
+}
+
+.mentor:hover, .course:hover {
     box-shadow: 0.1em 0.1em 1.5em rgba(0, 0, 0, 0.2);
 }
 

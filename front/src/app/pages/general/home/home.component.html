@@ -14,14 +14,14 @@
                 </li>
             </ul>
         </div>
-        <div class="best-mentors">
-            <h2>Recommended tutors</h2>
-            <ul class="mentor-list">
-                <li *ngFor="let course of courses" class="mentor">
+        <div class="best-courses">
+            <h2>Recommended courses</h2>
+            <ul class="courses-list">
+                <li *ngFor="let course of courses" class="course">
                     <!-- <a [routerLink]="['/profile', par.id]">{{ par.name }}</a> -->
                     <img src={{course.picture}} alt="{{course.name}} picture" *ngIf="course.picture">
-                    <p>{{ course.name }}</p>
-                    <p>{{ course.desc }}</p>
+                    <span class="course-title">{{ course.name }}</span>
+                    <span class="course-description">{{ course.desc }}</span>
                 </li>
             </ul>
         </div>
