@@ -55,7 +55,7 @@ export class ProfileComponent implements OnInit {
       lastname: new FormControl(this.userInfo.last_name),
       username: new FormControl(this.userInfo.username),
       email: new FormControl(this.userInfo.email),
-      biography: new FormControl(this.userInfo.bio),
+      bio: new FormControl(this.userInfo.bio),
       role: new FormControl(this.userInfo.role)
     }); 
   }
@@ -74,6 +74,7 @@ export class ProfileComponent implements OnInit {
     if(this.userData === undefined) {
       return;
     }
+    console.log(this.userData.value);
     this.getInfoSub = this.profileService.updateUserInfo(this.userData.value).subscribe({
       next: (data: Userinfo) => {
         console.log(data);
