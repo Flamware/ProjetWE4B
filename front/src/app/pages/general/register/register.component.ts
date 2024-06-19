@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {FormGroup, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
-import { AuthService } from '../../../auth.service';
+import { AuthService } from '../../../services/auth/auth.service';
 import {NgIf} from "@angular/common";
 
 @Component({

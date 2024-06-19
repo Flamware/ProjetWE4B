@@ -1,7 +1,7 @@
 // users.js
 const express = require('express');
 const router = express.Router();
-const jwtCheck = require('../jwCheck'); // Import jwtCheck
+const jwtCheck = require('../middleware/jwCheck'); // Import jwtCheck
 const { getAllUsers, createUser, userLogged, setUserRole, login, register} = require('../controllers/userController');
 
 router.post('/user-logged-in', jwtCheck, userLogged); // JWT verification applied here
