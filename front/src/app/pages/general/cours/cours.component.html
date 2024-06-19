@@ -1,18 +1,22 @@
-<div>
-  <div class="course-header">
-    <div class="course-info">
-      <a [routerLink]="['/message', courinfo.teacher ] "><h2>{{ courinfo.teacher }}</h2></a>
+<!-- src/app/components/cours/cours.component.html -->
 
-      <h3>{{ courinfo.title }}</h3>
-      <p>{{ courinfo.description }}</p>
-      <div class="rating">
-        <button (click)="rate(1)">☆</button>
-        <button (click)="rate(2)">☆</button>
-        <button (click)="rate(3)">☆</button>
-        <button (click)="rate(4)">☆</button>
-        <button (click)="rate(5)">☆</button>
-      </div>
+<div *ngIf="courinfo as course; else loading" class="course-header">
+  <div class="course-info">
+    <a [routerLink]="['/message', course.teacher]">
+      <h2>{{ course.name }}</h2>
+    </a>
+    <h3>{{ course.title }}</h3>
+    <p>{{ course.description }}</p>
+    <div class="rating">
+      <button *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rate(star)">
+        {{ star <= rating.get('stars')?.value ? '★' : '☆' }}
+      </button>
     </div>
   </div>
-  <app-mes-document></app-mes-document>
 </div>
+
+<ng-template #loading>
+  <p>Loading course details...</p>
+</ng-template>
+
+<app-mes-document></app-mes-document>

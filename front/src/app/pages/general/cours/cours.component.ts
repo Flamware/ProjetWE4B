@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import {MesDocumentComponent} from "../../../components/mes-document/mes-document.component";
-import {NgOptimizedImage} from "@angular/common";
-import {HttpClientModule} from "@angular/common/http";
-import { RouterLink} from '@angular/router';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MesDocumentComponent } from '../../../components/mes-document/mes-document.component';
+import { NgOptimizedImage } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { CourseService } from '../../../services/course/course.service';
+import { Course } from '../../../models/course';
 
 @Component({
   selector: 'app-cours',
@@ -14,41 +16,51 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
     MesDocumentComponent,
     NgOptimizedImage,
     RouterLink,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule
   ],
   styleUrls: ['./cours.component.css']
 })
-export class CoursComponent implements OnInit{
+export class CoursComponent implements OnInit {
   id_cours: number | undefined;
-  courinfo: any = {
-    teacher: 'jean',
-    title: 'cour de saussice',
-    description: 'jaime les saussices'
-  };
-  rating: FormGroup ;
+  courinfo: Course | undefined; // Déclarez courinfo comme un type ou undefined
+  rating: FormGroup;
 
-
-
-  constructor( private route: ActivatedRoute) {
+  constructor(
+    private route: ActivatedRoute,
+    private courseService: CourseService // Injection du service
+  ) {
     this.rating = new FormGroup({
-
+      stars: new FormControl(0, Validators.required)
     });
-
-
-  }
-  rate(value: any) {
-    console.log(value);
   }
 
-  ngOnInit() {
+  // Méthode pour gérer la notation
+  rate(value: number): void {
+    console.log(`Rated with ${value} stars`);
+    if (this.courinfo) {
+      // Logique de notation à ajouter ici
+    }
+  }
+
+  ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.id_cours = +params['id']; // (+) converts string 'id' to a number
-      // In a real app: dispatch action to load the details here.
-
+      this.id_cours = +params['id']; // Convertit l'ID de chaîne en nombre
+      if (this.id_cours) {
+        this.loadCourse(this.id_cours); // Charger les détails du cours
+      }
     });
+  }
 
-    ///this.courseService.getAllCourses().subscribe(data => {
-      ///this.courinfo = data;
-    ////});
+  // Méthode pour charger les détails du cours
+  private loadCourse(courseId: number): void {
+    this.courseService.getCourseById(courseId).subscribe(
+      (data: Course) => {
+        this.courinfo = data;
+      },
+      error => {
+        console.error('Error fetching course details:', error);
+      }
+    );
   }
 }

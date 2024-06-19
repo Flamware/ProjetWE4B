@@ -61,7 +61,8 @@ exports.register = async (req, res) => {
 };
 
 exports.getAccountInfo = async (req, res) => {
-  const username = req.session.username; // Assuming username is stored in the session
+  // const username = req.session.username; // Assuming username is stored in the session
+  const username = req.body.params.username;
   try {
     const query = 'SELECT * FROM users WHERE username = $1';
     const result = await client.query(query, [username]);
@@ -71,22 +72,32 @@ exports.getAccountInfo = async (req, res) => {
     }
 
     console.log('User:', user);
-    res.status(200).json({ user });
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      role: user.role,
+      created_at: user.created_at,
+      profile_picture: user.profile_picture,
+    });
+
   } catch (error) {
     console.error('Error fetching user information:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
+//TODO: use userID instead of email
 exports.updateAccount = async (req, res) => {
-  const { email, first_name, last_name } = req.body;
-  const username = req.session.username; // Assuming username is stored in the session
-
+  const data = req.body.params;
+  const { email, firstname, lastname, username, bio, role } = data;
+  console.log('Request body:', data);
   try {
-    const query = 'UPDATE users SET email = $1, first_name = $2, last_name = $3, updated_at = current_timestamp WHERE email = $4';
-    await client.query(query, [email, first_name, last_name, username]);
+    const query = 'UPDATE users SET first_name = $1, last_name = $2, username = $3, bio = $4, role = $5, updated_at = current_timestamp WHERE email = $6';
+    await client.query(query, [firstname, lastname, username, bio, role, email ]);
 
-    res.status(200).json({ success: 'User information updated successfully' });
+    res.status(200).json( data );
   } catch (error) {
     console.error('Error updating user information:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -173,41 +184,42 @@ exports.userLogged = async (req, res) => {
     res.status(200).json({ existing: true }); // Respond with a UserResponse object
   }
 };
+
 // Example route to handle updating user information
-  exports.updateUser = async (req, res) => {
-    const {email, first_name, last_name} = req.body;
-    console.log('Request body:', req.body);
-    try {
-      const updateQuery = `
-        UPDATE users
-        SET first_name = $2,
-            last_name  = $3,
-            updated_at = current_timestamp
-        WHERE email = $1;`;
+exports.updateUser = async (req, res) => {
+  const {email, first_name, last_name} = req.body;
+  console.log('Request body:', req.body);
+  try {
+    const updateQuery = `
+      UPDATE users
+      SET first_name = $2,
+          last_name  = $3,
+          updated_at = current_timestamp
+      WHERE email = $1;`;
 
-      await client.query(updateQuery, [email, first_name, last_name]);
+    await client.query(updateQuery, [email, first_name, last_name]);
 
-      res.status(200).json({message: 'User information updated successfully'});
-    } catch (error) {
-      console.error('Error updating user information:', error);
-      res.status(500).json({error: 'Internal server error'});
-    }
-  };
+    res.status(200).json({message: 'User information updated successfully'});
+  } catch (error) {
+    console.error('Error updating user information:', error);
+    res.status(500).json({error: 'Internal server error'});
+  }
+};
 
-  exports.getAllUsers = async (req, res) => {
-    try {
-      const query = `
-        SELECT *
-        FROM users;`;
+exports.getAllUsers = async (req, res) => {
+  try {
+    const query = `
+      SELECT *
+      FROM users;`;
 
-      const result = await client.query
-      (query);
-      res.status(200).json(result.rows);
-    } catch (error) {
-      console.error('Error getting all users:', error);
-      res.status(500).json({error: 'Internal server error'});
-    }
-  };
+    const result = await client.query
+    (query);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error getting all users:', error);
+    res.status(500).json({error: 'Internal server error'});
+  }
+};
 
 exports.setUserRole = async (req, res) => {
   try {

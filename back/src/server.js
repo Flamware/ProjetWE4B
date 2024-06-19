@@ -1,8 +1,13 @@
 // server.js
 const express = require('express');
 const app = express();
-const jwtCheck = require('./jwCheck'); // Import jwtCheck
+const jwtCheck = require('./middleware/jwCheck'); // Import jwtCheck
+
+// Routes
 const userRoutes = require('./routes/users'); // Import user routes
+const coursesRoute = require('./routes/courses');
+const userCoursesRoute = require('./routes/usercourses');
+
 const client = require('./database');
 const port = process.env.PORT || 3000;
 const session = require('express-session');
@@ -25,6 +30,7 @@ client.connectDatabase().catch(err => {
 })
 
 app.use(userRoutes); // Use user routes
+app.use(coursesRoute);
 
 app.get('/authorized', jwtCheck, function (req, res) {
   res.send('Secured Resource');

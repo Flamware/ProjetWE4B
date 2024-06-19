@@ -7,3 +7,6 @@ ng generate component pages/general/signup
 ng generate component pages/general/home
 ng generate component pages/general/about
 ng generate component pages/general/not-found
+
+
+ng generate service servicename

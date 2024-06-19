@@ -1,22 +1,23 @@
 <header class="header">
+  <div class="search">
+    <h2 class="title">Study helper</h2>
+    <input
+      type="text"
+      placeholder="Search for people/courses"
+      title="Search for people/courses"
+      class="searchbar"
+    />
+    <button class="button">Search</button>
+    <div class="results">
+    </div>
+    <a  routerLink="/login" routerLinkActive="active">Login</a>
+  </div>
   <nav>
     <a routerLink="/home" routerLinkActive="active">Home</a>
     <a routerLink="/about" routerLinkActive="active">About</a>
     <a routerLink="/profile" routerLinkActive="active">Profile</a>
     <a routerLink="/register" routerLinkActive="active">Register</a>
     <a routerLink="/mes-cours" routerLinkActive="active" >Mes Cours</a>
-    <a [routerLink]="['/message', '' ]" routerLinkActive="active" >Mes message</a>
-    <a  routerLink="/login" routerLinkActive="active">Login</a>
-     <!-- Corrected the typo here -->
+    <a [routerLink]="['/message', '' ]" routerLinkActive="active" >Mes messages</a>
   </nav>
-  <main class="main">
-    <input
-      type="text"
-      placeholder="Search for restaurants..."
-      class="input"
-    />
-    <button class="button">Search</button>
-    <div class="results">
-    </div>
-  </main>
 </header>

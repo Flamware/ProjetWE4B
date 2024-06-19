@@ -2,28 +2,28 @@
   <app-form-cours></app-form-cours>
 </div>
 <div class="card-container" id="form">
-  <div class="cour" *ngFor="let cour of ListeCours ;let i = index">
+  <div class="cour" *ngFor="let cour of ListeCours; let i = index">
     <div class="card">
       <div class="card-image">
+        <img [src]="cour.image" alt="{{ cour.nom }}">
       </div>
       <div class="card-content">
         <h2 class="card-title">{{ cour.nom }}</h2>
         <div class="card-rating">
-          <span *ngFor="let i of [].constructor(Math.round(cour.rate)); let index = index">
-            <span *ngIf="index < cour.rate" class="stars">★</span>
+          <span *ngFor="let star of [].constructor(5); let index = index">
+            <span [class.filled]="index < cour.rate" class="stars">★</span>
             <span *ngIf="index >= cour.rate" class="stars">☆</span>
           </span>
           ({{ cour.rate }})
         </div>
-        <p class="card-text">cour.description</p>
+        <p class="card-text">{{ cour.description }}</p>
         <div class="card-theme"></div>
         <div class="themes">
-
+          <!-- Any theme related content -->
         </div>
         <button class="card-action">Supprimer</button>
-        <a [routerLink]="['/cours', cour.id ]" class="card-action">Voir cour</a>
+        <a [routerLink]="['/cours', cour.id]" class="card-action">Voir cours</a>
       </div>
     </div>
   </div>
-
 </div>

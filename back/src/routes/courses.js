@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const coursesController = require('../controllers/coursesController');
-const verifyToken = require('../jwCheck');
+const verifyToken = require('../middleware/jwCheck');
 
 router.get('/getAllCourses', verifyToken, coursesController.getAllCourses);
+router.get('/getCourseById/:id', verifyToken, coursesController.getCourseById);
+router.post('/createCourse', verifyToken, coursesController.createCourse);
 
 module.exports = router;

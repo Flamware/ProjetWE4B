@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup ,ReactiveFormsModule,Validators} from '@angular/forms';
+import { CourseService } from '../../services/course/my/my-course.service';
 
 
 
@@ -10,45 +11,57 @@ import { FormControl, FormGroup ,ReactiveFormsModule,Validators} from '@angular/
     ReactiveFormsModule
   ],
   templateUrl: './form-cours.component.html',
-  styleUrl: './form-cours.component.css'
+  styleUrls: ['./form-cours.component.css']
 })
+
+
 export class FormCoursComponent implements OnInit {
-  myForm: FormGroup;
-  ngOnInit() {
-    let formulaire = document.getElementById("formulaire");
-    // @ts-ignore
-    formulaire.style.display = "none";
-  }
+  myForm: FormGroup = new FormGroup({
+    name: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    theme: new FormControl('', Validators.required)
+  });
 
-  constructor() {
-    this.myForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
-      theme: new FormControl('', [Validators.required]),
-    });
-  }
+  constructor(private courseService: CourseService) { }
 
-  onSubmit() {
-    console.log(this.myForm.value);
-  }
-
-   afficher() : void{
-    let formulaire = document.getElementById("formulaire");
-    let btn = document.getElementById("bouttonafficher");
-    // @ts-ignore
-    if(getComputedStyle(formulaire).display != "none"){
-      // @ts-ignore
-      formulaire.style.display = "none";
-      // @ts-ignore
-      btn.innerHTML = "Ajouter un cours";
-
-    } else {
-      // @ts-ignore
-      formulaire.style.display = "block";
-      // @ts-ignore
-      btn.innerHTML = "Fermer";
+  ngOnInit(): void {
+    let formulaire = document.getElementById('formulaire');
+    if (formulaire) {
+      formulaire.style.display = 'none';
     }
   }
 
+  onSubmit(): void {
+    if (this.myForm.valid) {
+      const courseData = this.myForm.value;
+      this.courseService.createCourse(courseData).subscribe(
+        (data) => {
+          console.log('Course created successfully:', data);
+          this.myForm.reset();
+        },
+        (error) => {
+          console.error('Error creating course:', error);
+        }
+      );
+    }
+  }
+
+  afficher(): void {
+    let formulaire = document.getElementById('formulaire');
+    let btn = document.getElementById('bouttonafficher');
+    if (formulaire) {
+      if (getComputedStyle(formulaire).display != 'none') {
+        formulaire.style.display = 'none';
+        if (btn) {
+          btn.innerHTML = 'Ajouter un cours';
+        }
+      } else {
+        formulaire.style.display = 'block';
+        if (btn) {
+          btn.innerHTML = 'Fermer';
+        }
+      }
+    }
+  }
 }
 
