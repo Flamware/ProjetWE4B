@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { AuthService } from '../services/auth/auth.service';
+import {RechercheComponent} from "../components/recherche/recherche.component";
 
 @Component({
   selector: 'app-header',
@@ -12,7 +13,8 @@ import { AuthService } from '../services/auth/auth.service';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    AsyncPipe
+    AsyncPipe,
+    RechercheComponent
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
