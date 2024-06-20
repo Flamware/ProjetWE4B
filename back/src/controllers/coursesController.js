@@ -1,4 +1,4 @@
-const { client } = require('../database'); // Importer 'client' depuis database.js
+const { client } = require('../config/database'); // Importer 'client' depuis database.js
 
 // Obtenir tous les cours
 async function getAllCourses(req, res) {

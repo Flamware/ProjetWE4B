@@ -5,5 +5,6 @@ export interface MyCourse {
     date: string;
     image: string;
     rate: number;
+    theme: string;
   }
   
