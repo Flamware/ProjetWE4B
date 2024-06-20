@@ -7,5 +7,5 @@ router.get('/getAllCourses', verifyToken, coursesController.getAllCourses);
 router.get('/getCourseById/:id', verifyToken, coursesController.getCourseById);
 router.post('/createCourse', verifyToken, coursesController.createCourse);
 router.delete('/delete-course/:id', verifyToken, coursesController.deleteCourse);
-
+router.post('/rateCourse', verifyToken, coursesController.rateCourse);
 module.exports = router;
