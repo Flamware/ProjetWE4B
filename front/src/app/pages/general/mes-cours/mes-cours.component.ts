@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MyCourse } from '../../../models/mycourse';
-import { CourseService } from '../../../services/course/my/my-course.service';
+import { MyCourseService } from '../../../services/course/my/my-course.service';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import { NgModule } from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {FormCoursComponent} from "../../../components/form-cours/form-cours.component";
-import {HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-mes-cours',
@@ -15,7 +14,6 @@ import {HttpClientModule} from "@angular/common/http";
     NgOptimizedImage,
     FormCoursComponent,
     RouterLink,
-    HttpClientModule,
     NgIf
   ],
   templateUrl: './mes-cours.component.html',
@@ -26,7 +24,7 @@ export class MesCoursComponent implements OnInit {
   userId: number | undefined;
 
   constructor(
-    private courseService: CourseService,
+    private courseService: MyCourseService,
     private route: ActivatedRoute
   ) {}
 
@@ -44,13 +42,14 @@ export class MesCoursComponent implements OnInit {
   }
 
   private loadCourses(userId: number): void {
-    this.courseService.getCoursesByUserId(userId).subscribe(
-      (data: MyCourse[]) => {
+    console.log('Loading courses');
+    this.courseService.getCoursesByUserId(userId).subscribe({
+      next: (data: MyCourse[]) => {
         this.ListeCours = data;
       },
-      error => {
+      error: (error: any) => {
         console.error('Error fetching courses:', error);
       }
-    );
+    });
   }
 }

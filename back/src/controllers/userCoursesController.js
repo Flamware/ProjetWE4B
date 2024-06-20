@@ -1,8 +1,8 @@
-const { client } = require('../database');
+const { client } = require('../config/database');
 
-// Récupérer les cours par ID utilisateur
+// Get courses by user ID endpoint
 const getCoursesByUserId = async (req, res) => {
-  const userId = req.params.userId; // Supposons que l'ID utilisateur est passé en paramètre d'URL
+  const userId = req.session.userId; // Retrieve user ID from session
   try {
     const query = `
       SELECT s.*
@@ -24,32 +24,38 @@ const getCoursesByUserId = async (req, res) => {
   }
 };
 
-// Créer un nouveau cours et associer l'utilisateur
+// Create new course endpoint
 const createCourse = async (req, res) => {
-  console.log('Request body:', req.body);
-  const { name, description, teacher, title } = req.body; // Assurez-vous que ces champs sont envoyés dans le corps de la requête
-  const userId = req.session.userId; // Récupérer l'ID de l'utilisateur à partir de la session
+  const { name, description, theme } = req.body;
+  const userId = req.session.userId; // Retrieve user ID from session
 
   try {
-    // Insérer d'abord dans la table 'skills' pour obtenir l'ID du cours créé
-    const insertQuery = 'INSERT INTO skills (name, description, teacher, title) VALUES ($1, $2, $3, $4) RETURNING id';
-    const insertValues = [name, description, teacher, title];
+    if (!userId) {
+      return res.status(401).json({ error: 'User ID not found in session' });
+    }
+
+    // Insert new course into database
+    const insertQuery = 'INSERT INTO skills (name, description, teacher_id, title) VALUES ($1, $2, $3, $4) RETURNING id';
+    const insertValues = [name, description, userId, theme];
     const insertResult = await client.query(insertQuery, insertValues);
     const courseId = insertResult.rows[0].id;
 
-    // Ensuite, insérer dans la table 'userskills' pour associer l'utilisateur au cours
+    // Associate course with user
     const userSkillsQuery = 'INSERT INTO userskills (user_id, skill_id) VALUES ($1, $2)';
     const userSkillsValues = [userId, courseId];
     await client.query(userSkillsQuery, userSkillsValues);
 
-    // Répondre avec le cours créé
+    // Prepare response with created course details
     const course = {
       id: courseId,
       name,
       description,
-      teacher,
-      title
+      teacher_id: userId,
+      theme,
     };
+
+    // Example of setting a cookie in the response
+    res.cookie('sessionID', req.sessionID, { httpOnly: true, maxAge: 3600000 });
 
     res.status(201).json({ course });
   } catch (error) {
@@ -58,8 +64,7 @@ const createCourse = async (req, res) => {
   }
 };
 
-// Exporter les méthodes de contrôleur
 module.exports = {
+  createCourse,
   getCoursesByUserId,
-  createCourse
 };
