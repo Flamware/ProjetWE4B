@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
   constructor(private profileService: ProfileService) {}
 
   ngOnInit() {
-    this.getInfoSub = this.profileService.getUserInfo().subscribe({
+    this.getInfoSub = this.profileService.getUserInfo("Olivier").subscribe({
         next: (data: Userinfo) => {
           console.log(data);
           this.userInfo = data;
