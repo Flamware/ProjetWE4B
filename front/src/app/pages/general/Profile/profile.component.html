@@ -1,4 +1,4 @@
-<div class="profile-container">
+<main class="profile-container">
   <div *ngIf="userInfo else noUserInfo" class="user-info">
     <div class="profile-header">
       <img *ngIf="userInfo.profile_picture" ngSrc="userInfo.profile_picture" alt="User Image" class="userImg">
@@ -47,4 +47,4 @@
     <p>No user information found!</p>
   </ng-template>
   <!-- Rest of your HTML code -->
-</div>
+</main>

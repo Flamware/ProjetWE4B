@@ -46,11 +46,25 @@ body, html
     font-family: inherit;
 }
 
+.textarea {
+    padding: 0.25em 0.5em;
+    font-size: small;
+}
+
 .button[type="submit"] {
     width: fit-content;
     padding: 0.5em 2em;
 }
 
-.date-input {
-
+main {
+    width: 60%;
+    margin: 0 auto;
+    margin-top: 2em;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 0.5em;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
 }
