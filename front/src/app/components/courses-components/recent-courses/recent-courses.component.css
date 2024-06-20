@@ -1,0 +1,13 @@
+/* recent-courses.component.css */
+.recent-courses ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .recent-courses li {
+    margin-bottom: 15px;
+  }
+  
+  .recent-courses h3 {
+    margin: 0;
+  }

@@ -1,0 +1,29 @@
+<div>
+  <div>
+    <input
+      type="text"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      (input)="onSearch($event)"
+      placeholder="Search..."
+    >
+    <ul *ngIf="isFocused && filteredList.length > 0 && filteredList.length < 5">
+      <li *ngFor="let item of filteredList">
+        <div class="resultats-recherche">
+          <div class="resultat-recherche">
+            <h2>{{item.title}}</h2>
+            <p>{{item.description}}</p>
+            <p>{{item.teacher}}</p>
+
+
+          </div>
+
+
+
+        </div>
+
+      </li>
+    </ul>
+  </div>
+
+</div>
