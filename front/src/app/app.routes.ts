@@ -12,6 +12,7 @@ import {ConnexionComponent} from "./pages/general/connexion/connexion.component"
 import {RegisterComponent} from "./pages/general/register/register.component";
 //import {TestComponent} from "../../../src/app/test/test.component";
 import {AuthGuard} from "./services/auth/AuthGuard.service";
+import { RecentCoursesComponent } from './components/courses-components/recent-courses/recent-courses.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -23,6 +24,7 @@ export const routes: Routes = [
   {path : 'mes-document', component: MesDocumentComponent, canActivate: [AuthGuard]},
   {path : 'login', component: ConnexionComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'recent-courses', component: RecentCoursesComponent },
   /*{ path: 'test', component: TestComponent}, Add the TestComponent route*/ 
   {path: '', redirectTo: '/home', pathMatch: 'full' }, // redirect to `home` route at startup
 ];

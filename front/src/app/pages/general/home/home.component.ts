@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { FormCoursComponent } from '../../../components/form-cours/form-cours.component';
+import { RecentCoursesComponent } from '../../../components/courses-components/recent-courses/recent-courses.component';
 import {Course} from "../../../models/course";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {CourseService} from "../../../services/course/course.service";
 import { CoursComponent } from '../tous-les-cours/cours/cours.component';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [FormCoursComponent, CoursComponent], // Assurez-vous que MesCoursComponent est ici
+  imports: [FormCoursComponent, CoursComponent, RecentCoursesComponent], // Assurez-vous que MesCoursComponent est ici
 })
 export class HomeComponent {
   showCourses = true;
