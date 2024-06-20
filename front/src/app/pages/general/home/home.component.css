@@ -1,110 +1,39 @@
-h1 {
-    margin: 0;
+.home-main {
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-/* Styles pour le conteneur des frames */
-.frame-container {
-    display: flex;
-    flex-direction: row; /* Aligner les frames côte à côte */
-    height: 80vh; /* Hauteur ajustable selon la page */
-    border: 1px solid #ccc;
-  }
-  
-  /* Styles pour chaque frame */
-  .frame {
-    flex: 1; /* Permet le redimensionnement dynamique */
-    border: 1px solid #000;
-    overflow: auto;
-    padding: 10px;
-    resize: horizontal; /* Permet le redimensionnement horizontal */
-  }
-  
-  /* Ajustements pour le formulaire */
-  .addCourse {
-    height: 100%;
-    overflow: auto;
-  }
-  
-  /* Ajustements pour la liste des cours */
-  .courseList {
-    height: 100%;
-    overflow: auto;
-  }
-  
-
-
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  position: relative;
-  gap: 16px;
-  padding: 16px;
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
 }
 
-.card {
-  background-color: white;
+.panel {
+  background-color: #f9f9f9;
+  padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  margin: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card-image {
-  height: 150px;
-  background-color: #c0c0c0;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+.panel h2 {
+  margin-top: 0;
 }
 
-.card-content {
-  padding: 16px;
+.panel-recent-courses {
+  grid-column: 1 / span 2;
 }
 
-.card-title {
-  font-size: 24px;
-  margin: 0;
+.panel-popular-courses {
+  grid-column: 1 / 2;
 }
 
-.card-rating {
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
+.panel-recommended-courses {
+  grid-column: 2 / 3;
 }
 
-.stars {
-  color: gold;
-  margin-right: 8px;
-}
-
-.card-text {
-  color: #757575;
-  font-size: 14px;
-  margin: 8px 0;
-}
-
-.card-subtitle {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 16px 0 8px;
-}
-
-.themes {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.theme {
-  background-color: #f0f0f0;
-  border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 14px;
-}
-
-.card-action {
-  display: block;
-  text-align: right;
-  margin-top: 16px;
-  color: #6200ea;
-  text-decoration: none;
+.panel-side-info {
+  grid-column: 1 / span 2;
+  grid-row: 3 / 4;
 }
