@@ -37,7 +37,7 @@ export class MyCourseService {
     );
   }
 
-  createCourse(courseData: MyCourse): Observable<MyCourse> {
+    createCourse(courseData: FormData): Observable<MyCourse> {
     return this.http.post<MyCourse>(`${this.apiUrl}/createCourse`, courseData, {
       headers: this.getHeaders()
     }).pipe(
@@ -50,6 +50,7 @@ export class MyCourseService {
   }
 
   deleteCourse(courseId: string): Observable<void> {
+    console.log('Deleting course:', courseId);
     return this.http.delete<void>(`${this.apiUrl}/deleteCourse/${courseId}`, {
       headers: this.getHeaders()
     }).pipe(

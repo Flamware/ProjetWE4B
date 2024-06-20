@@ -86,7 +86,7 @@ async function createCourse(req, res) {
 }
 
 async function deleteCourse(req, res) {
-  const courseId = req.params.id;
+  const courseId = req.params.courseId;
   const userId = req.userId;
   console.log("User number", userId, "tries to delete course number", courseId);
   // Vérifier si l'utilisateur est autorisé à supprimer le cours et le supprimer depuis usercourse

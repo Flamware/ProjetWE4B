@@ -2,31 +2,19 @@ const express = require('express');
 const session = require("express-session");
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
-const cookieParser = require("cookie-parser");
 const { createServer } = require('http');
-
+const { connectDatabase, client } = require('./config/database');
 const setupSocketIO = require('./utils/socket');
 
-// Config imports -----------------------------------------------------------------------
-const { connectDatabase, client } = require('./config/database');
-
-// Middleware imports -----------------------------------------------------------------------
-const { verifyToken } = require('./middleware/authMiddleware');
-
-// Routes imports -----------------------------------------------------------------------
-const userRoutes = require('./routes/users');
-const coursesRoute = require('./routes/courses');
-const userCoursesRoute = require('./routes/userCourses');
-
-// Api imports -----------------------------------------------------------------------
-const coursesApi = require('./api/api_courses');
-
-
+// Create the express app
 const app = express();
 const httpServer = createServer(app);
 const io = require('socket.io')(httpServer);
 
-// Middleware setup ---------------------------------------------------------------------------
+// Middleware setup
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
 app.use(session({
   store: new pgSession({
     pool: client,
@@ -37,15 +25,14 @@ app.use(session({
   cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
 }));
 
-// CORS configuration ---------------------------------------------------------------------------
-app.use(cors({
-  origin: 'http://localhost:4200', // Replace with your front-end domain
-  credentials: true // Allow cookies to be sent
-}));
-
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// CORS configuration
+app.use(cors({
+  origin: 'http://localhost:4200',
+  credentials: true
+}));
 
 // Connect to the database
 connectDatabase().catch(err => {
@@ -53,39 +40,44 @@ connectDatabase().catch(err => {
   process.exit(1);
 });
 
-// Routes setup --------------------------------------------------------------------------------
+// Routes setup
+const userRoutes = require('./routes/users');
+const coursesRoute = require('./routes/courses');
+const userCoursesRoute = require('./routes/userCourses');
+
+// Use routes
 app.use(userRoutes);
 app.use(coursesRoute);
-app.use(userCoursesRoute);
+app.use(userCoursesRoute); // This includes your userCoursesRoute with multer configuration
 
-app.get('/authorized', verifyToken, (req, res) => {
-  res.send('Secure resource');
-});
-
+// Example route to test session
 app.get('/sessioninfo', (req, res) => {
-  console.log('Current session:', req.session); // Log current session information
-  res.send(req.session); // Respond with session data
+  console.log('Current session:', req.session);
+  res.send(req.session);
 });
 
-app.get("/user", (req, res) => {
+// Example route to get user information
+app.get('/user', (req, res) => {
   if (req.session && req.session.userId) {
     const sessionUserId = req.session.userId;
-    res.status(200).json({ userId: sessionUserId }); // Respond with user ID if authenticated
+    res.status(200).json({ userId: sessionUserId });
   } else {
-    res.status(401).json({ error: 'User not authenticated' }); // Respond with error if not authenticated
+    res.status(401).json({ error: 'User not authenticated' });
   }
 });
 
+// Example route to test session views
 app.get('/session-test', (req, res) => {
   if (req.session.views) {
     req.session.views++;
-    res.send(`Views: ${req.session.views}`); // Increment and respond with session views count
+    res.send(`Views: ${req.session.views}`);
   } else {
     req.session.views = 1;
-    res.send('Welcome for the first time!'); // Initialize session views count and respond
+    res.send('Welcome for the first time!');
   }
 });
 
+// Setup socket.io
 setupSocketIO(io, session);
 
 // Start the server
@@ -93,3 +85,8 @@ const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+// Export the app for testing or other modules
+module.exports = {
+  app
+};

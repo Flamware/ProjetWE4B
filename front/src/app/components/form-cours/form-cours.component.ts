@@ -1,21 +1,19 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MyCourseService } from '../../services/course/my/my-course.service';
 import { MyCourse } from '../../models/mycourse';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-cours',
   templateUrl: './form-cours.component.html',
   standalone: true,
-  imports: [
-    ReactiveFormsModule
-  ],
   styleUrls: ['./form-cours.component.css']
 })
 export class FormCoursComponent implements OnInit {
   myForm: FormGroup;
   @Output() courseCreated = new EventEmitter<MyCourse>();
+  selectedFile: File | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,7 +25,7 @@ export class FormCoursComponent implements OnInit {
       theme: ['', Validators.required],
       description: ['', Validators.required],
       date: ['', Validators.required],
-      image: [''],
+      image: ['']
     });
   }
 
@@ -35,18 +33,28 @@ export class FormCoursComponent implements OnInit {
     this.hideForm();
   }
 
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
   submit(): void {
     if (this.myForm.valid) {
-      const courseData = this.myForm.value;
-      this.courseService.createCourse(courseData).subscribe({
+      const formData = new FormData();
+      formData.append('name', this.myForm.get('name')?.value);
+      formData.append('theme', this.myForm.get('theme')?.value);
+      formData.append('description', this.myForm.get('description')?.value);
+      formData.append('date', this.myForm.get('date')?.value);
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile, this.selectedFile.name);
+      }
+
+      this.courseService.createCourse(formData).subscribe({
         next: (data: MyCourse) => {
           console.log('Course created successfully:', data);
           this.myForm.reset();
-          this.showCourseAddedDialog(); // Show confirmation dialog
-          this.hideForm(); // Hide the form
-          // Optionally, you can emit an event to notify the parent component
+          this.showCourseAddedDialog();
+          this.hideForm();
           this.courseCreated.emit(data);
-          // Navigate to /mes-cours if needed
           this.router.navigate(['/mes-cours']).then(r => console.log('Navigated to /mes-cours'));
         },
         error: (error: any) => {
@@ -68,7 +76,6 @@ export class FormCoursComponent implements OnInit {
   }
 
   private showCourseAddedDialog(): void {
-    // Implement your confirmation dialog here
     alert('Course added successfully!');
   }
 

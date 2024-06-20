@@ -38,7 +38,7 @@ export class MesCoursComponent implements OnInit {
         console.error('Error fetching courses:', error);
       }
     }
-      
+
     );
   }
 
@@ -47,6 +47,7 @@ export class MesCoursComponent implements OnInit {
   }
 
   deleteCourse(courseId: string): void {
+    console.log('Deleting course:', courseId);
     this.courseService.deleteCourse(courseId).subscribe({
       next: () => {
         this.ListeCours = this.ListeCours.filter(course => course.id !== courseId);
