@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Userinfo } from '../../models/userinfo'
+import { Userinfo } from '../../models/userinfo';
 
 @Injectable({
   providedIn: 'root'
@@ -10,26 +10,29 @@ export class ProfileService {
   private apiUrl = 'http://localhost:3000';
   private getAccountUrl = `${this.apiUrl}/getAccountInfo`;
   private updateAccountUrl = `${this.apiUrl}/updateAccount`;
+
   constructor(private http: HttpClient) {}
 
-  public getUserInfo(username: string): Observable<Userinfo> {
-    return this.http.post<Userinfo>(this.getAccountUrl, {
-      params: { username },
-      headers: this.getHeaders()
-    },);
+  public getUserInfo(username?: string): Observable<Userinfo> {
+    let params = new HttpParams();
+    if (username) {
+      params = params.set('username', username);
+    }
+
+    const headers = this.getHeaders();
+
+    return this.http.get<Userinfo>(this.getAccountUrl, { headers, params });
   }
 
   public updateUserInfo(data: Userinfo): Observable<Userinfo> {
-    return this.http.post<Userinfo>(this.updateAccountUrl, {
-      params: data,
-      headers: this.getHeaders()
-    });
+    const headers = this.getHeaders();
+
+    return this.http.put<Userinfo>(this.updateAccountUrl, data, { headers });
   }
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');  // Assurez-vous d'avoir stocké le token d'authentification
+    const token = localStorage.getItem('token');  // Ensure the authentication token is stored in localStorage
     return new HttpHeaders({
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
   }

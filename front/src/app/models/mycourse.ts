@@ -1,10 +1,10 @@
 export interface MyCourse {
-    id: number;
-    nom: string;
-    description: string;
-    date: string;
-    image: string;
-    rate: number;
-    theme: string;
-  }
-  
+  id: string; // Adjusted to string based on the provided query response
+  type: string; // Represents the 'type' field from the query response
+  description: string;
+  title: string; // Renamed 'nom' to 'title' to match the query response
+  date: string;
+  image: string;
+  rate : number;
+}
+

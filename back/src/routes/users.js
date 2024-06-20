@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { verifyToken, verifySession } = require('../middleware/authMiddleware');
+const { verifyToken } = require('../middleware/authMiddleware');
 const {
   getAllUsers, createUser, userLogged, setUserRole, login, register, getAccountInfo,
   updateAccount, testToken
@@ -12,8 +12,8 @@ router.post('/create-user', verifyToken, createUser);
 router.put('/set-role', verifyToken, setUserRole);
 router.post('/login', login);
 router.post('/register', register);
-router.post('/getAccountInfo', verifySession, getAccountInfo); // Assuming session-based for profile
-router.post('/updateAccount', verifySession, updateAccount); // Assuming session-based for profile
+router.get('/getAccountInfo', verifyToken, getAccountInfo); // Assuming session-based for profile
+router.put('/updateAccount', verifyToken, updateAccount); // Assuming session-based for profile
 router.get('/test', verifyToken, testToken);
 
 module.exports = router;

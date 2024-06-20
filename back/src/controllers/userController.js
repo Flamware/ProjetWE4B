@@ -21,8 +21,6 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Incorrect password' });
     }
 
-    req.session.email = user.email;
-    req.session.username = user.username;
     req.session.userId = user.id;
 
     req.session.save(err => {
@@ -30,7 +28,7 @@ exports.login = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
       }
 
-      const token = jwt.sign({ email: user.email, username: user.username, userId: user.id }, "your_secret_key", { expiresIn: '30d' });
+      const token = jwt.sign({ userId: user.id }, "your_secret_key", { expiresIn: '30d' });
       res.status(200).json({ message: 'Logged in successfully', token });
     });
 
@@ -71,21 +69,45 @@ exports.register = async (req, res) => {
 };
 
 exports.getAccountInfo = async (req, res) => {
-  const username = req.body.params.username;
+  let username;
+
+  // Check if username is provided in request body, otherwise fallback to req.id
+  if (req.body.username) {
+    username = req.body.username;
+  } else if (req.userId) {
+    username = req.userId; // Assuming req.id holds the user's ID
+  } else {
+    return res.status(400).json({ error: 'Username or user ID not provided' });
+  }
 
   try {
-    const query = 'SELECT * FROM users WHERE username = $1';
-    const result = await client.query(query, [username]);
+    // Query to fetch user information based on username or id
+    let query;
+    let queryParams;
+
+    // Check if username is a number (assuming it's an id)
+    if (!isNaN(username)) {
+      query = 'SELECT * FROM users WHERE id = $1';
+      queryParams = [username];
+    } else {
+      query = 'SELECT * FROM users WHERE username = $1';
+      queryParams = [username];
+    }
+
+    const result = await client.query(query, queryParams);
     const user = result.rows[0];
 
+    // If user not found, return 404 error
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Modify profile_picture path if present
     if (user.profile_picture) {
       user.profile_picture = `/img/profile/${user.profile_picture}`;
     }
 
+    // Return formatted user information in the response
     res.status(200).json({
       username: user.username,
       email: user.email,
@@ -102,16 +124,19 @@ exports.getAccountInfo = async (req, res) => {
   }
 };
 
+
 exports.updateAccount = async (req, res) => {
-  const data = req.body.params;
+  const data = req.body; // Remove .params here
+
   const { email, firstname, lastname, username, bio, role } = data;
 
   try {
     const query = `
       UPDATE users
       SET first_name = $1, last_name = $2, username = $3, bio = $4, role = $5, updated_at = current_timestamp
-      WHERE email = $6`;
-    await client.query(query, [firstname, lastname, username, bio, role, email]);
+      WHERE id = $6`; // Corrected to $6 for the ID placeholder
+
+    await client.query(query, [firstname, lastname, username, bio, role, req.userId]);
 
     res.status(200).json(data);
   } catch (error) {

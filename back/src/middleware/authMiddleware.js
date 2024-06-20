@@ -16,20 +16,8 @@ exports.verifyToken = (req, res, next) => {
     }
 
     req.userId = decoded.userId;
-    req.username = decoded.username;
     console.log('decoded', decoded);
     next();
   });
 };
 
-exports.verifySession = (req, res, next) => {
-  console.log('session', req.session);
-
-  if (!req.session.userId) {
-    return res.status(403).json({ error: 'Not authenticated' });
-  }
-
-  req.userId = req.session.userId;
-  req.username = req.session.username;
-  next();
-};

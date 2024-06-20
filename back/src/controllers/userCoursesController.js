@@ -27,7 +27,8 @@ const getCoursesByUserId = async (req, res) => {
 // Create new course endpoint
 const createCourse = async (req, res) => {
   const { name, description, theme } = req.body;
-  const userId = req.session.userId; // Retrieve user ID from session
+  console.log('req', req.body);
+  const userId = req.userId; // Retrieve user ID from session
 
   try {
     if (!userId) {

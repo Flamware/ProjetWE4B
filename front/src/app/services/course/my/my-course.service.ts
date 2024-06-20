@@ -24,12 +24,12 @@ export class MyCourseService {
         throw error;
       })
     );
-  }  
+  }
 
   createCourse(courseData: MyCourse): Observable<MyCourse> {
     console.log('Creating course with data:', courseData);
     return this.http.post<MyCourse>(`${this.apiUrl}/create-course`, courseData, {
-      headers: this.getHeadersWithoutAuthorization() // Utiliser une nouvelle fonction pour exclure Authorization
+      headers: this.getHeaders()
     }).pipe(
       tap(data => console.log('Course created successfully:', data)),
       catchError(error => {
@@ -37,20 +37,43 @@ export class MyCourseService {
         throw error;
       })
     );
-  }  
+  }
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('accessToken');
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
+    const token = localStorage.getItem('token');
+    if (token) {
+      return new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
+    } else {
+      return new HttpHeaders({
+        'Content-Type': 'application/json'
+      });
+    }
   }
 
-  private getHeadersWithoutAuthorization(): HttpHeaders {
-    return new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+  getAllCourse(username ?: string): Observable<MyCourse[]> {
+    return this.http.get<MyCourse[]>(`${this.apiUrl}/getAllCourses`, {
+      headers: this.getHeaders()
+    }).pipe(
+      tap(data => console.log('Courses fetched successfully:', data)),
+      catchError(error => {
+        console.error('Error fetching courses:', error);
+        throw error;
+      })
+    );
   }
-  
+  deleteCourse(courseId: string): Observable<void> {
+    console.log('Deleting course with ID:', courseId);
+    return this.http.delete<void>(`${this.apiUrl}/delete-course/${courseId}`, {
+      headers: this.getHeaders()
+    }).pipe(
+      tap(() => console.log('Course deleted successfully')),
+      catchError(error => {
+        console.error('Error deleting course:', error);
+        throw error;
+      })
+    );
+  }
 }

@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
   constructor(private profileService: ProfileService) {}
 
   ngOnInit() {
-    this.getInfoSub = this.profileService.getUserInfo("Olivier").subscribe({
+    this.getInfoSub = this.profileService.getUserInfo().subscribe({
         next: (data: Userinfo) => {
           console.log(data);
           this.userInfo = data;
@@ -46,7 +46,7 @@ export class ProfileComponent implements OnInit {
         }
       }
     );
-    
+
   }
 
   createForm() {
@@ -57,7 +57,7 @@ export class ProfileComponent implements OnInit {
       email: new FormControl(this.userInfo.email),
       bio: new FormControl(this.userInfo.bio),
       role: new FormControl(this.userInfo.role)
-    }); 
+    });
   }
 
   ngOnDestroy() {

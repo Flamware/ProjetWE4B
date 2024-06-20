@@ -2,54 +2,56 @@ import { Component, OnInit } from '@angular/core';
 import { MyCourse } from '../../../models/mycourse';
 import { MyCourseService } from '../../../services/course/my/my-course.service';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import { NgModule } from '@angular/core';
-import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {FormCoursComponent} from "../../../components/form-cours/form-cours.component";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-mes-cours',
+  templateUrl: './mes-cours.component.html',
   standalone: true,
   imports: [
-    NgForOf,
-    NgOptimizedImage,
     FormCoursComponent,
-    RouterLink,
-    NgIf
+    NgForOf,
+    NgIf,
+    RouterLink
   ],
-  templateUrl: './mes-cours.component.html',
   styleUrls: ['./mes-cours.component.css']
 })
 export class MesCoursComponent implements OnInit {
   ListeCours: MyCourse[] = [];
-  userId: number | undefined;
 
   constructor(
     private courseService: MyCourseService,
     private route: ActivatedRoute
   ) {}
 
-  round(value: number): number {
-    return Math.round(value);
-  }
-
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.userId = +params['userId']; // Assuming the userId is passed in the URL
-      if (this.userId) {
-        this.loadCourses(this.userId);
-      }
-    });
+    this.loadCourses();
   }
 
-  private loadCourses(userId: number): void {
-    console.log('Loading courses');
-    this.courseService.getCoursesByUserId(userId).subscribe({
-      next: (data: MyCourse[]) => {
-        this.ListeCours = data;
+  private loadCourses(): void {
+    this.courseService.getAllCourse().subscribe(
+      (response: any) => {
+        this.ListeCours = response.courses;
       },
-      error: (error: any) => {
+      (error: any) => {
         console.error('Error fetching courses:', error);
       }
-    });
+    );
+  }
+
+  handleCourseCreated(newCourse: MyCourse): void {
+    this.ListeCours.push(newCourse); // Add newly created course to the list
+  }
+
+  deleteCourse(courseId: string): void {
+    this.courseService.deleteCourse(courseId).subscribe(
+      () => {
+        this.ListeCours = this.ListeCours.filter(course => course.id !== courseId);
+      },
+      (error: any) => {
+        console.error('Error deleting course:', error);
+      }
+    );
   }
 }
