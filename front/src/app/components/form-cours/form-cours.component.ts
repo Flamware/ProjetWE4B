@@ -28,7 +28,6 @@ export class FormCoursComponent implements OnInit {
       description: ['', Validators.required],
       date: ['', Validators.required],
       image: [''],
-      rate: ['']
     });
   }
 

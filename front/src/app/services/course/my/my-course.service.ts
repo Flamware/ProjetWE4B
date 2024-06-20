@@ -76,4 +76,16 @@ export class MyCourseService {
       })
     );
   }
+
+  loadHome() {
+    return this.http.get(`${this.apiUrl}/loadAllStoriesForHome`, {
+      headers: this.getHeaders()
+    }).pipe(
+      tap(data => console.log('Courses fetched successfully:', data)),
+      catchError(error => {
+        console.error('Error fetching courses:', error);
+        throw error;
+      })
+    );
+  }
 }

@@ -11,11 +11,6 @@ export class CourseService {
 
   constructor(private http: HttpClient) {}
 
-  getAllCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.apiUrl}/getAllCourses`, {
-      headers: this.getHeaders()
-    });
-  }
 
   getCourseById(id: number): Observable<Course> {
     return this.http.get<Course>(`${this.apiUrl}/getCourseById/${id}`, {
@@ -35,7 +30,11 @@ export class CourseService {
     });
   }
 
-
+  getAllCourse(): Observable<Course[]> {
+    return this.http.get<Course[]>(`${this.apiUrl}/getAllCourseForHome`, {
+      headers: this.getHeaders()
+    });
+  }
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');  // Assurez-vous d'avoir stocké le token d'authentification

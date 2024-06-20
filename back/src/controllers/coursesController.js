@@ -1,5 +1,22 @@
 const { client } = require('../config/database'); // Importer 'client' depuis database.js
 
+async function getAllCourseForHome(req, res) {
+  try {
+    // Obtenir tous les cours
+    const query = 'SELECT * FROM course';
+    const result =
+    await client
+    .query(query);
+    const courses = result.rows;
+    res.status(200).json({ courses });
+  }
+  catch (error) {
+    console.error('Error fetching courses:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
 // Obtenir tous les cours
 async function getAllCourses(req, res) {
   if (req.body.username){
@@ -55,7 +72,7 @@ async function getCourseById(req, res) {
 
 // Créer un nouveau cours
 async function createCourse(req, res) {
-  const {date, description, image, name, theme,rate} = req.body;
+  const {date, description, image, name, theme} = req.body;
   const userId = req.userId;
   //insere un nouveau cours dans la base de données
   try {
@@ -63,8 +80,8 @@ async function createCourse(req, res) {
       return res.status(401).json({error: 'User ID not found in session'});
     }
 
-    const insertQuery = 'INSERT INTO course (type, description , title , date , image, teacher_id, rate) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id';
-    const insertValues = [theme, description, name, date, image, userId, rate];
+    const insertQuery = 'INSERT INTO course (type, description , title , date , image, teacher_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id';
+    const insertValues = [theme, description, name, date, image, userId];
     const insertResult = await client.query(insertQuery, insertValues);
     const courseId = insertResult.rows[0].id;
     // if ok return the new course
@@ -124,5 +141,6 @@ module.exports = {
   getCourseById,
   createCourse,
   deleteCourse,
-  rateCourse
+  rateCourse,
+  getAllCourseForHome
 };
