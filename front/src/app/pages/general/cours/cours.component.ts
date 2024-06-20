@@ -27,6 +27,7 @@ export class CoursComponent implements OnInit {
   rating: FormGroup;
 
   constructor(
+
     private route: ActivatedRoute,
     private courseService: CourseService // Injection du service
   ) {
@@ -59,6 +60,7 @@ export class CoursComponent implements OnInit {
         console.error('No course ID provided');
         return;
       }
+
       this.loadCourse(this.id_cours)
     }); // Charger les détails du cours
   }
@@ -66,8 +68,10 @@ export class CoursComponent implements OnInit {
   // Méthode pour charger les détails du cours
   private loadCourse(courseId: number): void {
     this.courseService.getCourseById(courseId).subscribe({
-      next: (data: Course) => {
-        this.courinfo = data;
+      next: (response: any) => {
+        this.courinfo = response.course;
+        console.log('Course details:', this.courinfo);
+
       },
       error: (error) => {
         console.error('Error fetching course details:', error);

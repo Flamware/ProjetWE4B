@@ -3,10 +3,10 @@
 <div *ngIf="courinfo as course; else loading" class="course-header">
   <div class="course-info">
     <a [routerLink]="['/message', course.teacher]">
-      <h2>{{ course.name }}</h2>
+      <h2>{{ courinfo.name }}</h2>
     </a>
-    <h3>{{ course.title }}</h3>
-    <p>{{ course.description }}</p>
+    <h3>{{ courinfo.title }}</h3>
+    <p>{{ courinfo.description }}</p>
     <div class="rating">
       <button *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rate(star)">
         {{ star <= rating.get('stars')?.value ? '★' : '☆' }}
