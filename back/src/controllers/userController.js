@@ -90,6 +90,7 @@ exports.getAccountInfo = async (req, res) => {
       query = 'SELECT * FROM users WHERE id = $1';
       queryParams = [username];
     } else {
+      //Attention si il y a plusierus utilisateurs avec le même nom
       query = 'SELECT * FROM users WHERE username = $1';
       queryParams = [username];
     }

@@ -30,13 +30,15 @@ export class MesCoursComponent implements OnInit {
   }
 
   private loadCourses(): void {
-    this.courseService.getAllCourse().subscribe(
-      (response: any) => {
+    this.courseService.getAllCourse().subscribe({
+      next: (response: any) => {
         this.ListeCours = response.courses;
       },
-      (error: any) => {
+      error: (error: any) => {
         console.error('Error fetching courses:', error);
       }
+    }
+      
     );
   }
 
@@ -45,13 +47,13 @@ export class MesCoursComponent implements OnInit {
   }
 
   deleteCourse(courseId: string): void {
-    this.courseService.deleteCourse(courseId).subscribe(
-      () => {
+    this.courseService.deleteCourse(courseId).subscribe({
+      next: () => {
         this.ListeCours = this.ListeCours.filter(course => course.id !== courseId);
       },
-      (error: any) => {
+      error: (error: any) => {
         console.error('Error deleting course:', error);
       }
-    );
+    });
   }
 }

@@ -38,29 +38,40 @@ export class CoursComponent implements OnInit {
   // Méthode pour gérer la notation
   rate(value: number): void {
     console.log(`Rated with ${value} stars`);
-    if (this.courinfo) {
-      // Logique de notation à ajouter ici
+    if(!this.id_cours){
+      console.error('No course ID provided');
+      return;
     }
-  }
-
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.id_cours = +params['id']; // Convertit l'ID de chaîne en nombre
-      if (this.id_cours) {
-        this.loadCourse(this.id_cours); // Charger les détails du cours
+    this.courseService.rateCourse(this.id_cours, value).subscribe({
+      next: (data: Course) => {
+        console.log('Course rated:', data);
+      },
+      error: (error) => {
+        console.error('Error rating course:', error);
       }
     });
   }
 
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.id_cours = params['id']; // Récupérer l'ID du cours
+      if(!this.id_cours){
+        console.error('No course ID provided');
+        return;
+      }
+      this.loadCourse(this.id_cours)
+    }); // Charger les détails du cours
+  }
+
   // Méthode pour charger les détails du cours
   private loadCourse(courseId: number): void {
-    this.courseService.getCourseById(courseId).subscribe(
-      (data: Course) => {
+    this.courseService.getCourseById(courseId).subscribe({
+      next: (data: Course) => {
         this.courinfo = data;
       },
-      error => {
+      error: (error) => {
         console.error('Error fetching course details:', error);
       }
-    );
+    });
   }
 }
