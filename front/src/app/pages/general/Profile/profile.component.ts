@@ -1,9 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl,Validators } from '@angular/forms';
 import { NgIf } from "@angular/common";
 import { ProfileService } from '../../../services/profile/profile.service';
 import { Userinfo } from '../../../models/userinfo';
 import { Subscription } from 'rxjs';
+
+type errors = {
+  firstname: string,
+  lastname: string,
+  username: string,
+  email: string
+};
 
 @Component({
   selector: 'app-user-profile',
@@ -25,6 +32,13 @@ export class ProfileComponent implements OnInit {
     bio: 'Hello, I am John Doe.',
     role: 'student',
     created_at: new Date('2022-01-01') // S'adapte au pays du client
+  };
+
+  formErrors: errors = {
+    firstname: '',
+    lastname: '',
+    username: '',
+    email: '',
   };
 
   userData?:FormGroup;
@@ -51,12 +65,12 @@ export class ProfileComponent implements OnInit {
 
   createForm() {
     this.userData = new FormGroup({
-      firstname: new FormControl(this.userInfo.first_name),
-      lastname: new FormControl(this.userInfo.last_name),
-      username: new FormControl(this.userInfo.username),
-      email: new FormControl(this.userInfo.email),
+      firstname: new FormControl(this.userInfo.first_name, [Validators.required, Validators.maxLength(255)]),
+      lastname: new FormControl(this.userInfo.last_name, [Validators.required, Validators.maxLength(255)]),
+      username: new FormControl(this.userInfo.username, [Validators.required, Validators.maxLength(255)]),
+      email: new FormControl(this.userInfo.email, [Validators.required, Validators.email, Validators.maxLength(255)]),
       bio: new FormControl(this.userInfo.bio),
-      role: new FormControl(this.userInfo.role)
+      role: new FormControl(this.userInfo.role, [Validators.required])
     }); 
   }
 
@@ -74,6 +88,12 @@ export class ProfileComponent implements OnInit {
     if(this.userData === undefined) {
       return;
     }
+    if(this.userData.invalid) {
+      this.setErrors();
+      console.log("Form is invalid");
+      return;
+    }
+    this.resetErrors();
     console.log(this.userData.value);
     this.getInfoSub = this.profileService.updateUserInfo(this.userData.value).subscribe({
       next: (data: Userinfo) => {
@@ -85,5 +105,74 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  private setErrors() {
+    const form = this.userData;
+    if(form === undefined) {
+      return;
+    }
+    const first_name = form.get('firstname');
+    const last_name = form.get('lastname');
+    const username = form.get('username');
+    const email = form.get('email');
+
+    if(first_name && first_name.errors) {
+      Object.keys(first_name.errors).forEach((key) => {
+        switch(key) {
+          case 'required':
+            this.formErrors.firstname = 'First name is required';
+            break;
+          case 'maxlength':
+            this.formErrors.firstname = 'First name is too long';
+            break;
+        }
+      });
+    }
+    if(last_name && last_name.errors) {
+      Object.keys(last_name.errors).forEach((key) => {
+        switch(key) {
+          case 'required':
+            this.formErrors.lastname = 'Last name is required';
+            break;
+          case 'maxlength':
+            this.formErrors.lastname = 'Last name is too long';
+            break;
+        }
+      });
+    }
+    if(username && username.errors) {
+      Object.keys(username.errors).forEach((key) => {
+        switch(key) {
+          case 'required':
+            this.formErrors.username = 'Username is required';
+            break;
+          case 'maxlength':
+            this.formErrors.username = 'Username is too long';
+            break;
+        }
+      });
+    }
+    if(email && email.errors) {
+      Object.keys(email.errors).forEach((key) => {
+        switch(key) {
+          case 'required':
+            this.formErrors.email = 'Email is required';
+            break;
+          case 'email':
+            this.formErrors.email = 'Email is invalid';
+            break;
+          case 'maxlength':
+            this.formErrors.email = 'Email is too long';
+            break;
+        }
+      });
+    }
+  }
+
+  private resetErrors() {
+    this.formErrors.firstname = '';
+    this.formErrors.lastname = '';
+    this.formErrors.username = '';
+    this.formErrors.email = '';
+  }
 
 }
