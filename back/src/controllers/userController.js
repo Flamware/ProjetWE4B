@@ -2,14 +2,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { client } = require('../config/database');
 const fs = require('fs');
+const path = require('path');
 
-// Login endpoint
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-  console.log('Request body:', req.body);
 
   try {
-    // Check if user with given email exists
     const query = 'SELECT * FROM users WHERE email = $1';
     const result = await client.query(query, [email]);
     const user = result.rows[0];
@@ -18,34 +16,39 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'User not found' });
     }
 
-    // Verify password
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return res.status(401).json({ error: 'Incorrect password' });
     }
 
-    // Store user data in session
-    req.session.email = email;
+    req.session.email = user.email;
     req.session.username = user.username;
     req.session.userId = user.id;
-    req.session.save();
 
-    console.log('Session:', req.session);
+    req.session.save(err => {
+      if (err) {
+        return res.status(500).json({ error: 'Internal server error' });
+      }
 
-    res.status(200).json({ message: 'Logged in successfully' });
+      const token = jwt.sign({ email: user.email, username: user.username, userId: user.id }, "your_secret_key", { expiresIn: '30d' });
+      res.status(200).json({ message: 'Logged in successfully', token });
+    });
+
   } catch (error) {
-    console.error('Error logging in:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-// Register new user endpoint
+exports.testToken = async (req, res) => {
+  console.log('session', req.session);
+  console.log('Testing token', req.body);
+  res.status(200).json({ message: 'Token is valid' });
+};
+
 exports.register = async (req, res) => {
-  console.log('Registering user', req.body);
   const { username, email, password, nom, prenom, role } = req.body;
 
   try {
-    // Check if user with same email exists
     const query = 'SELECT * FROM users WHERE email = $1';
     const result = await client.query(query, [email]);
 
@@ -53,10 +56,8 @@ exports.register = async (req, res) => {
       return res.status(409).json({ error: 'User with this email already exists' });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Store new user data
     const insertQuery = `
       INSERT INTO users (username, first_name, last_name, email, password, role)
       VALUES ($1, $2, $3, $4, $5, $6)`;
@@ -69,7 +70,6 @@ exports.register = async (req, res) => {
   }
 };
 
-// Get user account information endpoint
 exports.getAccountInfo = async (req, res) => {
   const username = req.body.params.username;
 
@@ -102,7 +102,6 @@ exports.getAccountInfo = async (req, res) => {
   }
 };
 
-// Update user account information endpoint
 exports.updateAccount = async (req, res) => {
   const data = req.body.params;
   const { email, firstname, lastname, username, bio, role } = data;
@@ -121,17 +120,14 @@ exports.updateAccount = async (req, res) => {
   }
 };
 
-// Update user profile picture endpoint
 exports.updateProfilePicture = async (req, res) => {
   const { profile_picture } = req.body;
   const username = req.session.username;
 
   try {
-    // Retrieve current profile picture URL from DB
     const query = 'SELECT profile_picture FROM users WHERE username = $1';
     const result = await client.query(query, [username]);
 
-    // Delete old profile picture if exists
     if (result.rows[0].profile_picture) {
       const oldProfilePicture = path.join(__dirname, `../public/img/profile/${result.rows[0].profile_picture}`);
       fs.unlink(oldProfilePicture, (err) => {
@@ -141,7 +137,6 @@ exports.updateProfilePicture = async (req, res) => {
       });
     }
 
-    // Save new profile picture in filesystem
     const profilePictureFilename = `${username}-${Date.now()}.png`;
     const newProfilePicture = path.join(__dirname, `../public/img/profile/${profilePictureFilename}`);
     const base64Data = profile_picture.replace(/^data:image\/png;base64,/, '');
@@ -151,7 +146,6 @@ exports.updateProfilePicture = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
       }
 
-      // Update profile picture filename in DB
       const updateQuery = 'UPDATE users SET profile_picture = $1 WHERE username = $2';
       await client.query(updateQuery, [profilePictureFilename, username]);
 
@@ -163,9 +157,7 @@ exports.updateProfilePicture = async (req, res) => {
   }
 };
 
-// Create user endpoint
 exports.createUser = async (req, res) => {
-  console.log('Creating user', req.body);
   const { email, first_name, last_name, auth0_user_id } = req.body;
 
   try {
@@ -187,21 +179,16 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Check if user is logged in (Auth0) endpoint
 exports.userLogged = async (req, res) => {
   const token = req.body.sub;
   const payload = jwt.decode(token);
   const authId = payload.sub;
   const email = payload.email;
 
-  console.log('Auth0 ID:', authId);
-
   try {
-    // Check if user exists in database
     const query = 'SELECT * FROM users WHERE auth0_user_id = $1';
     const result = await client.query(query, [authId]);
 
-    // If user doesn't exist, create new user
     if (result.rows.length === 0) {
       const insertQuery = 'INSERT INTO users (auth0_user_id, email) VALUES ($1, $2)';
       await client.query(insertQuery, [authId, email]);
@@ -215,7 +202,6 @@ exports.userLogged = async (req, res) => {
   }
 };
 
-// Update user information endpoint
 exports.updateUser = async (req, res) => {
   const { email, first_name, last_name } = req.body;
 
@@ -236,7 +222,6 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Get all users endpoint
 exports.getAllUsers = async (req, res) => {
   try {
     const query = 'SELECT * FROM users';
@@ -248,18 +233,12 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// Set user role endpoint
 exports.setUserRole = async (req, res) => {
   try {
     const authId = req.user.sub;
     const email = req.user.email;
     const role = req.body.role;
 
-    console.log('User ID:', authId);
-    console.log('User email:', email);
-    console.log('Role:', role);
-
-    // Update user role in database
     const updateQuery = 'UPDATE users SET role = $1 WHERE id = $2';
     const values = [role, authId];
 

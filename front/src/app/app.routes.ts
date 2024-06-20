@@ -10,6 +10,7 @@ import {MessageComponent} from "./pages/general/message/message.component";
 import {MesDocumentComponent} from "./components/mes-document/mes-document.component";
 import {ConnexionComponent} from "./pages/general/connexion/connexion.component";
 import {RegisterComponent} from "./pages/general/register/register.component";
+import {TestComponent} from "../../../src/app/test/test.component";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -21,7 +22,8 @@ export const routes: Routes = [
   {path : 'mes-document', component: MesDocumentComponent},
   {path : 'login', component: ConnexionComponent},
   {path: 'register', component: RegisterComponent},
-  { path: '', redirectTo: '/home', pathMatch: 'full' }, // redirect to `home` route at startup
+  { path: 'test', component: TestComponent }, // Add the TestComponent route
+  {path: '', redirectTo: '/home', pathMatch: 'full' }, // redirect to `home` route at startup
 ];
 
 @NgModule({

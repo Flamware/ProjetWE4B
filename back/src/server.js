@@ -1,31 +1,36 @@
-const sessionMiddleware = require('./middleware/sessionMiddleware');  // Middleware for managing sessions
-const injectSession = require('./middleware/sessionInjection'); // Middleware for injecting session into requests
-
 const express = require('express');
 const { createServer } = require('http');
 const cors = require('cors');
-const { Server } = require('socket.io');
-const { connectDatabase } = require('./config/database');
+const { connectDatabase, client } = require('./config/database'); // Ensure client is imported
 const cookieParser = require("cookie-parser");
 const userRoutes = require('./routes/users'); // Import user routes
 const coursesRoute = require('./api/courses'); // Import courses routes
 const userCoursesRoute = require('./routes/usercourses'); // Import user courses routes (commented out)
-const jwtCheck = require('./middleware/jwCheck'); // Middleware for JWT verification
-const setupSocketIO = require('./utils/socket'); // Utility for setting up Socket.IO
+const { verifyToken } = require('./middleware/authMiddleware'); // Middleware for JWT verification
+const setupSocketIO = require('./utils/socket');
+const session = require("express-session");
+const pgSession = require('connect-pg-simple')(session); // Import pgSession for session storage
 
 const app = express();
 const httpServer = createServer(app);
 
 // Middleware setup
-app.use(cookieParser()); // Parse cookies
-app.use(sessionMiddleware); // Initialize session middleware
-app.use(injectSession); // Inject session data into requests
+app.use(session({
+  store: new pgSession({
+    pool: client,
+  }),
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+}));
 
 // CORS configuration
 app.use(cors({
   origin: 'http://localhost:4200', // Replace with your front-end domain
   credentials: true // Allow cookies to be sent
 }));
+
 
 // Body parsing middleware
 app.use(express.json()); // Parse JSON bodies
@@ -40,17 +45,10 @@ connectDatabase().catch(err => {
 // Routes setup
 app.use(userRoutes); // Mount user routes
 app.use(coursesRoute); // Mount courses routes
-app.use(userCoursesRoute); // Mount user courses routes (commented out)
-
-/*
-app.use((req,res,next)=>{
-  mySession = req.session.userName;
-  next();
-  });
-*/
+app.use(userCoursesRoute); // Mount user courses routes
 
 // Example protected route using JWT middleware
-app.get('/authorized', jwtCheck, (req, res) => {
+app.get('/authorized', verifyToken, (req, res) => {
   res.send('Secure resource');
 });
 
@@ -81,13 +79,11 @@ app.get('/session-test', (req, res) => {
   }
 });
 
-/*
 // Initialize Socket.IO (commented out)
-const io = new Server(httpServer);
+const io = require('socket.io')(httpServer); // Import and initialize Socket.IO
 
-// Share session with Socket.IO (commented out)
-setupSocketIO(io, sessionMiddleware);
-*/
+// Share session with Socket.IO (uncomment if needed)
+setupSocketIO(io, session);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
