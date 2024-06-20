@@ -1,20 +1,32 @@
 const express = require('express');
-const { createServer } = require('http');
-const cors = require('cors');
-const { connectDatabase, client } = require('./config/database'); // Ensure client is imported
-const cookieParser = require("cookie-parser");
-const userRoutes = require('./routes/users'); // Import user routes
-const coursesRoute = require('./api/courses'); // Import courses routes
-const userCoursesRoute = require('./routes/usercourses'); // Import user courses routes (commented out)
-const { verifyToken } = require('./middleware/authMiddleware'); // Middleware for JWT verification
-const setupSocketIO = require('./utils/socket');
 const session = require("express-session");
-const pgSession = require('connect-pg-simple')(session); // Import pgSession for session storage
+const pgSession = require('connect-pg-simple')(session);
+const cors = require('cors');
+const cookieParser = require("cookie-parser");
+const { createServer } = require('http');
+
+const setupSocketIO = require('./utils/socket');
+
+// Config imports -----------------------------------------------------------------------
+const { connectDatabase, client } = require('./config/database');
+
+// Middleware imports -----------------------------------------------------------------------
+const { verifyToken } = require('./middleware/authMiddleware');
+
+// Routes imports -----------------------------------------------------------------------
+const userRoutes = require('./routes/users');
+const coursesRoute = require('./routes/courses');
+const userCoursesRoute = require('./routes/userCourses');
+
+// Api imports -----------------------------------------------------------------------
+const coursesApi = require('./api/api_courses');
+
 
 const app = express();
 const httpServer = createServer(app);
+const io = require('socket.io')(httpServer);
 
-// Middleware setup
+// Middleware setup ---------------------------------------------------------------------------
 app.use(session({
   store: new pgSession({
     pool: client,
@@ -25,16 +37,15 @@ app.use(session({
   cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
 }));
 
-// CORS configuration
+// CORS configuration ---------------------------------------------------------------------------
 app.use(cors({
   origin: 'http://localhost:4200', // Replace with your front-end domain
   credentials: true // Allow cookies to be sent
 }));
 
 
-// Body parsing middleware
-app.use(express.json()); // Parse JSON bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Connect to the database
 connectDatabase().catch(err => {
@@ -42,23 +53,20 @@ connectDatabase().catch(err => {
   process.exit(1);
 });
 
-// Routes setup
-app.use(userRoutes); // Mount user routes
-app.use(coursesRoute); // Mount courses routes
-app.use(userCoursesRoute); // Mount user courses routes
+// Routes setup --------------------------------------------------------------------------------
+app.use(userRoutes);
+app.use(coursesRoute);
+app.use(userCoursesRoute);
 
-// Example protected route using JWT middleware
 app.get('/authorized', verifyToken, (req, res) => {
   res.send('Secure resource');
 });
 
-// Example route to display user information from session
 app.get('/sessioninfo', (req, res) => {
   console.log('Current session:', req.session); // Log current session information
   res.send(req.session); // Respond with session data
 });
 
-// Example route to get user ID from session
 app.get("/user", (req, res) => {
   if (req.session && req.session.userId) {
     const sessionUserId = req.session.userId;
@@ -68,7 +76,6 @@ app.get("/user", (req, res) => {
   }
 });
 
-// Example session test route
 app.get('/session-test', (req, res) => {
   if (req.session.views) {
     req.session.views++;
@@ -79,10 +86,6 @@ app.get('/session-test', (req, res) => {
   }
 });
 
-// Initialize Socket.IO (commented out)
-const io = require('socket.io')(httpServer); // Import and initialize Socket.IO
-
-// Share session with Socket.IO (uncomment if needed)
 setupSocketIO(io, session);
 
 // Start the server

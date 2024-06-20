@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/authMiddleware');
-const {createCourse, getCourseById, rateCourse} = require("../controllers/coursesController");
-const {getCoursesByUserId} = require("../controllers/userCoursesController");
+const {createCourse, getCoursesByUserId, getAllCoursesFromUser, deleteCourse} = require("../controllers/userCoursesController");
 
-router.get('/mes-cours/:userId', verifyToken, getCoursesByUserId)
-router.post('/create-course', verifyToken, createCourse)
-router.get('/getCourseById', verifyToken, getCourseById);
-router.post('/rateCourse', verifyToken, rateCourse);
+// Logged User Courses Routes
+router.get('/coursesByUserId/:userId', verifyToken, getCoursesByUserId);
+router.get('/allCoursesFromUser', verifyToken, getAllCoursesFromUser)
+router.post('/createCourse', verifyToken, createCourse);
+router.delete('/deleteCourse/:courseId', verifyToken, deleteCourse);
 
 module.exports = router;

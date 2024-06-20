@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MyCourse } from '../../../models/mycourse';
-import { MyCourseService } from '../../../services/course/my/my-course.service';
+import { MyCourse } from '../../../../models/mycourse';
+import { MyCourseService } from '../../../../services/course/my/my-course.service';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {FormCoursComponent} from "../../../components/form-cours/form-cours.component";
+import {FormCoursComponent} from "../../../../components/form-cours/form-cours.component";
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
@@ -30,7 +30,7 @@ export class MesCoursComponent implements OnInit {
   }
 
   private loadCourses(): void {
-    this.courseService.getAllCourse().subscribe({
+    this.courseService.getAllCoursesFromUser().subscribe({
       next: (response: any) => {
         this.ListeCours = response.courses;
       },

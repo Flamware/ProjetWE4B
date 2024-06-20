@@ -1,6 +1,5 @@
 const { client } = require('../config/database');
 
-// Get courses by user ID endpoint
 const getCoursesByUserId = async (req, res) => {
   const userId = req.session.userId; // Retrieve user ID from session
   try {
@@ -24,48 +23,87 @@ const getCoursesByUserId = async (req, res) => {
   }
 };
 
-// Create new course endpoint
-const createCourse = async (req, res) => {
-  const { name, description, theme } = req.body;
-  console.log('req', req.body);
-  const userId = req.userId; // Retrieve user ID from session
+async function getAllCoursesFromUser(req, res) {
+  if (req.body.username){
+    console.log("User", req.body.username, "is requesting all courses")
+    // fetch user id
+    const query = 'SELECT id FROM users WHERE username = $1';
+    const result = await client.query(query, [req.body.username]);
 
-  try {
-    if (!userId) {
-      return res.status(401).json({ error: 'User ID not found in session' });
-    }
-
-    // Insert new course into database
-    const insertQuery = 'INSERT INTO skills (name, description, teacher_id, title) VALUES ($1, $2, $3, $4) RETURNING id';
-    const insertValues = [name, description, userId, theme];
-    const insertResult = await client.query(insertQuery, insertValues);
-    const courseId = insertResult.rows[0].id;
-
-    // Associate course with user
-    const userSkillsQuery = 'INSERT INTO userskills (user_id, skill_id) VALUES ($1, $2)';
-    const userSkillsValues = [userId, courseId];
-    await client.query(userSkillsQuery, userSkillsValues);
-
-    // Prepare response with created course details
-    const course = {
-      id: courseId,
-      name,
-      description,
-      teacher_id: userId,
-      theme,
-    };
-
-    // Example of setting a cookie in the response
-    res.cookie('sessionID', req.sessionID, { httpOnly: true, maxAge: 3600000 });
-
-    res.status(201).json({ course });
-  } catch (error) {
-    console.error('Error creating course:', error);
+    //fetch all course from user
+    const query2 = 'SELECT * FROM course WHERE teacher_id = $1';
+    const result2 = await client.query(query2, [result.rows[0].id]);
+    const courses = result2.rows;
+    res.status(200).json({ courses });
+  }
+  else{
+    console.log("Fetching course of logged user")
+    const userId = req.userId;
+    // Obtenir tous les cours de l'utilisateur connecté
+    try {
+      const query = 'SELECT * FROM course WHERE teacher_id = $1';
+      const result = await
+      client.query(query, [userId]);
+      const courses = result.rows;
+      res.status(200).json({ courses });
+  }
+  catch (error) {
+    console.error('Error fetching courses:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-};
+  }
+}
+
+async function createCourse(req, res) {
+  const {date, description, image, name, theme} = req.body;
+  const userId = req.userId;
+  //insere un nouveau cours dans la base de données
+  try {
+    if (!userId) {
+      return res.status(401).json({error: 'User ID not found in session'});
+    }
+
+    const insertQuery = 'INSERT INTO course (type, description , title , date , image, teacher_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id';
+    const insertValues = [theme, description, name, date, image, userId];
+    const insertResult = await client.query(insertQuery, insertValues);
+    const courseId = insertResult.rows[0].id;
+    // if ok return the new course
+    const course = {
+      id: courseId,
+      type: theme,
+      description,
+      title: name,
+      date,
+      image,
+      teacher_id: userId
+    };
+    res.status(201).json({course});
+  }
+  catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({error: 'Internal server error'});
+  }
+}
+
+async function deleteCourse(req, res) {
+  const courseId = req.params.id;
+  const userId = req.userId;
+  console.log("User number", userId, "tries to delete course number", courseId);
+  // Vérifier si l'utilisateur est autorisé à supprimer le cours et le supprimer depuis usercourse
+  try {
+    const query = 'DELETE FROM course WHERE id = $1 AND teacher_id = $2';
+    const result = await client.query(query, [courseId, userId]);
+    res.status(200).json({message: 'Course deleted successfully'});
+  }
+  catch (error) {
+    console.error('Error deleting course:', error);
+    res.status(500).json({error: 'Internal server error'});
+  }
+}
 
 module.exports = {
   createCourse,
+  deleteCourse,
   getCoursesByUserId,
+  getAllCoursesFromUser
 };

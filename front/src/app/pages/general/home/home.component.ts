@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
 import { FormCoursComponent } from '../../../components/form-cours/form-cours.component';
-import {NgForOf, NgIf} from "@angular/common";
-import {MyCourse} from "../../../models/mycourse";
-import {MyCourseService} from "../../../services/course/my/my-course.service";
+import {Course} from "../../../models/course";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {CourseService} from "../../../services/course/course.service";
+import { CoursComponent } from '../tous-les-cours/cours/cours.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [FormCoursComponent, NgForOf, NgIf, RouterLink],
+  imports: [FormCoursComponent, CoursComponent], // Assurez-vous que MesCoursComponent est ici
 })
 export class HomeComponent {
-  ListeCours: MyCourse[] = [];
+  showCourses = true;
+
+  ListeCours: Course[] = [];
 
   constructor(
     private courseService: CourseService,
@@ -22,11 +23,12 @@ export class HomeComponent {
   ) {}
 
   ngOnInit(): void {
-    this.loadCourses();
+    /*this.loadCourses();*/
   }
 
+  /*
   private loadCourses(): void {
-    this.courseService.getAllCourse().subscribe({
+    this.courseService.getAllCoursesAndShuffle().subscribe({
         next: (response: any) => {
           this.ListeCours = response.courses;
         },
@@ -36,9 +38,5 @@ export class HomeComponent {
       }
 
     );
-  }
-
-  handleCourseCreated(newCourse: MyCourse): void {
-    this.ListeCours.push(newCourse); // Add newly created course to the list
-  }
+  }*/
 }

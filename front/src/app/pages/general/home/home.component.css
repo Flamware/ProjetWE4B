@@ -2,6 +2,36 @@ h1 {
     margin: 0;
 }
 
+/* Styles pour le conteneur des frames */
+.frame-container {
+    display: flex;
+    flex-direction: row; /* Aligner les frames côte à côte */
+    height: 80vh; /* Hauteur ajustable selon la page */
+    border: 1px solid #ccc;
+  }
+  
+  /* Styles pour chaque frame */
+  .frame {
+    flex: 1; /* Permet le redimensionnement dynamique */
+    border: 1px solid #000;
+    overflow: auto;
+    padding: 10px;
+    resize: horizontal; /* Permet le redimensionnement horizontal */
+  }
+  
+  /* Ajustements pour le formulaire */
+  .addCourse {
+    height: 100%;
+    overflow: auto;
+  }
+  
+  /* Ajustements pour la liste des cours */
+  .courseList {
+    height: 100%;
+    overflow: auto;
+  }
+  
+
 
 .card-container {
   display: flex;

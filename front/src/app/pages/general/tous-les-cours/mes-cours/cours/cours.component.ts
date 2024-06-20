@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MesDocumentComponent } from '../../../components/mes-document/mes-document.component';
+import { MesDocumentComponent } from '../../../../../components/mes-document/mes-document.component';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CourseService } from '../../../services/course/course.service';
-import { Course } from '../../../models/course';
+import { CourseService } from '../../../../../services/course/course.service';
+import { Course } from '../../../../../models/course';
 
 @Component({
   selector: 'app-cours',
