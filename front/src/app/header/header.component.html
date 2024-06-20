@@ -10,7 +10,8 @@
     <button class="button">Search</button>
     <div class="results">
     </div>
-    <a *ngIf="!isconnected" routerLink="/login" routerLinkActive="active">Login</a>
+    <button class="button" id="boutonlogin" *ngIf="!isconnected" routerLink="/login" routerLinkActive="active">Login</button>
+    <button class="button" (click)="logout()" *ngIf="isconnected" routerLink="/logout" routerLinkActive="active">Logout</button>
   </div>
   <nav>
     <a routerLink="/home" routerLinkActive="active">Home</a>
@@ -21,3 +22,4 @@
     <a [routerLink]="['/message', '' ]" routerLinkActive="active" >Mes messages</a>
   </nav>
 </header>
+

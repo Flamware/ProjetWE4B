@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {AbstractControl, ValidationErrors} from "@angular/forms";
 
@@ -10,7 +10,10 @@ import {AbstractControl, ValidationErrors} from "@angular/forms";
 export class AuthService {
   private loginUrl = 'http://localhost:3000/login';  // Replace with your server's login endpoint
   private registerUrl = 'http://localhost:3000/register';  // Replace with your server's register endpoint
+  // @ts-ignore
+  private loggedIn = new BehaviorSubject<boolean>(this.getToken());
 
+  authStatus = this.loggedIn.asObservable();
   constructor(private http: HttpClient) {
   }
 
@@ -21,9 +24,16 @@ export class AuthService {
           localStorage.setItem('token', response.token);
           localStorage.setItem('username', response.username);
           localStorage.setItem('userId', response.userId);
+          this.loggedIn.next(true);
         }
       })
     );
+  }
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userId');
+    this.loggedIn.next(false);
   }
 
   register(username: string, email: string, password: string, nom: string, prenom: string, role: string): Observable<any> {
@@ -39,6 +49,7 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem('token');
   }
+
 
   isAuthenticated() {
     return !!localStorage.getItem('token');

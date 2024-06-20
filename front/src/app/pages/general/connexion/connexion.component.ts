@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Renderer2, Component, ElementRef} from '@angular/core';
 import { FormControl, FormGroup ,ReactiveFormsModule,Validators} from '@angular/forms';
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {AuthService} from "../../../services/auth/auth.service";
@@ -16,7 +16,7 @@ import {AuthService} from "../../../services/auth/auth.service";
 export class ConnexionComponent {
 
   formconnexion: FormGroup;
-  constructor( private authService: AuthService, private router: Router) {
+  constructor( private authService: AuthService, private router: Router,private renderer: Renderer2, private el: ElementRef) {
     this.formconnexion = new FormGroup({
       email: new FormControl('', [Validators.email]),
       password: new FormControl('', [Validators.required]),
@@ -32,6 +32,7 @@ export class ConnexionComponent {
           localStorage.setItem('username', response.username);
           localStorage.setItem('userId', response.userId);
           this.router.navigate(['/']).then(r => console.log(r));
+
         }
       });
   }
