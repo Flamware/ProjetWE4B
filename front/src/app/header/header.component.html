@@ -10,7 +10,7 @@
     <button class="button">Search</button>
     <div class="results">
     </div>
-    <a  routerLink="/login" routerLinkActive="active">Login</a>
+    <a *ngIf="!isconnected" routerLink="/login" routerLinkActive="active">Login</a>
   </div>
   <nav>
     <a routerLink="/home" routerLinkActive="active">Home</a>
