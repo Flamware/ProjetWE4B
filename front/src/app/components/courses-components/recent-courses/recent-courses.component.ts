@@ -25,11 +25,16 @@ export class RecentCoursesComponent implements OnInit {
   loadRecentCourses(): void {
     this.courseService.getAllCoursesFromUser().subscribe({
       next: (courses) => {
-        this.recentCourses = courses.slice(0, 5); // Affiche les 5 cours les plus récents
+        if (Array.isArray(courses)) {
+          this.recentCourses = courses.slice(0, 5); // Display the latest 5 courses
+        } else {
+          console.error('Error: Expected an array of courses, but received:', courses);
+        }
       },
       error: (error) => {
         console.error('Error fetching recent courses:', error);
       }
     });
   }
+  
 }

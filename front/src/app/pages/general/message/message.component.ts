@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
-import { MessageService } from '../../../services/message/message.service'; // Assurez-vous d'avoir le bon chemin vers votre service
+import { MessageService } from '../../../services/message/message.service';
 import { Message } from '../../../models/message';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserSearchComponent } from '../../../components/user-search/user-search.component';
 import { ContactsComponent } from '../../../components/contacts/contacts.component';
+import { interval, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-message',
@@ -20,7 +22,7 @@ import { ContactsComponent } from '../../../components/contacts/contacts.compone
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.css']
 })
-export class MessageComponent implements OnInit {
+export class MessageComponent implements OnInit, OnDestroy {
   sender: string | null = null;
   messages: Message[] = [];
   contacts: any[] = [];
@@ -28,6 +30,7 @@ export class MessageComponent implements OnInit {
   interlocuteur: string = '';
   searchQuery: string = '';
   selectedContactId: string | null = null;
+  private refreshSubscription: Subscription | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,11 +45,32 @@ export class MessageComponent implements OnInit {
       const contactId = params.get('contactId');
       if (contactId) {
         this.loadMessagesForContact(contactId);
+
+        // Démarrez le rafraîchissement périodique des messages toutes les 10 secondes
+        this.refreshSubscription = interval(10000) // 10 secondes
+          .pipe(
+            switchMap(() => this.messageService.getMessages(contactId))
+          )
+          .subscribe({
+            next: (messages: Message[]) => {
+              this.messages = messages;
+            },
+            error: (error: any) => {
+              console.error('Error fetching messages:', error);
+            }
+          });
       } else {
         // Logic to handle when no contact is selected
         console.log('No contact selected.');
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    // Nettoyez l'abonnement au rafraîchissement périodique lors de la destruction du composant
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
   }
 
   loadMessagesForContact(contactId: string): void {
@@ -63,11 +87,15 @@ export class MessageComponent implements OnInit {
   }
 
   sendMessage(): void {
-    if (this.interlocuteur && this.newMessage.trim() !== '') {
-      this.messageService.sendMessage(this.interlocuteur, this.newMessage).subscribe({
+    if (this.selectedContactId && this.newMessage.trim() !== '') {
+      this.messageService.sendMessage(this.selectedContactId, this.newMessage).subscribe({
         next: (message: Message) => {
+          // Ajoute le message envoyé aux messages existants
           this.messages.push(message);
-          this.newMessage = ''; // Réinitialisez le champ de saisie après l'envoi
+          // Efface le champ de saisie après l'envoi
+          this.newMessage = '';
+          // Charge à nouveau les messages pour le contact sélectionné
+          this.loadMessagesForContact(this.selectedContactId!);
         },
         error: (error: any) => {
           console.error('Error sending message:', error);
@@ -75,6 +103,7 @@ export class MessageComponent implements OnInit {
       });
     }
   }
+  
 
   navigateToMessage(contactId: string): void {
     this.router.navigate(['/message', contactId]);

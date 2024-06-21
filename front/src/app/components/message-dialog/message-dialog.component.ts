@@ -16,6 +16,7 @@ import { MessageService } from '../../services/message/message.service';
     MatInputModule
   ],
   templateUrl: './message-dialog.component.html',
+  styleUrls: ['./message-dialog.component.css']
 })
 export class MessageDialogComponent {
 
