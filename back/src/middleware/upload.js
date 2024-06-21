@@ -1,4 +1,6 @@
+// Middleware multer pour gérer les fichiers
 const multer = require('multer');
+const path = require('path');
 
 // Multer configuration
 const storage = multer.diskStorage({
@@ -6,7 +8,9 @@ const storage = multer.diskStorage({
     cb(null, './uploads/'); // Destination directory for uploaded files
   },
   filename: function (req, file, cb) {
-    cb(null, new Date().toISOString() + '-' + file.originalname); // File naming convention
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const fileExtension = path.extname(file.originalname);
+    cb(null, uniqueSuffix + fileExtension); // File naming convention
   }
 });
 

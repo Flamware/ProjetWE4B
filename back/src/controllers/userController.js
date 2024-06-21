@@ -43,10 +43,18 @@ exports.testToken = async (req, res) => {
   res.status(200).json({ message: 'Token is valid' });
 };
 
+// Fonction de gestion de l'inscription d'un utilisateur
 exports.register = async (req, res) => {
-  const { username, email, password, nom, prenom, role } = req.body;
-
   try {
+    // Extraire les champs de texte du formulaire
+    const { username, email, password, nom, prenom, role } = req.body;
+
+    // Validation des champs
+    if (!username || !email || !password || !nom || !prenom || !role) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Vérifier si l'utilisateur existe déjà
     const query = 'SELECT * FROM users WHERE email = $1';
     const result = await client.query(query, [email]);
 
@@ -54,12 +62,23 @@ exports.register = async (req, res) => {
       return res.status(409).json({ error: 'User with this email already exists' });
     }
 
+    // Hachage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Préparer les données pour l'insertion dans la base de données
     const insertQuery = `
-      INSERT INTO users (username, first_name, last_name, email, password, role)
-      VALUES ($1, $2, $3, $4, $5, $6)`;
-    await client.query(insertQuery, [username, prenom, nom, email, hashedPassword, role]);
+      INSERT INTO users (username, first_name, last_name, email, password, role, profile_picture)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)`;
+
+    // Obtenir le chemin de l'image de profil si elle est téléchargée
+    let profilePicturePath = null;
+    if (req.file) {
+      profilePicturePath = req.file.path;
+      console.log('Uploaded file:', req.file); // Ajouter ce log pour vérifier les détails du fichier téléchargé
+    }
+
+    // Insérer l'utilisateur dans la base de données
+    await client.query(insertQuery, [username, prenom, nom, email, hashedPassword, role, profilePicturePath]);
 
     res.status(200).json({ message: 'User registered successfully' });
   } catch (error) {

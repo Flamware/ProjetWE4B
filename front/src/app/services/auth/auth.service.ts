@@ -36,11 +36,8 @@ export class AuthService {
     this.loggedIn.next(false);
   }
 
-  register(username: string, email: string, password: string, nom: string, prenom: string, role: string): Observable<any> {
-    console.log("register", username, email, password, prenom, role);
-    //set to case minuscule role
-    role = role.toLowerCase();
-    return this.http.post<any>(this.registerUrl, {username, email, password, nom, prenom, role});
+  register(formData: FormData): Observable<any> {
+    return this.http.post(`${this.registerUrl}`, formData);
   }
 
   setToken(token: string): void {

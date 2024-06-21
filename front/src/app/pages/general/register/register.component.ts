@@ -15,23 +15,70 @@ import {NgIf} from "@angular/common";
 })
 export class RegisterComponent {
   formconnexion: FormGroup;
-  constructor(private formBuilder: FormBuilder, private authService: AuthService) {
-    this.formconnexion = this.formBuilder.group({
-      username: ['', Validators.required],
+  profilePictureFile: File | null = null;
+  profilePicturePreview: string | null = null;
+
+  constructor(private fb: FormBuilder, private authService: AuthService) {
+    this.formconnexion = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       role: ['', Validators.required]
     });
   }
 
+  ngOnInit(): void {
+    this.formconnexion = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      nom: ['', Validators.required],
+      prenom: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      role: ['', Validators.required]
+    });
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.profilePictureFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.profilePicturePreview = e.target.result;
+      };
+      reader.readAsDataURL(this.profilePictureFile);
+    }
+  }
+
   submit(): void {
     if (this.formconnexion.valid) {
-      this.authService.register(this.formconnexion.value.username, this.formconnexion.value.email, this.formconnexion.value.password, this.formconnexion.value.nom, this.formconnexion.value.prenom, this.formconnexion.value.role)
-        .subscribe(response => {
-          console.log(response);
-        });
+      const formData = new FormData();
+      formData.append('username', this.formconnexion.get('username')?.value);
+      formData.append('email', this.formconnexion.get('email')?.value);
+      formData.append('nom', this.formconnexion.get('nom')?.value);
+      formData.append('prenom', this.formconnexion.get('prenom')?.value);
+      formData.append('password', this.formconnexion.get('password')?.value);
+      formData.append('role', this.formconnexion.get('role')?.value);
+
+      if (this.profilePictureFile) {
+        formData.append('profilePicture', this.profilePictureFile);
+      }
+
+      this.authService.register(formData).subscribe({
+        next: response => {
+          console.log('Registration successful', response);
+        },
+        error: error => {
+          console.error('Error during registration', error);
+        },
+        complete: () => {
+          console.log('Registration request complete');
+        }
+      });
+    } else {
+      console.error('Form is not valid');
     }
   }
 }
