@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { NgIf } from "@angular/common";
+import { CommonModule, NgIf } from "@angular/common";
 import { ProfileService } from '../../../services/profile/profile.service';
 import { Userinfo } from '../../../models/userinfo';
 import { Subscription } from 'rxjs';
@@ -19,7 +19,8 @@ type errors = {
   standalone: true,
   imports: [
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule
   ],
   styleUrls: ['./profile.component.css']
 })
@@ -36,6 +37,7 @@ export class ProfileComponent implements OnInit {
   getInfoSub?: Subscription;
   updateInfoSub?: Subscription;
   userInfo?: Userinfo;
+  profilePictureUrl?: string;
 
   constructor(private profileService: ProfileService) {}
 
@@ -46,6 +48,7 @@ export class ProfileComponent implements OnInit {
           this.userInfo = data;
           this.userInfo.created_at = new Date(data.created_at);
           this.createForm();
+          this.loadProfilePicture();
         },
         error: (err) => {
           console.error('Error fetching course details:', err);
@@ -54,6 +57,22 @@ export class ProfileComponent implements OnInit {
     );
 
   }
+
+  loadProfilePicture(): void {
+    // Utilisation du service ProfileService pour récupérer l'URL de l'image de profil
+    this.profileService.getProfilePictureUrl().subscribe({
+      next: (url: string) => {
+        // Assurez-vous que l'URL ne contient que des slashes ('/') et non des backslashes ('\')
+        this.profilePictureUrl = `http://localhost:3000/${this.userInfo?.profile_picture?.replace(/\\/g, '/')}`;
+      },
+      error: (error: any) => {
+        console.error('Error loading profile picture:', error);
+      },
+      complete: () => {
+        console.log('Profile picture loading completed.');
+      }
+    });
+  }  
 
   createForm() {
     if(this.userInfo === undefined) {

@@ -36,4 +36,13 @@ export class ProfileService {
       'Authorization': `Bearer ${token}`
     });
   }
+
+  getProfilePictureUrl(): Observable<string> {
+    const headers = this.getHeaders();
+
+    // Endpoint pour récupérer l'URL de l'image de profil
+    const profilePictureUrl = `${this.apiUrl}/users/profile-picture`;
+
+    return this.http.get<string>(profilePictureUrl, { headers });
+  }
 }

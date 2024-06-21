@@ -43,18 +43,14 @@ exports.testToken = async (req, res) => {
   res.status(200).json({ message: 'Token is valid' });
 };
 
-// Fonction de gestion de l'inscription d'un utilisateur
 exports.register = async (req, res) => {
   try {
-    // Extraire les champs de texte du formulaire
     const { username, email, password, nom, prenom, role } = req.body;
 
-    // Validation des champs
     if (!username || !email || !password || !nom || !prenom || !role) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    // Vérifier si l'utilisateur existe déjà
     const query = 'SELECT * FROM users WHERE email = $1';
     const result = await client.query(query, [email]);
 
@@ -62,30 +58,75 @@ exports.register = async (req, res) => {
       return res.status(409).json({ error: 'User with this email already exists' });
     }
 
-    // Hachage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Préparer les données pour l'insertion dans la base de données
     const insertQuery = `
-      INSERT INTO users (username, first_name, last_name, email, password, role, profile_picture)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)`;
+      INSERT INTO users (username, first_name, last_name, email, password, role)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id`;
 
-    // Obtenir le chemin de l'image de profil si elle est téléchargée
-    let profilePicturePath = null;
-    if (req.file) {
-      profilePicturePath = req.file.path;
-      console.log('Uploaded file:', req.file); // Ajouter ce log pour vérifier les détails du fichier téléchargé
-    }
+    const insertedUser = await client.query(insertQuery, [username, prenom, nom, email, hashedPassword, role]);
+    const userId = insertedUser.rows[0].id;
 
-    // Insérer l'utilisateur dans la base de données
-    await client.query(insertQuery, [username, prenom, nom, email, hashedPassword, role, profilePicturePath]);
-
-    res.status(200).json({ message: 'User registered successfully' });
+    res.status(200).json({ message: 'User registered successfully', userId });
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+// Fonction pour gérer l'envoi de la photo de profil
+exports.uploadProfilePicture = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email must be provided in URL' });
+    }
+
+    let profilePicturePath = null;
+    if (req.file) {
+      profilePicturePath = req.file.path;
+      console.log('Uploaded profile picture:', req.file);
+    } else {
+      return res.status(400).json({ error: 'Profile picture file not provided' });
+    }
+
+    // Mettre à jour l'enregistrement utilisateur avec le chemin de la photo de profil
+    const updateQuery = `
+      UPDATE users
+      SET profile_picture = $1
+      WHERE email = $2`;
+
+    await client.query(updateQuery, [profilePicturePath, email]);
+
+    res.status(200).json({ message: 'Profile picture uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading profile picture:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getUserProfilePictureUrl = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const query = 'SELECT profile_picture FROM users WHERE id = $1';
+    const result = await client.query(query, [userId]);
+
+    if (result.rows.length === 0 || !result.rows[0].profile_picture) {
+      return res.status(404).json({ error: 'Profile picture not found' });
+    }
+
+    const profilePictureUrl = result.rows[0].profile_picture;
+    res.status(200).json(profilePictureUrl);
+  } catch (error) {
+    console.error('Error fetching profile picture:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 exports.getAccountInfo = async (req, res) => {
   let username;
@@ -120,11 +161,6 @@ exports.getAccountInfo = async (req, res) => {
     // If user not found, return 404 error
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Modify profile_picture path if present
-    if (user.profile_picture) {
-      user.profile_picture = `/img/profile/${user.profile_picture}`;
     }
 
     // Return formatted user information in the response

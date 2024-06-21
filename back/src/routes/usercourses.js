@@ -9,8 +9,7 @@ const multer = require("multer");
 router.get('/coursesByUserId/:userId', verifyToken, getCoursesByUserId);
 router.get('/allCoursesFromUser', verifyToken, getAllCoursesFromUser);
 
-// Example of using multer in a route
-router.post('/createCourse', verifyToken, multer, createCourse);
+router.post('/createCourse', verifyToken, createCourse);
 
 router.delete('/deleteCourse/:courseId', verifyToken, deleteCourse);
 

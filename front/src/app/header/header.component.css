@@ -131,3 +131,10 @@ nav {
 .result-item:hover {
   border-color: #ccc;
 }
+
+.profile-picture img {
+  width: 40px; /* Ajustez la taille selon vos besoins */
+  height: 40px;
+  border-radius: 50%; /* Pour arrondir l'image */
+  object-fit: cover; /* Pour s'assurer que l'image s'adapte correctement */
+}

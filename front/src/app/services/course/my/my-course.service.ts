@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { MyCourse } from '../../../models/mycourse';
 
@@ -18,10 +18,7 @@ export class MyCourseService {
       headers: this.getHeaders()
     }).pipe(
       tap(data => console.log(`Courses fetched for user ID: ${userId}`, data)),
-      catchError(error => {
-        console.error('Error fetching courses for user:', error);
-        throw error;
-      })
+      catchError(this.handleError('getCoursesByUserId'))
     );
   }
 
@@ -30,22 +27,25 @@ export class MyCourseService {
       headers: this.getHeaders()
     }).pipe(
       tap(data => console.log(`Courses fetched for user`, data)),
-      catchError(error => {
-        console.error('Error fetching courses for user:', error);
-        throw error;
-      })
+      catchError(this.handleError('getAllCoursesFromUser'))
     );
   }
 
-    createCourse(courseData: FormData): Observable<MyCourse> {
-    return this.http.post<MyCourse>(`${this.apiUrl}/createCourse`, courseData, {
+  createCourse(courseData: FormData): Observable<MyCourse> {
+    // Construire le corps de la requête avec les données extraites de FormData
+    const body = {
+      date: courseData.get('date'),
+      description: courseData.get('description'),
+      image: courseData.get('image'),
+      name: courseData.get('name'),
+      theme: courseData.get('theme')
+    };
+
+    // Envoi de la requête HTTP avec le corps JSON
+    return this.http.post<MyCourse>(`${this.apiUrl}/createCourse`, body, {
       headers: this.getHeaders()
     }).pipe(
-      tap(data => console.log('Course created successfully:', data)),
-      catchError(error => {
-        console.error('Error creating course:', error);
-        throw error;
-      })
+      tap(data => console.log('Course created successfully:', data))
     );
   }
 
@@ -55,24 +55,25 @@ export class MyCourseService {
       headers: this.getHeaders()
     }).pipe(
       tap(() => console.log('Course deleted successfully:', courseId)),
-      catchError(error => {
-        console.error('Error deleting course:', error);
-        throw error;
-      })
+      catchError(this.handleError('deleteCourse'))
     );
   }
 
-  private getHeaders(): HttpHeaders {
+  private getHeaders(isMultipart: boolean = false): HttpHeaders {
     const token = localStorage.getItem('token');
-    if (token) {
-      return new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      });
-    } else {
-      return new HttpHeaders({
-        'Content-Type': 'application/json'
-      });
+    let headers = new HttpHeaders({
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+    if (!isMultipart) {
+      headers = headers.append('Content-Type', 'application/json');
     }
+    return headers;
+  }
+
+  private handleError(operation = 'operation') {
+    return (error: any): Observable<never> => {
+      console.error(`${operation} failed: ${error.message}`);
+      return throwError(error);
+    };
   }
 }

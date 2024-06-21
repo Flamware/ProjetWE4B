@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {AbstractControl, ValidationErrors} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private loginUrl = 'http://localhost:3000/login';  // Replace with your server's login endpoint
-  private registerUrl = 'http://localhost:3000/register';  // Replace with your server's register endpoint
-  // @ts-ignore
-  private loggedIn = new BehaviorSubject<boolean>(this.getToken());
+  private loginUrl = 'http://localhost:3000/login'; // Replace with your server's login endpoint
+  private registerUrl = 'http://localhost:3000/register'; // Replace with your server's register endpoint
+  private apiUrl = 'http://localhost:3000';
+  private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated());
 
   authStatus = this.loggedIn.asObservable();
-  constructor(private http: HttpClient) {
-  }
+
+  constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(this.loginUrl, {email, password}).pipe(
+    return this.http.post<any>(this.loginUrl, { email, password }).pipe(
       tap(response => {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
@@ -29,6 +28,7 @@ export class AuthService {
       })
     );
   }
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
@@ -37,18 +37,32 @@ export class AuthService {
   }
 
   register(formData: FormData): Observable<any> {
-    return this.http.post(`${this.registerUrl}`, formData);
+    // Créez un objet avec les propriétés attendues par le backend
+    const body = {
+      username: formData.get('username'),
+      email: formData.get('email'),
+      nom: formData.get('nom'),
+      prenom: formData.get('prenom'),
+      password: formData.get('password'),
+      role: formData.get('role')
+    };
+  
+    // Envoi de la requête HTTP avec le corps JSON
+    return this.http.post<any>(this.registerUrl, body);
   }
+  
 
-  setToken(token: string): void {
-    localStorage.setItem('token', token);
-  }
-  getToken(): string | null {
-    return localStorage.getItem('token');
-  }
-
-
-  isAuthenticated() {
+  isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
   }
+
+  uploadProfilePicture(formData: FormData): Observable<any> {
+    const email = formData.get('email');
+    const uploadUrl = `${this.apiUrl}/upload/${email}`; // Ajustez l'URL d'envoi pour inclure email
+  
+    console.log('Upload URL:', uploadUrl); // Log pour afficher l'URL
+  
+    return this.http.post<any>(uploadUrl, formData);
+  }
+  
 }

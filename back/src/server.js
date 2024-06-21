@@ -1,10 +1,11 @@
 const express = require('express');
-const session = require("express-session");
+const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 const { createServer } = require('http');
 const setupSocketIO = require('./utils/socket');
-const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
 
 // Config imports -----------------------------------------------------------------------
 const { connectDatabase, client } = require('./config/database');
@@ -16,20 +17,25 @@ const { verifyToken } = require('./middleware/authMiddleware');
 const userRoutes = require('./routes/users');
 const coursesRoute = require('./routes/courses');
 const userCoursesRoute = require('./routes/usercourses');
-const messageRoute = require("./routes/messages");
+const messageRoute = require('./routes/messages');
 
 // Api imports -----------------------------------------------------------------------
 const coursesApi = require('./api/api_courses');
-
 
 const app = express();
 const httpServer = createServer(app);
 const io = require('socket.io')(httpServer);
 
+// Setup multer for file uploads
+const upload = multer({ dest: 'uploads/' });
+
 // Middleware setup
-app.use(bodyParser.json());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// Middleware pour servir les fichiers statiques depuis le dossier uploads
+const uploadsPath = path.resolve(__dirname, '../uploads');
+app.use('/uploads', express.static(uploadsPath));
 
 app.use(session({
   store: new pgSession({
@@ -84,6 +90,16 @@ app.get('/session-test', (req, res) => {
     req.session.views = 1;
     res.send('Welcome for the first time!');
   }
+});
+
+// Route for course creation (example)
+app.post('/createCourse', upload.single('file'), (req, res) => {
+  const courseData = req.body;
+  const file = req.file;
+  console.log('Course Data:', courseData);
+  console.log('Uploaded File:', file);
+  // Traitement des données du cours et du fichier ici
+  res.status(201).json({ message: 'Course created', courseData, file });
 });
 
 // Setup socket.io

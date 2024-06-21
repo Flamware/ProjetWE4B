@@ -51,7 +51,7 @@ export class RegisterComponent {
       reader.readAsDataURL(this.profilePictureFile);
     }
   }
-
+  
   submit(): void {
     if (this.formconnexion.valid) {
       const formData = new FormData();
@@ -61,17 +61,34 @@ export class RegisterComponent {
       formData.append('prenom', this.formconnexion.get('prenom')?.value);
       formData.append('password', this.formconnexion.get('password')?.value);
       formData.append('role', this.formconnexion.get('role')?.value);
-
-      if (this.profilePictureFile) {
-        formData.append('profilePicture', this.profilePictureFile);
-      }
-
+  
+      // Register the user first
       this.authService.register(formData).subscribe({
-        next: response => {
+        next: (response: any) => {
           console.log('Registration successful', response);
+          
+          // If registration is successful, attempt to upload profile picture
+          if (this.profilePictureFile) {
+            const uploadFormData = new FormData();
+            uploadFormData.append('profilePicture', this.profilePictureFile);
+            uploadFormData.append('email', this.formconnexion.get('email')?.value);
+
+  
+            this.authService.uploadProfilePicture(uploadFormData).subscribe({
+              next: () => {
+                console.log('Profile picture uploaded successfully');
+                // Optionally, redirect or notify user of successful registration and upload
+              },
+              error: (uploadError) => {
+                console.error('Error uploading profile picture:', uploadError);
+                // Handle error uploading profile picture
+              }
+            });
+          }
         },
-        error: error => {
-          console.error('Error during registration', error);
+        error: (registrationError) => {
+          console.error('Error during registration', registrationError);
+          // Handle error during registration
         },
         complete: () => {
           console.log('Registration request complete');
@@ -81,4 +98,5 @@ export class RegisterComponent {
       console.error('Form is not valid');
     }
   }
+  
 }
