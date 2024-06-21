@@ -1,0 +1,6 @@
+<div *ngIf="mediaUrl">
+    <img *ngIf="mediaType === 'image'" [src]="mediaUrl" alt="Media">
+    <video *ngIf="mediaType === 'video'" [src]="mediaUrl" controls></video>
+    <audio *ngIf="mediaType === 'audio'" [src]="mediaUrl" controls></audio>
+  </div>
+  

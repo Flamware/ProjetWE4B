@@ -22,6 +22,19 @@ export class MyCourseService {
     );
   }
 
+    // Méthode pour récupérer un média via son URL
+    getMediaByUrl(mediaUrl: string): Observable<any> {
+      const headers = this.getHeaders();
+  
+      return this.http.get<any>(mediaUrl, { headers }).pipe(
+        tap(data => console.log('Media fetched successfully:', data)),
+        catchError(error => {
+          console.error('Error fetching media:', error);
+          throw error;
+        })
+      );
+    }
+
   getAllCoursesFromUser(): Observable<MyCourse[]> {
     return this.http.get<MyCourse[]>(`${this.apiUrl}/allCoursesFromUser`, {
       headers: this.getHeaders()

@@ -5,9 +5,15 @@
 <div class="card-container" id="form">
   <div class="cour" *ngFor="let course of ListeCours; let i = index">
     <div class="card">
-      <div class="card-image">
-        <img [src]="course.image || 'default-image-url'" alt="{{ course.image }}">
+      <!-- Affichage du média -->
+      <div *ngFor="let mediaUrl of course.mediaUrls">
+        <app-media-viewer [mediaUrl]="mediaUrl"></app-media-viewer>
       </div>
+
+      <!-- Example of how to display a single mediaUrl and mediaType -->
+      <!-- Adjust this based on your actual data structure -->
+      <!-- <app-media-viewer [mediaUrl]="course.mediaUrl" [mediaType]="course.mediaType"></app-media-viewer> -->
+
       <div class="card-content">
         <h2 class="card-title">{{ course.title }}</h2>
         <div class="card-rating">

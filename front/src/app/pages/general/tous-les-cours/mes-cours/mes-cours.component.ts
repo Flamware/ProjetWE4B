@@ -4,6 +4,7 @@ import { MyCourseService } from '../../../../services/course/my/my-course.servic
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {FormCoursComponent} from "../../../../components/form-cours/form-cours.component";
 import {NgForOf, NgIf} from "@angular/common";
+import { MediaViewerComponent } from '../../../../components/media-viewer/media-viewer.component';
 
 @Component({
   selector: 'app-mes-cours',
@@ -13,7 +14,8 @@ import {NgForOf, NgIf} from "@angular/common";
     FormCoursComponent,
     NgForOf,
     NgIf,
-    RouterLink
+    RouterLink,
+    MediaViewerComponent
   ],
   styleUrls: ['./mes-cours.component.css']
 })

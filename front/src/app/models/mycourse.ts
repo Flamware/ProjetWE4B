@@ -6,5 +6,6 @@ export interface MyCourse {
   date: string;
   image: string;
   rate : number;
+  mediaUrls: string[];
 }
 

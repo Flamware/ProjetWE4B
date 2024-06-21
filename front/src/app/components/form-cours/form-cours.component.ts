@@ -17,6 +17,8 @@ export class FormCoursComponent implements OnInit {
   myForm: FormGroup;
   @Output() courseCreated = new EventEmitter<MyCourse>();
   selectedFile: File | null = null;
+  selectedImage: File | null = null;
+  selectedMedias: File[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,6 +42,10 @@ export class FormCoursComponent implements OnInit {
     this.selectedFile = event.target.files[0];
   }
 
+  onMediaSelected(event: any, index: number): void {
+    this.selectedMedias[index] = event.target.files[0];
+  }
+
   submit(): void {
     if (this.myForm.valid) {
       const formData = new FormData();
@@ -47,16 +53,20 @@ export class FormCoursComponent implements OnInit {
       formData.append('theme', this.myForm.get('theme')?.value);
       formData.append('description', this.myForm.get('description')?.value);
       formData.append('date', this.myForm.get('date')?.value);
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile, this.selectedFile.name);
+      if (this.selectedImage) {
+        formData.append('image', this.selectedImage, this.selectedImage.name);
       }
+      // Append each selected media file
+      this.selectedMedias.forEach((media, index) => {
+        if (media) {
+          formData.append(`media${index + 1}`, media, media.name);
+        }
+      });
 
       this.courseService.createCourse(formData).subscribe({
         next: (data: MyCourse) => {
           console.log('Course created successfully:', data);
           this.myForm.reset();
-          this.showCourseAddedDialog();
-          this.hideForm();
           this.courseCreated.emit(data);
           this.router.navigate(['/mes-cours']).then(r => console.log('Navigated to /mes-cours'));
         },
