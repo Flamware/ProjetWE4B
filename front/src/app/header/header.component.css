@@ -64,14 +64,17 @@ nav {
 
 /* Main Content Styles */
 .search {
-  display: flex;
+  display: grid;
   padding: 1em;
   text-align: center;
   justify-content: center;
+  grid-template-columns: 1fr 5fr 1fr;
   background-color: var(--accent-color);
   /* border-radius: 0.5em; */
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s;
+  flex-flow: row nowrap;
+
   /* margin: 2em auto; */
   /* max-width: 60%; */
 }
@@ -91,13 +94,7 @@ nav {
   text-align: center;
 }
 
-.searchbar{
-  padding: 5px;
-  width: 80%;
-  margin-right: 10px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-}
+
 
 .button {
   padding: 10px 20px;
