@@ -4,6 +4,7 @@ const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 const { createServer } = require('http');
 const setupSocketIO = require('./utils/socket');
+const bodyParser = require('body-parser');
 
 // Config imports -----------------------------------------------------------------------
 const { connectDatabase, client } = require('./config/database');
@@ -26,6 +27,7 @@ const httpServer = createServer(app);
 const io = require('socket.io')(httpServer);
 
 // Middleware setup
+app.use(bodyParser.json());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
@@ -38,9 +40,6 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false, httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
 }));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // CORS configuration
 app.use(cors({

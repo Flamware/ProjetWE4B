@@ -1,11 +1,25 @@
-// Middleware multer pour gérer les fichiers
 const multer = require('multer');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
 // Multer configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads/'); // Destination directory for uploaded files
+    // Obtenez l'id de l'utilisateur à partir de req.userId
+    const userId = req.userId;
+
+    // Vérifiez si req.userId est défini (à partir de verifyToken)
+    if (!userId) {
+      return cb(new Error('User id not provided'));
+    }
+
+    // Définissez le chemin du dossier en fonction de l'id de l'utilisateur
+    const uploadPath = `./uploads/${userId}/`;
+
+    // Créez le dossier s'il n'existe pas déjà
+    mkdirSync(uploadPath, { recursive: true });
+
+    cb(null, uploadPath); // Destination directory for uploaded files
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
