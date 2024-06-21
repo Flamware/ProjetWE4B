@@ -1,78 +1,88 @@
-
-
 .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    position: relative;
-    gap: 16px;
-    padding: 16px;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: calc(50% - 16px); /* Pour deux colonnes, avec un espace de 16px entre les cartes */
+  margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
   .card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    margin: 8px;
+    width: calc(33.33% - 16px); /* Pour trois colonnes sur des écrans plus larges, avec un espace de 16px entre les cartes */
   }
-  
-  .card-image {
-    height: 150px;
-    background-color: #c0c0c0;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+}
+
+@media (min-width: 1024px) {
+  .card {
+    width: calc(25% - 16px); /* Pour quatre colonnes sur des écrans encore plus larges, avec un espace de 16px entre les cartes */
   }
-  
-  .card-content {
-    padding: 16px;
-  }
-  
-  .card-title {
-    font-size: 24px;
-    margin: 0;
-  }
-  
-  .card-rating {
-    display: flex;
-    align-items: center;
-    margin: 8px 0;
-  }
-  
-  .stars {
-    color: gold;
-    margin-right: 8px;
-  }
-  
-  .card-text {
-    color: #757575;
-    font-size: 14px;
-    margin: 8px 0;
-  }
-  
-  .card-subtitle {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 16px 0 8px;
-  }
-  
-  .themes {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  
-  .theme {
-    background-color: #f0f0f0;
-    border-radius: 16px;
-    padding: 4px 12px;
-    font-size: 14px;
-  }
-  
-  .card-action {
-    display: block;
-    text-align: right;
-    margin-top: 16px;
-    color: #6200ea;
-    text-decoration: none;
-  }
-  
+}
+
+.card-image {
+  height: 150px;
+  background-color: #c0c0c0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.card-title {
+  font-size: 24px;
+  margin: 0;
+}
+
+.card-rating {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.stars {
+  color: gold;
+  margin-right: 8px;
+}
+
+.card-text {
+  color: #757575;
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.card-subtitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 16px 0 8px;
+}
+
+.themes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.theme {
+  background-color: #f0f0f0;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 14px;
+}
+
+.card-action {
+  display: block;
+  text-align: right;
+  margin-top: 16px;
+  color: #6200ea;
+  text-decoration: none;
+}

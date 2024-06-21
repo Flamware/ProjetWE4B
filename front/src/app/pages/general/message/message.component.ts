@@ -1,43 +1,122 @@
-import { Component } from '@angular/core';
-import {NgForOf, NgIf} from "@angular/common";
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { MessageService } from '../../../services/message/message.service'; // Assurez-vous d'avoir le bon chemin vers votre service
+import { Message } from '../../../models/message';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { UserSearchComponent } from '../../../components/user-search/user-search.component';
+import { ContactsComponent } from '../../../components/contacts/contacts.component';
 
 @Component({
   selector: 'app-message',
   standalone: true,
   imports: [
-    NgIf,
-    NgForOf,
-    RouterLink
+    FormsModule,
+    CommonModule,
+    UserSearchComponent,
+    ContactsComponent
   ],
   templateUrl: './message.component.html',
-  styleUrl: './message.component.css'
+  styleUrls: ['./message.component.css']
 })
-export class MessageComponent {
+export class MessageComponent implements OnInit {
+  sender: string | null = null;
+  messages: Message[] = [];
+  contacts: any[] = [];
+  newMessage: string = '';
+  interlocuteur: string = '';
+  searchQuery: string = '';
+  selectedContactId: string | null = null;
 
-  sender: null | undefined ; // Changez cela pour filtrer par un autre expéditeur
-
-
-  constructor(private route: ActivatedRoute) {}
-  interlocuteur: string = "Bob";
-  messages = [{sender: "Alice", content: "Salut Bob, comment vas-tu ?"},{sender: "Bob", content: "Salut Alice"}];
-  contacts = [{name: "Alice"},{name: "Bob"}];
-
+  constructor(
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+    private router: Router
+  ) {
+    this.sender = 'moi';
+  }
 
   ngOnInit(): void {
-    //this.getMessagesBySender(this.sender);
-    this.route.params.subscribe(params => {
-      this.sender = params['contact']; // (+) converts string 'id' to a number
-      // In a real app: dispatch action to load the details here.
-      // @ts-ignore
-      if (this.sender=='') {
-        this.sender= null;
+    this.route.paramMap.subscribe(params => {
+      const contactId = params.get('contactId');
+      if (contactId) {
+        this.loadMessagesForContact(contactId);
+      } else {
+        // Logic to handle when no contact is selected
+        console.log('No contact selected.');
       }
-
     });
   }
 
-  getMessagesBySender(sender: string): void {
-    //this.messages = this.messageService.getMessages().filter(message => message.sender === sender);
+  loadMessagesForContact(contactId: string): void {
+    this.messageService.getMessages(contactId).subscribe({
+      next: (messages: Message[]) => {
+        this.messages = messages;
+        // Find the selected contact based on contactId
+        this.selectedContactId = contactId;
+      },
+      error: (error: any) => {
+        console.error('Error fetching messages:', error);
+      }
+    });
+  }
+
+  sendMessage(): void {
+    if (this.interlocuteur && this.newMessage.trim() !== '') {
+      this.messageService.sendMessage(this.interlocuteur, this.newMessage).subscribe({
+        next: (message: Message) => {
+          this.messages.push(message);
+          this.newMessage = ''; // Réinitialisez le champ de saisie après l'envoi
+        },
+        error: (error: any) => {
+          console.error('Error sending message:', error);
+        }
+      });
+    }
+  }
+
+  navigateToMessage(contactId: string): void {
+    this.router.navigate(['/message', contactId]);
+  }
+
+  searchUsers(): void {
+    if (this.searchQuery.trim() !== '') {
+      this.messageService.searchUsers(this.searchQuery).subscribe({
+        next: (users: any[]) => {
+          this.contacts = users;
+        },
+        error: (error: any) => {
+          console.error('Error searching users:', error);
+        }
+      });
+    }
+  }
+
+  addContact(contact: any): void {
+    this.messageService.addContact(contact).subscribe({
+      next: (addedContact: any) => {
+        this.contacts.push(addedContact);
+        this.searchQuery = ''; // Réinitialisez la recherche
+      },
+      error: (error: any) => {
+        console.error('Error adding contact:', error);
+      }
+    });
+  }
+
+  isContact(contact: any): boolean {
+    return this.contacts.some(c => c.id === contact.id);
+  }
+
+  selectContact(contact: any): void {
+    this.selectedContactId = contact.id;
+    this.navigateToMessage(contact.id); // Naviguer vers la conversation du contact sélectionné
+  }
+
+  // Méthode pour sélectionner un contact depuis ContactsComponent
+  onContactSelected(contact: any): void {
+    this.selectedContactId = contact.id;
+    this.loadMessagesForContact(contact.id); // Charger les messages du contact sélectionné
   }
 }

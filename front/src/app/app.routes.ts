@@ -21,6 +21,8 @@ export const routes: Routes = [
   {path: 'mes-cours', component: MesCoursComponent, canActivate: [AuthGuard]},
   {path: 'cours/:id', component: CoursComponent},
   {path: 'message/:contact', component: MessageComponent, canActivate: [AuthGuard]},
+  {path: 'message/:sender', component: MessageComponent },
+  { path: 'message', component: MessageComponent },
   {path : 'mes-document', component: MesDocumentComponent, canActivate: [AuthGuard]},
   {path : 'login', component: ConnexionComponent},
   {path: 'register', component: RegisterComponent},

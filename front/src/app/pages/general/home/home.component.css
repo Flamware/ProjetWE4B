@@ -4,10 +4,10 @@
 }
 
 .container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, auto);
-  gap: 20px;
+  display: flex;
+  justify-items: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .panel {
@@ -22,18 +22,9 @@
 }
 
 .panel-recent-courses {
-  grid-column: 1 / span 2;
+  grid-column: span 2; /* Occupe 2 colonnes */
 }
 
 .panel-popular-courses {
-  grid-column: 1 / 2;
-}
-
-.panel-recommended-courses {
-  grid-column: 2 / 3;
-}
-
-.panel-side-info {
-  grid-column: 1 / span 2;
-  grid-row: 3 / 4;
+  grid-column: span 1; /* Occupe 1 colonne */
 }

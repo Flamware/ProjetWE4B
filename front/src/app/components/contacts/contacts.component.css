@@ -1,0 +1,45 @@
+.contacts-list {
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  .contacts-list h2 {
+    margin-bottom: 10px;
+  }
+  
+  .scrollable-panel {
+    max-height: 300px; /* Ajustez la hauteur selon vos besoins */
+    overflow-y: auto;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Animation de transition */
+  }
+  
+  .contact-item:hover {
+    background-color: #f0f0f0; /* Couleur de fond au survol */
+  }
+  
+  .contact-item div {
+    flex: 1;
+  }
+  
+  .contact-item button {
+    background-color: #007bff; /* Couleur de fond du bouton */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Animation de transition */
+  }
+  
+  .contact-item button:hover {
+    background-color: #0056b3; /* Couleur de fond au survol du bouton */
+  }
+  

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MyCourseService } from '../../services/course/my/my-course.service';
 import { MyCourse } from '../../models/mycourse';
 import { Router } from '@angular/router';
@@ -8,6 +8,9 @@ import { Router } from '@angular/router';
   selector: 'app-form-cours',
   templateUrl: './form-cours.component.html',
   standalone: true,
+  imports: [
+    ReactiveFormsModule
+  ],
   styleUrls: ['./form-cours.component.css']
 })
 export class FormCoursComponent implements OnInit {

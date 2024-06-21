@@ -3,10 +3,24 @@ const session = require("express-session");
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 const { createServer } = require('http');
-const { connectDatabase, client } = require('./config/database');
 const setupSocketIO = require('./utils/socket');
 
-// Create the express app
+// Config imports -----------------------------------------------------------------------
+const { connectDatabase, client } = require('./config/database');
+
+// Middleware imports -----------------------------------------------------------------------
+const { verifyToken } = require('./middleware/authMiddleware');
+
+// Routes imports -----------------------------------------------------------------------
+const userRoutes = require('./routes/users');
+const coursesRoute = require('./routes/courses');
+const userCoursesRoute = require('./routes/usercourses');
+const messageRoute = require("./routes/messages");
+
+// Api imports -----------------------------------------------------------------------
+const coursesApi = require('./api/api_courses');
+
+
 const app = express();
 const httpServer = createServer(app);
 const io = require('socket.io')(httpServer);
@@ -40,15 +54,11 @@ connectDatabase().catch(err => {
   process.exit(1);
 });
 
-// Routes setup
-const userRoutes = require('./routes/users');
-const coursesRoute = require('./routes/courses');
-const userCoursesRoute = require('./routes/userCourses');
-
 // Use routes
 app.use(userRoutes);
 app.use(coursesRoute);
-app.use(userCoursesRoute); // This includes your userCoursesRoute with multer configuration
+app.use(userCoursesRoute);
+app.use(messageRoute);
 
 // Example route to test session
 app.get('/sessioninfo', (req, res) => {

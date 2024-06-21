@@ -1,48 +1,31 @@
+<div class="container">
+  <div class="contact-list">
+    <h2>Contacts</h2>
+    <app-user-search (userAdded)="addContact($event)"></app-user-search>
+    <app-contacts [contacts]="contacts" (contactSelected)="onContactSelected($event)"></app-contacts>
+  </div>  
 
-
-
-<div *ngIf="messages.length === 0">
-  <div class="chat-box">
-    <h2>Aucun message trouvé pour {{ sender }}</h2>
-  </div>
-
-</div>
-  <div class="container" *ngIf="messages.length > 0">
-    <h2>Messages envoyés par {{ sender }}</h2>
-    <div class="chat-container">
-
-      <h2 *ngIf="sender==null else senderdefine" class=" chat-box">
-        pas de contact selectionné
-      </h2>
-<ng-template #senderdefine>
-  <div class="chat-box">
-        <div *ngFor="let message of messages">
-          <div *ngIf="message.sender == interlocuteur; else messagelse" class="message received">
-            {{ message.content }}
-          </div>
-          <ng-template #messagelse>
-            <div class="message sent">
-              {{ message.content }}
-            </div>
-          </ng-template>
-        </div>
-
-        <div class="message-input">
-          <input type="text" placeholder="Type your message...">
-          <button type="button">Send</button>
-        </div>
-      </div>
-
-      </ng-template>
-
-      <div class="contact-list">
-        <h2>Contacts</h2>
-        <ul>
-          <a *ngFor="let contact of contacts">
-            <li [routerLink]="['/message', contact.name ]"  class="card-action">{{contact.name}}</li>
-          </a>
-        </ul>
-      </div>
+  <div *ngIf="!selectedContactId">
+    <div class="chat-box">
+      <h2>No contact selected</h2>
     </div>
   </div>
 
+  <div *ngIf="selectedContactId">
+    <h2>Messages with {{ selectedContactId }}</h2>
+    <div class="chat-container">
+      <div class="chat-box">
+        <div *ngFor="let message of messages">
+          <div class="message received">
+            {{ message.content }}
+          </div>
+        </div>
+
+        <div class="message-input">
+          <input type="text" placeholder="Type your message..." [(ngModel)]="newMessage" name="newMessage">
+          <button type="button" (click)="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

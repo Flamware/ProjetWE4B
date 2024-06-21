@@ -1,0 +1,11 @@
+<div class="user-search">
+    <input type="text" placeholder="Search users..." [(ngModel)]="searchQuery" name="searchQuery">
+    <button type="button" (click)="searchUsers()">Search</button>
+    <ul>
+      <li *ngFor="let user of searchResults">
+        {{ user.first_name }}  {{ user.last_name }}
+        <button *ngIf="!isContact(user)" (click)="addUser(user)">Add</button>
+      </li>
+    </ul>
+  </div>
+  
