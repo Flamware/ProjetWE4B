@@ -1,17 +1,20 @@
+/* Styles for the form component */
 .contact-form {
   display: flex;
-  position: fixed;  /* This makes the form fixed on the screen */
-  top: 50%;  /* Positions the form vertically in the center */
-  left: 50%;  /* Positions the form horizontally in the center */
-  transform: translate(-50%, -50%);  /* Adjusts positioning based on top and left */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 8px;
   flex-wrap: wrap;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 400px;
   padding: 20px;
-  z-index: 999;  /* High z-index ensures it appears on top */
+  z-index: 999;
   justify-content: center;
+  max-height: calc(100vh - 40px); /* 100% viewport height minus padding */
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .contact-form h2 {
@@ -30,61 +33,109 @@
   font-weight: bold;
 }
 
-.input-group {
-  display: flex;
-  align-items: center;
-}
-
-.input-icon {
-  background-color: #e0e0e0;
-  padding: 0.5em;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-}
-
-.add-course {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  bottom: 3em;
-  right: 1em;
-  font-size: 1.5em;
-  font-weight: bold;
-  height: 2em;
-  width: 2em;
-  padding: 0.5em 0.5em;
-  border-radius: 50%;
-  z-index: 1000;
-}
-
-/* input[type="text"],
-input[type="theme"],
-textarea {
-  flex: 1;
+.text-input,
+.date-input {
+  width: calc(100% - 10px);
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
   outline: none;
 }
 
-textarea {
+.textarea {
+  width: calc(100% - 10px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   resize: none;
+  outline: none;
 }
 
-button {
-  width: 100%;
+/* Styles for media previews */
+.media-preview {
+  margin-top: 10px;
   padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-image,
+.preview-video,
+.preview-audio {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.preview-pdf {
+  padding: 10px;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+/* Button styles */
+.btn {
+  padding: 10px 15px;
   background-color: #6200ea;
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn:hover {
   background-color: #3700b3;
-} */
+}
+
+.close-button {
+  padding: 10px 15px;
+  background-color: #ff1744; /* Couleur rouge pour le bouton Close */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: #d50000; /* Couleur plus sombre au survol */
+}
+
+.add-course {
+  position: absolute;
+  bottom: 3em;
+  right: 1em;
+  font-size: 1.5em;
+  font-weight: bold;
+  height: 2em;
+  width: 2em;
+  padding: 0.5em;
+  border-radius: 50%;
+  background-color: #6200ea;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-course:hover {
+  background-color: #3700b3;
+}

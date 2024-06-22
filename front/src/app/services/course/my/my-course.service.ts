@@ -11,7 +11,7 @@ export class MyCourseService {
 
   private apiUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getCoursesByUserId(userId: number): Observable<MyCourse[]> {
     return this.http.get<MyCourse[]>(`${this.apiUrl}/coursesByUserId/${userId}`, {
@@ -22,18 +22,16 @@ export class MyCourseService {
     );
   }
 
-    // Méthode pour récupérer un média via son URL
-    getMediaByUrl(mediaUrl: string): Observable<any> {
-      const headers = this.getHeaders();
-  
-      return this.http.get<any>(mediaUrl, { headers }).pipe(
-        tap(data => console.log('Media fetched successfully:', data)),
-        catchError(error => {
-          console.error('Error fetching media:', error);
-          throw error;
-        })
-      );
-    }
+  getMediaByUrl(mediaUrl: string): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.get<any>(mediaUrl, { headers }).pipe(
+      tap(data => console.log('Media fetched successfully:', data)),
+      catchError(error => {
+        console.error('Error fetching media:', error);
+        throw error;
+      })
+    );
+  }
 
   getAllCoursesFromUser(): Observable<MyCourse[]> {
     return this.http.get<MyCourse[]>(`${this.apiUrl}/allCoursesFromUser`, {
@@ -44,18 +42,8 @@ export class MyCourseService {
     );
   }
 
-  createCourse(courseData: FormData): Observable<MyCourse> {
-    // Construire le corps de la requête avec les données extraites de FormData
-    const body = {
-      date: courseData.get('date'),
-      description: courseData.get('description'),
-      image: courseData.get('image'),
-      name: courseData.get('name'),
-      theme: courseData.get('theme')
-    };
-
-    // Envoi de la requête HTTP avec le corps JSON
-    return this.http.post<MyCourse>(`${this.apiUrl}/createCourse`, body, {
+  createCourse(courseData: any): Observable<MyCourse> {
+    return this.http.post<MyCourse>(`${this.apiUrl}/createCourse`, courseData, {
       headers: this.getHeaders()
     }).pipe(
       tap(data => console.log('Course created successfully:', data))
@@ -70,6 +58,12 @@ export class MyCourseService {
       tap(() => console.log('Course deleted successfully:', courseId)),
       catchError(this.handleError('deleteCourse'))
     );
+  }
+
+  uploadMedia(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(`${this.apiUrl}/uploadFile`, formData);
   }
 
   private getHeaders(isMultipart: boolean = false): HttpHeaders {

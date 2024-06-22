@@ -64,5 +64,12 @@ export class AuthService {
   
     return this.http.post<any>(uploadUrl, formData);
   }
+
+  uploadFile(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const uploadUrl = `${this.apiUrl}/uploadFile`;
+    return this.http.post<any>(uploadUrl, formData);
+  }
   
 }

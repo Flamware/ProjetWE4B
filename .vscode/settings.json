@@ -1,0 +1,16 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "CockroachDB",
+            "name": "WE4B",
+            "connectString": "postgresql://axel:CqfYxdcHoA1lZeT2DAz5fA@punchy-dragon-11093.8nj.gcp-europe-west1.cockroachlabs.cloud:26257/we4b_db?sslmode=verify-full"
+        }
+    ]
+}
