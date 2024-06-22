@@ -1,169 +1,32 @@
-div {
-  margin: 20px;
-}
-
-input {
+.searchbar {
   padding: 10px;
   font-size: 1em;
   width: 100%;
   box-sizing: border-box;
 }
 
-ul {
+/* Conteneur des résultats de recherche */
+.search-results {
+  display: flex;
   position: absolute;
+  flex-flow: column nowrap;
   list-style-type: none;
   padding: 0;
-  z-index: 1000;
-  background-color: white;
-}
-
-li {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
-
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  position: relative;
-  gap: 16px;
-  padding: 16px;
-}
-
-.card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  margin: 8px;
-}
-
-.card-image {
-  height: 150px;
-  background-color: #c0c0c0;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-
-.card-content {
-  padding: 16px;
-}
-
-.card-title {
-  font-size: 24px;
   margin: 0;
-}
-
-.card-rating {
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
-}
-
-.stars {
-  color: gold;
-  margin-right: 8px;
-}
-
-.card-text {
-  color: #757575;
-  font-size: 14px;
-  margin: 8px 0;
-}
-
-.card-subtitle {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 16px 0 8px;
-}
-
-.themes {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.theme {
-  background-color: #f0f0f0;
-  border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 14px;
-}
-
-.card-action {
-  display: block;
-  text-align: right;
-  margin-top: 16px;
-  color: #6200ea;
-  text-decoration: none;
-}
-/* Conteneur des résultats de recherche */
-.resultats-recherche {
-  display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 0 -20px;
 }
 
 /* Carte individuelle */
-.resultat-recherche {
-  width: calc(50% - 40px);
-  margin: 20px;
-  padding: 20px;
+.search-result {
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 0.5em;
+  width: 100%;
   background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
 }
 
-/* Titre de la carte */
-.resultat-recherche h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-/* Description de la carte */
-.resultat-recherche p {
-  margin-top: 10px;
-  line-height: 1.5;
-}
-
-/* Note de la carte */
-.resultat-recherche .note {
-  margin-top: 10px;
-  color: #ffc107;
-}
-
-/* Bouton "Supprimer" */
-.resultat-recherche .supprimer {
-  display: block;
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #ff4d4d;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
+.search-result:hover {
+  background-color: #ccc;
   cursor: pointer;
 }
-
-/* Bouton "Voir cours" */
-.resultat-recherche .voir-cours {
-  display: block;
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .resultat-recherche {
-    width: 100%;
-  }
-}
-
-
