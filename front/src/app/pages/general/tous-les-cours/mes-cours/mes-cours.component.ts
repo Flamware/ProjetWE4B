@@ -21,6 +21,8 @@ import { MediaViewerComponent } from '../../../../components/media-viewer/media-
 })
 export class MesCoursComponent implements OnInit {
   ListeCours: MyCourse[] = [];
+  baseUrl = 'http://localhost:3000'; // Ajoutez ici votre préfixe d'URL
+  showMedia: boolean = false; // Ajoutez cette propriété
 
   constructor(
     private courseService: MyCourseService,
@@ -44,6 +46,26 @@ export class MesCoursComponent implements OnInit {
     );
   }
 
+  determineMediaType(mediaUrl: string): string {
+    if (!mediaUrl) {
+      return ''; // Gestion du cas où mediaUrl est null ou undefined
+    }
+  
+    const extension = mediaUrl.split('.').pop()?.toLowerCase();
+    if (extension) {
+      if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
+        return 'image';
+      } else if (['mp4', 'mov', 'avi'].includes(extension)) {
+        return 'video';
+      } else if (['mp3', 'wav'].includes(extension)) {
+        return 'audio';
+      }
+    }
+  
+    return ''; // Retourner une valeur par défaut si aucune correspondance n'est trouvée
+  }
+  
+
   handleCourseCreated(newCourse: MyCourse): void {
     this.ListeCours.push(newCourse); // Add newly created course to the list
   }
@@ -58,5 +80,9 @@ export class MesCoursComponent implements OnInit {
         console.error('Error deleting course:', error);
       }
     });
+  }
+
+  toggleMedia(): void {
+    this.showMedia = !this.showMedia;
   }
 }

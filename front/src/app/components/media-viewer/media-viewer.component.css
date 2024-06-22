@@ -1,0 +1,19 @@
+/* CSS pour styliser les médias dans la carte */
+.card-media-container {
+  max-width: 100%; /* Limite la largeur maximale du conteneur */
+  overflow: hidden; /* Cache le débordement des médias si nécessaire */
+  margin-top: 10px; /* Espace au-dessus des médias */
+}
+
+.card-media-container img,
+.card-media-container video,
+.card-media-container audio {
+  display: block; /* Affiche les médias en tant que blocs */
+  max-width: 100%; /* Médias responsifs, ajustés à la largeur maximale du conteneur */
+  height: auto; /* Hauteur automatique */
+}
+
+.card-media-container video,
+.card-media-container audio {
+  margin-top: 5px; /* Espace supplémentaire au-dessus des vidéos et audios */
+}

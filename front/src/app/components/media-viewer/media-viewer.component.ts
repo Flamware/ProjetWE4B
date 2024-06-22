@@ -7,13 +7,8 @@ import { Component, Input } from '@angular/core';
   imports: [
     CommonModule
   ],
-  template: `
-    <div *ngIf="mediaUrl">
-      <img *ngIf="mediaType === 'image'" [src]="mediaUrl" alt="Media">
-      <video *ngIf="mediaType === 'video'" [src]="mediaUrl" controls></video>
-      <audio *ngIf="mediaType === 'audio'" [src]="mediaUrl" controls></audio>
-    </div>
-  `
+  templateUrl: './media-viewer.component.html',
+  styleUrl: './media-viewer.component.css'
 })
 export class MediaViewerComponent {
   @Input() mediaUrl: string = '';

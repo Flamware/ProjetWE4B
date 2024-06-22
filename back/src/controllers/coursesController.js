@@ -5,9 +5,14 @@ async function getAllCourses(req, res) {
     // Obtenir tous les cours
     const query = 'SELECT * FROM course';
     const result =
-    await client
-    .query(query);
-    const courses = result.rows;
+    await client.query(query);
+
+    const courses = result.rows.map(course => ({
+      ...course,
+      mediaUrls: course.media_urls || [], // Ajoutez les URLs des médias
+      imageUrl: course.image || '' // Ajoutez l'URL de l'image principale
+    }));
+
     res.status(200).json({ courses });
   }
   catch (error) {

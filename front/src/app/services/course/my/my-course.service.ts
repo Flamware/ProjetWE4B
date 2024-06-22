@@ -10,6 +10,7 @@ import { MyCourse } from '../../../models/mycourse';
 export class MyCourseService {
 
   private apiUrl = 'http://localhost:3000';
+
   private createdCourseId: string | undefined; // Variable pour stocker l'ID du cours créé
 
   constructor(private http: HttpClient) {}

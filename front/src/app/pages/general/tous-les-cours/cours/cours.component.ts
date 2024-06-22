@@ -4,6 +4,7 @@ import { CourseService } from '../../../../services/course/course.service';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {FormCoursComponent} from "../../../../components/form-cours/form-cours.component";
 import {NgForOf, NgIf} from "@angular/common";
+import { MediaViewerComponent } from '../../../../components/media-viewer/media-viewer.component';
 
 @Component({
   selector: 'app-tous-cours',
@@ -12,13 +13,16 @@ import {NgForOf, NgIf} from "@angular/common";
     FormCoursComponent,
     NgForOf,
     NgIf,
-    RouterLink
+    RouterLink,
+    MediaViewerComponent
   ],
   templateUrl: './cours.component.html',
   styleUrl: './cours.component.css'
 })
 export class CoursComponent {
   ListeCours: MyCourse[] = [];
+  baseUrl = 'http://localhost:3000';
+  showMedia: boolean = false; // Ajoutez cette propriété
 
   constructor(
     private courseService: CourseService,
@@ -40,5 +44,32 @@ export class CoursComponent {
     }
       
     );
+  }
+
+  handleCourseCreated(newCourse: MyCourse): void {
+    this.ListeCours.push(newCourse); // Add newly created course to the list
+  }
+
+  determineMediaType(mediaUrl: string): string {
+    if (!mediaUrl) {
+      return ''; // Gestion du cas où mediaUrl est null ou undefined
+    }
+  
+    const extension = mediaUrl.split('.').pop()?.toLowerCase();
+    if (extension) {
+      if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
+        return 'image';
+      } else if (['mp4', 'mov', 'avi'].includes(extension)) {
+        return 'video';
+      } else if (['mp3', 'wav'].includes(extension)) {
+        return 'audio';
+      }
+    }
+  
+    return ''; // Retourner une valeur par défaut si aucune correspondance n'est trouvée
+  }
+
+  toggleMedia(): void {
+    this.showMedia = !this.showMedia;
   }
 }

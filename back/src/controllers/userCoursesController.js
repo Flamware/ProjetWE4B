@@ -33,7 +33,12 @@ async function getAllCoursesFromUser(req, res) {
     //fetch all course from user
     const query2 = 'SELECT * FROM course WHERE teacher_id = $1';
     const result2 = await client.query(query2, [result.rows[0].id]);
-    const courses = result2.rows;
+    const courses = result2.rows.map(course => ({
+      ...course,
+      mediaUrls: course.media_urls || [], // Ajoutez les URLs des médias
+      imageUrl: course.image || '' // Ajoutez l'URL de l'image principale
+    }));
+
     res.status(200).json({ courses });
   }
   else{
@@ -44,7 +49,11 @@ async function getAllCoursesFromUser(req, res) {
       const query = 'SELECT * FROM course WHERE teacher_id = $1';
       const result = await
       client.query(query, [userId]);
-      const courses = result.rows;
+      const courses = result.rows.map(course => ({
+        ...course,
+        mediaUrls: course.media_urls || [], // Ajoutez les URLs des médias
+        imageUrl: course.image || '' // Ajoutez l'URL de l'image principale
+      }));
       res.status(200).json({ courses });
   }
   catch (error) {
@@ -87,6 +96,7 @@ async function createCourse(req, res) {
 
 // TODO: à modifier
 async function uploadCourseMedia(req, res) {
+  const { email } = req.params;
   const file = req.file;
   const courseId = req.params.courseId; // Course ID envoyé depuis le frontend
 
@@ -95,7 +105,7 @@ async function uploadCourseMedia(req, res) {
   }
 
   try {
-    const imageUrl = `/uploads/${file.filename}`; // URL où l'image est téléchargée
+    const imageUrl = `/uploads/${email}/${file.filename}`; // URL où l'image est téléchargée
 
     // Vérifier si le courseId est valide
     if (!courseId) {
