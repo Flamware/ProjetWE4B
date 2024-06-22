@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/authMiddleware');
-const upload = require('../middleware/upload');
+const upload = require('../middleware/userxUpload');
 const {
   getAllUsers, createUser, userLogged, setUserRole, login, register, getAccountInfo,
   updateAccount, testToken, uploadProfilePicture  // Add uploadProfilePicture to imports

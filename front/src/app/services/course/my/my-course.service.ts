@@ -63,8 +63,12 @@ export class MyCourseService {
   uploadMedia(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<any>(`${this.apiUrl}/uploadFile`, formData);
+  
+    const email = localStorage.getItem('email');  // Récupérez l'email depuis le localStorage
+  
+    return this.http.post<any>(`${this.apiUrl}/uploadFile/${email}`, formData);  // Passez l'email dans l'URL
   }
+  
 
   private getHeaders(isMultipart: boolean = false): HttpHeaders {
     const token = localStorage.getItem('token');

@@ -54,8 +54,15 @@ app.use(session({
 
 // Configuration de CORS pour autoriser les requêtes du front-end -------------------------
 app.use(cors({
-  origin: 'http://localhost:4200', // Origine autorisée (le front-end Angular)
-  credentials: true // Permettre l'envoi des cookies avec les requêtes
+  origin: 'http://localhost:4200',
+  credentials: true,
+  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With', 'Accept'],
+  maxAge: 86400,
+  credentials: true
 }));
 
 // Connexion à la base de données --------------------------------------------------------

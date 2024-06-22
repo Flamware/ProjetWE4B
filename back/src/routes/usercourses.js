@@ -10,6 +10,12 @@ router.get('/coursesByUserId/:userId', verifyToken, getCoursesByUserId);
 router.get('/allCoursesFromUser', verifyToken, getAllCoursesFromUser);
 
 router.post('/createCourse', verifyToken, createCourse);
+router.post('/uploadFile/:email', upload.single('file'), (req, res) => {
+    const file = req.file;
+    console.log('Uploaded File:', file);
+    // Logique de traitement du fichier ici
+    res.status(201).json({ message: 'File uploaded successfully', file });
+});
 
 router.delete('/deleteCourse/:courseId', verifyToken, deleteCourse);
 

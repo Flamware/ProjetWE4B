@@ -8,7 +8,7 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const query = 'SELECT * FROM users WHERE email = $1';
+    const query = 'SELECT id, username, email, password FROM users WHERE email = $1';
     const result = await client.query(query, [email]);
     const user = result.rows[0];
 
@@ -21,18 +21,20 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Incorrect password' });
     }
 
-    req.session.userId = user.id;
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.id }, "your_secret_key", { expiresIn: '30d' });
 
-    req.session.save(err => {
-      if (err) {
-        return res.status(500).json({ error: 'Internal server error' });
-      }
-
-      const token = jwt.sign({ userId: user.id }, "your_secret_key", { expiresIn: '30d' });
-      res.status(200).json({ message: 'Logged in successfully', token });
+    // Return user data and token
+    res.status(200).json({
+      message: 'Logged in successfully',
+      token,
+      username: user.username,
+      email: user.email,
+      userId: user.id
     });
 
   } catch (error) {
+    console.error('Error during login:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
