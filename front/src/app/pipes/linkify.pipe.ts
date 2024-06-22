@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, SecurityContext } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
@@ -17,13 +17,18 @@ export class LinkifyPipe implements PipeTransform {
     
     // Replace URLs with secure iframes
     const linkedText = value.replace(urlRegex, (url) => {
-      return `<iframe [src]="getSafeUrl('${url}')"></iframe>`;
+      const safeUrl = this.getSafeUrl(url);
+      return `<iframe src="${safeUrl}" width="100%" height="315" frameborder="0" allowfullscreen></iframe>`;
     });
 
+    // Sanitize the HTML before returning
     return this.sanitizer.bypassSecurityTrustHtml(linkedText);
   }
 
-  private getSafeUrl(url: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
+  private getSafeUrl(url: string): string {
+    if (!url) return ''; // Handle null or undefined case
+  
+    // You can further validate or sanitize the URL here if needed
+    return this.sanitizer.sanitize(SecurityContext.URL, url) || '';
+  }  
 }

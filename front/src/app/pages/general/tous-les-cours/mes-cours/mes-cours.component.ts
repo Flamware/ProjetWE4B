@@ -6,6 +6,7 @@ import {FormCoursComponent} from "../../../../components/form-cours/form-cours.c
 import {NgForOf, NgIf} from "@angular/common";
 import { MediaViewerComponent } from '../../../../components/media-viewer/media-viewer.component';
 import { LinkifyPipe } from '../../../../pipes/linkify.pipe';
+import { YoutubeEmbedPipe } from '../../../../pipes/youtube-embed.pipe';
 
 @Component({
   selector: 'app-mes-cours',
@@ -17,7 +18,8 @@ import { LinkifyPipe } from '../../../../pipes/linkify.pipe';
     NgIf,
     RouterLink,
     MediaViewerComponent,
-    LinkifyPipe
+    LinkifyPipe,
+    YoutubeEmbedPipe
   ],
   styleUrls: ['./mes-cours.component.css']
 })
