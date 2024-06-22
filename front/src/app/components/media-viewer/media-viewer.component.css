@@ -1,19 +1,100 @@
-/* CSS pour styliser les médias dans la carte */
+/* Conteneur principal pour les médias */
 .card-media-container {
   max-width: 100%; /* Limite la largeur maximale du conteneur */
-  overflow: hidden; /* Cache le débordement des médias si nécessaire */
+  width: 100%; /* Assure que le conteneur occupe toute la largeur disponible */
+  overflow: visible; /* Permet à l'élément de s'étendre en hauteur si nécessaire */
   margin-top: 10px; /* Espace au-dessus des médias */
+  box-sizing: border-box; /* Inclut les bordures et padding dans la largeur totale */
+  background-color: #f9f9f9; /* Ajouter un fond pour démarquer le conteneur */
+  padding: 10px; /* Espace interne autour des médias */
 }
 
+/* Styles pour les images, vidéos et audios */
 .card-media-container img,
 .card-media-container video,
 .card-media-container audio {
   display: block; /* Affiche les médias en tant que blocs */
   max-width: 100%; /* Médias responsifs, ajustés à la largeur maximale du conteneur */
-  height: auto; /* Hauteur automatique */
+  width: 100%; /* S'assurer que les médias prennent toute la largeur disponible */
+  height: auto; /* Ajuster la hauteur automatiquement */
+  margin-bottom: 10px; /* Espace entre les médias */
+  border: none; /* Enlever les bordures par défaut */
 }
 
+/* Styles spécifiques pour les vidéos et audios */
 .card-media-container video,
 .card-media-container audio {
   margin-top: 5px; /* Espace supplémentaire au-dessus des vidéos et audios */
+  min-height: 40px; /* Fixer une hauteur minimale pour les audios et vidéos */
+  background-color: #ffffff; /* Fond pour démarquer visuellement */
+  padding: 5px; /* Ajoute un léger padding pour améliorer l'esthétique */
+  border-radius: 5px; /* Bordures arrondies pour un aspect plus agréable */
+  border: 1px solid #ddd; /* Bordure légère pour démarquer l'élément */
 }
+
+.card-media-container audio {
+  display: block; /* Affiche l'élément audio en tant que bloc */
+  width: 100%; /* Toujours garder 100% de la largeur disponible */
+  height: auto; /* Ajuster la hauteur en conséquence */
+}
+
+/* Styles pour les documents */
+.card-media-container iframe {
+  width: 100%; /* Occupe toute la largeur disponible */
+  height: 600px; /* Hauteur fixe pour une meilleure vue des documents */
+  margin-bottom: 10px; /* Espace entre les documents */
+  border: 1px solid #ddd; /* Bordure légère pour démarquer l'élément */
+  border-radius: 5px; /* Bordures arrondies */
+}
+
+.card-media-container .document-download {
+  display: block; /* Affiche le lien de téléchargement en tant que bloc */
+  margin-bottom: 10px; /* Espace entre les documents */
+  padding: 10px; /* Espace interne pour améliorer l'esthétique */
+  text-align: center; /* Centre le texte */
+  background-color: #f0f0f0; /* Fond clair pour démarquer le lien */
+  color: #333; /* Couleur du texte */
+  text-decoration: none; /* Enlever le soulignement du lien */
+  border: 1px solid #ddd; /* Bordure légère */
+  border-radius: 5px; /* Bordures arrondies */
+}
+
+.card-media-container .document-download:hover {
+  background-color: #e0e0e0; /* Changement de couleur au survol pour améliorer l'UX */
+}
+
+/* Styles pour les archives */
+.card-media-container .archive-download {
+  display: block; /* Affiche le lien de téléchargement en tant que bloc */
+  margin-bottom: 10px; /* Espace entre les archives */
+  padding: 10px; /* Espace interne pour améliorer l'esthétique */
+  text-align: center; /* Centre le texte */
+  background-color: #f0f0f0; /* Fond clair pour démarquer le lien */
+  color: #333; /* Couleur du texte */
+  text-decoration: none; /* Enlever le soulignement du lien */
+  border: 1px solid #ddd; /* Bordure légère */
+  border-radius: 5px; /* Bordures arrondies */
+}
+
+.card-media-container .archive-download:hover {
+  background-color: #e0e0e0; /* Changement de couleur au survol pour améliorer l'UX */
+}
+
+/* Styles pour les autres types de fichiers */
+.card-media-container .other-download {
+  display: block; /* Affiche le lien de téléchargement en tant que bloc */
+  margin-bottom: 10px; /* Espace entre les autres types de fichiers */
+  padding: 10px; /* Espace interne pour améliorer l'esthétique */
+  text-align: center; /* Centre le texte */
+  background-color: #f0f0f0; /* Fond clair pour démarquer le lien */
+  color: #333; /* Couleur du texte */
+  text-decoration: none; /* Enlever le soulignement du lien */
+  border: 1px solid #ddd; /* Bordure légère */
+  border-radius: 5px; /* Bordures arrondies */
+}
+
+.card-media-container .other-download:hover {
+  background-color: #e0e0e0; /* Changement de couleur au survol pour améliorer l'UX */
+}
+
+

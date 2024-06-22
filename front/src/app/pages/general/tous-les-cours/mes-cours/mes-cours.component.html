@@ -16,9 +16,9 @@
           </span>
           ({{ course.rate || 0 }})
         </div>
-        <p class="card-text">{{ course.description }}</p>
+        <p class="card-text" [innerHTML]="course.description | linkify"></p>
         <div class="card-theme">
-          <span class="theme">{{ course.type }}</span>
+          <p class="theme" [innerHTML]="course.type | linkify"></p>
         </div>
         <div class="themes">
           <!-- Additional theme-related content -->

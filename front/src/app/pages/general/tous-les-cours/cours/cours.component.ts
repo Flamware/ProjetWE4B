@@ -19,6 +19,7 @@ import { MediaViewerComponent } from '../../../../components/media-viewer/media-
   templateUrl: './cours.component.html',
   styleUrl: './cours.component.css'
 })
+
 export class CoursComponent {
   ListeCours: MyCourse[] = [];
   baseUrl = 'http://localhost:3000';
@@ -55,15 +56,57 @@ export class CoursComponent {
       return ''; // Gestion du cas où mediaUrl est null ou undefined
     }
   
+    // Extraction de l'extension de fichier
     const extension = mediaUrl.split('.').pop()?.toLowerCase();
-    if (extension) {
-      if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
-        return 'image';
-      } else if (['mp4', 'mov', 'avi'].includes(extension)) {
-        return 'video';
-      } else if (['mp3', 'wav'].includes(extension)) {
-        return 'audio';
-      }
+  
+    // Liste des extensions et leur type de média associé
+    const mediaTypeMapping: { [key: string]: string } = {
+      // Images
+      'jpeg': 'image',
+      'jpg': 'image',
+      'png': 'image',
+      'gif': 'image',
+      'bmp': 'image',
+      'webp': 'image',
+  
+      // Vidéos
+      'mp4': 'video',
+      'mov': 'video',
+      'avi': 'video',
+      'mkv': 'video',
+      'flv': 'video',
+      'webm': 'video',
+  
+      // Audios
+      'mp3': 'audio',
+      'wav': 'audio',
+      'ogg': 'audio',
+  
+      // Documents
+      'pdf': 'document',
+      'doc': 'document',
+      'docx': 'document',
+      'xls': 'document',
+      'xlsx': 'document',
+      'ppt': 'document',
+      'pptx': 'document',
+      'txt': 'document',
+  
+      // Archives
+      'zip': 'archive',
+      'tar': 'archive',
+      'gz': 'archive',
+      '7z': 'archive',
+  
+      // Autres types de fichiers
+      'json': 'other',
+      'xml': 'other',
+      'bin': 'other', // fichiers binaires génériques
+    };
+  
+    // Déterminer le type de média basé sur l'extension
+    if (extension && mediaTypeMapping[extension]) {
+      return mediaTypeMapping[extension];
     }
   
     return ''; // Retourner une valeur par défaut si aucune correspondance n'est trouvée

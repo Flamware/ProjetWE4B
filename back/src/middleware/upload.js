@@ -24,12 +24,56 @@ const storage = multer.diskStorage({
   }
 });
 
+// Liste des types MIME acceptés
+const acceptedMimeTypes = [
+  // Images
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/bmp',
+  'image/webp',
+
+  // Vidéos
+  'video/mp4',
+  'video/quicktime',
+  'video/x-msvideo',
+  'video/x-matroska',
+  'video/x-flv',
+  'video/webm',
+
+  // Audios
+  'audio/mpeg',
+  'audio/wav',
+  'audio/ogg',
+  'audio/mp3',
+
+  // Documents
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'text/plain',
+
+  // Archives
+  'application/zip',
+  'application/x-tar',
+  'application/x-gzip',
+  'application/x-7z-compressed',
+
+  // Autres types de fichiers
+  'application/json',
+  'application/xml',
+  'application/octet-stream'  // Pour les fichiers binaires génériques
+];
+
 const fileFilter = (req, file, cb) => {
-  // Accepter uniquement certains types de fichiers (par exemple, images)
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-    cb(null, true);
+  if (acceptedMimeTypes.includes(file.mimetype)) {
+    cb(null, true); // Accepte le fichier
   } else {
-    cb(new Error('Invalid file type. Only JPEG and PNG files are allowed.'), false);
+    cb(new Error(`Invalid file type: ${file.mimetype}. Allowed types are: ${acceptedMimeTypes.join(', ')}`), false); // Rejette le fichier
   }
 };
 

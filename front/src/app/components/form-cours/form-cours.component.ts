@@ -135,11 +135,17 @@ export class FormCoursComponent implements OnInit {
               });
             });
           } else {
-            // If no image selected, create course directly with medias
-            this.uploadMedias(courseData.id).then(mediaUrls => {
-              courseData.mediaUrls = mediaUrls;
-              this.finalizeCourseCreation(courseData);
-            });
+            console.log(this.selectedMedias.length);
+            if (this.selectedMedias.length > 0) {
+              // If no media selected, create course directly
+              this.uploadMedias(courseData.id).then(mediaUrls => {
+                courseData.mediaUrls = mediaUrls;
+                this.finalizeCourseCreation(courseData);
+              });
+            } else {
+              this.hideForm();
+              this.router.navigate(['/mes-cours']).then(r => console.log('Navigated to /mes-cours'));
+            }
           }
         },
         error: (error: any) => {
