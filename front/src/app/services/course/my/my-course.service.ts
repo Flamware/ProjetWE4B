@@ -10,6 +10,7 @@ import { MyCourse } from '../../../models/mycourse';
 export class MyCourseService {
 
   private apiUrl = 'http://localhost:3000';
+  private createdCourseId: string | undefined; // Variable pour stocker l'ID du cours créé
 
   constructor(private http: HttpClient) {}
 
@@ -42,11 +43,37 @@ export class MyCourseService {
     );
   }
 
-  createCourse(courseData: any): Observable<MyCourse> {
-    return this.http.post<MyCourse>(`${this.apiUrl}/createCourse`, courseData, {
+  createCourse(courseData: any): Observable<{ course: MyCourse }> {
+    return this.http.post<{ course: MyCourse }>(`${this.apiUrl}/createCourse`, courseData, {
       headers: this.getHeaders()
     }).pipe(
-      tap(data => console.log('Course created successfully:', data))
+      tap(data => {
+        console.log('Course created successfully:', data);
+        this.createdCourseId = data.course.id; // Store the created course ID
+      }),
+      catchError(this.handleError('createCourse'))
+    );
+  }
+
+  uploadFile(courseId: string, formData: FormData): Observable<any> {
+    const email = localStorage.getItem('email');
+    return this.http.post<any>(`${this.apiUrl}/uploadFile/${email}/${courseId}`, formData, {
+      headers: this.getHeaders(true) // Use multipart for file upload
+    }).pipe(
+      catchError(this.handleError('uploadFile'))
+    );
+  }
+
+  updateCourseMedias(courseId: string, mediaUrls: string[], imageUrl: string): Observable<any> {
+    const body = {
+      mediaUrls: mediaUrls,
+      imageUrl: imageUrl
+    };
+    return this.http.put<any>(`${this.apiUrl}/updateCourse/${courseId}`, body, {
+      headers: this.getHeaders()
+    }).pipe(
+      tap(data => console.log('Course media updated:', data)),
+      catchError(this.handleError('updateCourseMedias'))
     );
   }
 
@@ -59,16 +86,6 @@ export class MyCourseService {
       catchError(this.handleError('deleteCourse'))
     );
   }
-
-  uploadMedia(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', file);
-  
-    const email = localStorage.getItem('email');  // Récupérez l'email depuis le localStorage
-  
-    return this.http.post<any>(`${this.apiUrl}/uploadFile/${email}`, formData);  // Passez l'email dans l'URL
-  }
-  
 
   private getHeaders(isMultipart: boolean = false): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -83,7 +100,7 @@ export class MyCourseService {
 
   private handleError(operation = 'operation') {
     return (error: any): Observable<never> => {
-      console.error(`${operation} failed: ${error.message}`);
+      console.error(`${operation} failed:`, error);
       return throwError(error);
     };
   }

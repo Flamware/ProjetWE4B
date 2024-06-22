@@ -68,12 +68,4 @@ export class AuthService {
     return this.http.post<any>(uploadUrl, formData);
   }
 
-  uploadFile(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', file);
-    const email = localStorage.getItem('email');
-    const uploadUrl = `${this.apiUrl}/uploadFile/${email}`;
-    return this.http.post<any>(uploadUrl, formData);
-  }
-  
 }

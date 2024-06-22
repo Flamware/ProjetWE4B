@@ -1,11 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MyCourseService } from '../../services/course/my/my-course.service';
-import { AuthService } from '../../services/auth/auth.service';
 import { MyCourse } from '../../models/mycourse';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Observable, tap } from 'rxjs';
+import { Observable, catchError, lastValueFrom, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-form-cours',
@@ -20,8 +19,7 @@ import { Observable, tap } from 'rxjs';
 export class FormCoursComponent implements OnInit {
   myForm: FormGroup;
   @Output() courseCreated = new EventEmitter<MyCourse>();
-  selectedImage: { file: File | undefined; preview: string | ArrayBuffer | null; type: string; } | undefined;
-  selectedImagePreview: string | ArrayBuffer | null = null;
+  selectedImage: { file: File | undefined; preview: string | ArrayBuffer | null; type: string } | undefined;
   selectedMedias: { file: File | undefined, preview: string | ArrayBuffer | null, type: string }[] = [];
   errorMessage: string = '';
   maxMediaCount: number = 3;
@@ -30,15 +28,13 @@ export class FormCoursComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private courseService: MyCourseService,
-    private authService: AuthService,
     private router: Router
   ) {
     this.myForm = this.formBuilder.group({
       name: ['', Validators.required],
       theme: ['', Validators.required],
       description: ['', Validators.required],
-      date: ['', Validators.required],
-      image: ['']
+      date: ['', Validators.required]
     });
   }
 
@@ -91,19 +87,8 @@ export class FormCoursComponent implements OnInit {
       callback(e.target.result);
     };
 
-    // Determine how to read based on file type
-    if (file.type.startsWith('image')) {
-      reader.readAsDataURL(file); // Read image as data URL
-    } else if (file.type.startsWith('video')) {
-      reader.readAsDataURL(file); // Read video as data URL
-    } else if (file.type.startsWith('audio')) {
-      reader.readAsDataURL(file); // Read audio as data URL
-    } else if (file.type === 'application/pdf') {
-      // For PDF files, you may want to handle differently, e.g., using URL.createObjectURL
-      reader.readAsDataURL(file); // Read PDF as data URL
-    } else {
-      reader.readAsDataURL(file); // Fallback for other types (not recommended for non-previewable types)
-    }
+    // Read file as data URL
+    reader.readAsDataURL(file);
   }
 
   addMediaInput(): void {
@@ -131,79 +116,92 @@ export class FormCoursComponent implements OnInit {
         date: this.myForm.get('date')?.value
       };
 
-      // Upload l'image principale
-      if (this.selectedImage) {
-        this.uploadFile(this.selectedImage.file!).subscribe(response => {
-          courseData.imageUrl = response.url;
-          // Upload des médias
-          this.uploadMedias().then(mediaUrls => {
-            courseData.mediaUrls = mediaUrls;
+      // Create course first
+      this.courseService.createCourse(courseData).subscribe({
+        next: (data:{ course: MyCourse }) => {
+          console.log('Course created successfully ---> :', data);
+          courseData.id = data.course.id; // Store the created course ID in courseData
 
-            // Créez le cours avec les URLs d'image et de médias
-            this.courseService.createCourse(courseData).subscribe({
-              next: (data: MyCourse) => {
-                console.log('Course created successfully:', data);
-                this.myForm.reset();
-                this.courseCreated.emit(data);
-                this.hideForm();
-                this.router.navigate(['/mes-cours']).then(r => console.log('Navigated to /mes-cours'));
-              },
-              error: (error: any) => {
-                console.error('Error creating course:', error);
-                this.errorMessage = 'Une erreur est survenue lors de la création du cours. Veuillez réessayer.';
-              }
+          console.log('Course Data ---->:', courseData.id, data.course.id);
+
+          // Upload main image if selected
+          if (this.selectedImage) {
+            this.uploadFile(courseData.id, this.selectedImage.file!).subscribe(response => {
+              courseData.imageUrl = response.url;
+              // Upload media files
+              this.uploadMedias(courseData.id).then(mediaUrls => {
+                courseData.mediaUrls = mediaUrls;
+                this.finalizeCourseCreation(courseData);
+              });
             });
-          });
-        });
-      } else {
-        // Si aucune image n'est sélectionnée, créez le cours directement
-        this.uploadMedias().then(mediaUrls => {
-          courseData.mediaUrls = mediaUrls;
-
-          this.courseService.createCourse(courseData).subscribe({
-            next: (data: MyCourse) => {
-              console.log('Course created successfully:', data);
-              this.myForm.reset();
-              this.courseCreated.emit(data);
-              this.hideForm();
-              this.router.navigate(['/mes-cours']).then(r => console.log('Navigated to /mes-cours'));
-            },
-            error: (error: any) => {
-              console.error('Error creating course:', error);
-              this.errorMessage = 'Une erreur est survenue lors de la création du cours. Veuillez réessayer.';
-            }
-          });
-        });
-      }
+          } else {
+            // If no image selected, create course directly with medias
+            this.uploadMedias(courseData.id).then(mediaUrls => {
+              courseData.mediaUrls = mediaUrls;
+              this.finalizeCourseCreation(courseData);
+            });
+          }
+        },
+        error: (error: any) => {
+          console.error('Error creating course:', error);
+          this.errorMessage = 'Une erreur est survenue lors de la création du cours. Veuillez réessayer.';
+        }
+      });
     }
   }
 
-  private uploadFile(file: File): Observable<any> {
+  private finalizeCourseCreation(courseData: any): void {
+    this.courseService.updateCourseMedias(courseData.id, courseData.mediaUrls, courseData.imageUrl).subscribe({
+      next: (response: any) => {
+        console.log('Media URLs updated for course:', courseData.id);
+        this.myForm.reset();
+        this.courseCreated.emit(response.course);
+        this.hideForm();
+        this.router.navigate(['/mes-cours']).then(r => console.log('Navigated to /mes-cours'));
+      },
+      error: (error: any) => {
+        console.error('Error updating media URLs for course:', courseData.id, error);
+        this.errorMessage = 'Une erreur est survenue lors de la mise à jour des URLs de médias du cours. Veuillez réessayer.';
+      }
+    });
+  }
+
+  private uploadFile(courseId: string, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-
-    return this.authService.uploadFile(file).pipe(
-      tap((response: any) => {
-        console.log('File uploaded successfully:', response);
+  
+    return this.courseService.uploadFile(courseId, formData).pipe(
+      catchError(err => {
+        console.error('Upload failed:', err);
+        return throwError(err);
       })
     );
   }
 
-  private async uploadMedias(): Promise<string[]> {
+  private async uploadMedias(courseId: string): Promise<string[]> {
     const mediaUrls: string[] = [];
-
+  
     for (const media of this.selectedMedias) {
-      if (media) {
-        await this.uploadFile(media.file!).toPromise().then(response => {
-          mediaUrls.push(response.url);
-        }).catch(error => {
+      if (media.file) {
+        try {
+          // Utiliser lastValueFrom pour convertir l'Observable en Promise
+          const response = await lastValueFrom(this.uploadFile(courseId, media.file));
+          if (response.url) {  // Vérifie que l'URL n'est pas nulle
+            mediaUrls.push(response.url);
+          } else {
+            console.error('No URL returned for media:', media.file);
+            this.mediaError = 'Une erreur est survenue lors de l\'upload des médias.';
+          }
+        } catch (error) {
           console.error('Error uploading media:', error);
           this.mediaError = 'Une erreur est survenue lors de l\'upload des médias.';
-        });
+        }
       }
     }
-    return mediaUrls;
+  
+    return mediaUrls.filter(url => url); // Filtre les URLs nulles ou indéfinies
   }
+  
 
   afficher(): void {
     const formulaire = document.getElementById('formulaire');

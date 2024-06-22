@@ -85,6 +85,104 @@ async function createCourse(req, res) {
   }
 }
 
+// TODO: à modifier
+async function uploadCourseMedia(req, res) {
+  const file = req.file;
+  const courseId = req.params.courseId; // Course ID envoyé depuis le frontend
+
+  if (!file) {
+    return res.status(400).json({ error: 'File not provided' });
+  }
+
+  try {
+    const imageUrl = `/uploads/${file.filename}`; // URL où l'image est téléchargée
+
+    // Vérifier si le courseId est valide
+    if (!courseId) {
+      return res.status(400).json({ error: 'Course ID is required' });
+    }
+
+    // Vérifier si le cours existe
+    const fetchQuery = 'SELECT * FROM course WHERE id = $1';
+    const fetchResult = await client.query(fetchQuery, [courseId]);
+
+    if (fetchResult.rowCount === 0) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+
+    // Mettre à jour la base de données avec l'URL de l'image
+    const updateQuery = 'UPDATE course SET image = $1 WHERE id = $2';
+    await client.query(updateQuery, [imageUrl, courseId]);
+
+    // Réponse JSON avec l'URL de l'image et un message de confirmation
+    res.status(200).json({
+      message: 'Image uploaded and set successfully',
+      url: imageUrl
+    });
+
+  } catch (error) {
+    console.error('Error uploading course media:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+async function updateCourseMedia(req, res) {
+  const courseId = req.params.courseId;
+  const { mediaUrls, imageUrl } = req.body; // Assurez-vous que mediaUrls est bien un tableau d'URLs
+
+  try {
+    // Vérifier que courseId est valide
+    if (!courseId) {
+      return res.status(400).json({ error: 'Course ID is required' });
+    }
+
+    // Vérifier que mediaUrls est un tableau
+    if (!Array.isArray(mediaUrls)) {
+      return res.status(400).json({ error: 'mediaUrls must be an array' });
+    }
+
+    // Vérifier que imageUrl est une chaîne
+    if (typeof imageUrl !== 'string' || !imageUrl.trim()) {
+      return res.status(400).json({ error: 'imageUrl must be a valid string' });
+    }
+
+    // Récupérer les médias_urls actuels du cours
+    const fetchQuery = 'SELECT media_urls FROM course WHERE id = $1';
+    const fetchResult = await client.query(fetchQuery, [courseId]);
+
+    if (fetchResult.rowCount === 0) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+
+    const currentMediasUrls = fetchResult.rows[0].media_urls || [];
+
+    // Ajouter les nouveaux mediaUrls à la liste des medias_urls actuels
+    const updatedMediasUrls = [...new Set([...currentMediasUrls, ...mediaUrls])];
+
+    // Mettre à jour la base de données avec les nouveaux medias_urls et l'imageUrl
+    const updateQuery = 'UPDATE course SET media_urls = $1, image = $2 WHERE id = $3';
+    await client.query(updateQuery, [updatedMediasUrls, imageUrl, courseId]);
+
+    const updatedCourse = {
+      id: courseId,
+      mediaUrls: updatedMediasUrls,
+      imageUrl: imageUrl
+    };
+
+    res.status(200).json({ message: 'Course media and image updated successfully', course: updatedCourse });
+  } catch (error) {
+    console.error('Error updating course media and image:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+// TODO: à modifier
+async function getCoursesMedias(req, res) {
+
+
+};
+
 async function deleteCourse(req, res) {
   const courseId = req.params.courseId;
   const userId = req.userId;
@@ -105,5 +203,8 @@ module.exports = {
   createCourse,
   deleteCourse,
   getCoursesByUserId,
-  getAllCoursesFromUser
+  getAllCoursesFromUser,
+  uploadCourseMedia,
+  getCoursesMedias,
+  updateCourseMedia
 };
