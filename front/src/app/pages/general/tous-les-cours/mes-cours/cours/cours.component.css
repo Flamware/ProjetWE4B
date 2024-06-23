@@ -1,42 +1,74 @@
 .course-header {
-  background-color: #f8f9fa;
+  max-width: 800px;
+  margin: 0 auto;
   padding: 20px;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.course-info {
-  text-align: center;
-}
-
-.course-info h2 {
-  margin: 0;
-  font-size: 24px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
   color: #333;
 }
 
+.course-info {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+.course-info h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
 .course-info h3 {
-  margin: 5px 0;
   font-size: 20px;
-  color: #666;
+  margin-bottom: 8px;
 }
 
 .course-info p {
-  margin: 10px 0;
   font-size: 16px;
-  color: #888;
+  line-height: 1.6;
+  margin-bottom: 12px;
 }
-.rating button {
-  color: #aaa;
-  text-decoration: none;
-  font-size: 3em;
-  transition: color .4s;
+
+.course-image {
+  margin-bottom: 12px;
 }
-.rating button:hover,
-.rating button:focus {
-  color: orange;
+
+.media-container {
+  margin-top: 16px;
+}
+
+.toggle-media-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+}
+
+.toggle-media-button:hover {
+  background-color: #0056b3;
+}
+
+.media-viewers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.rating {
+  margin-top: 16px;
+}
+
+.rating .star {
+  font-size: 24px;
+  color: #ffc107; /* Couleur des étoiles */
+  cursor: pointer;
+}
+
+.rating .star:hover,
+.rating .star.active {
+  color: #ffdf70; /* Couleur des étoiles au survol ou actives */
 }

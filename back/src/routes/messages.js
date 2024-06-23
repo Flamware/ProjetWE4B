@@ -10,7 +10,10 @@ router.post("/send", verifyToken, messagesController.sendMessage);
 router.get("/messages/:receiverId", verifyToken, messagesController.getMessages);
 
 // Récupérer tous les messages d'un expéditeur
-router.get("/messages", verifyToken, messagesController.getMessagesBySender);
+router.get("/messagesP", verifyToken, messagesController.getMessagesBySender);
+
+// Récupérer tous les messages d'un expéditeur
+router.get("/messagesG/:receiverId", verifyToken, messagesController.getMessagesByReceiver);
 
 // Supprimer un message par son ID
 router.delete("/delete/:messageId", messagesController.deleteMessage);
@@ -23,5 +26,7 @@ router.post("/addContact", verifyToken, messagesController.addContact);
 
 // Fetch les contacts
 router.get("/contacts", verifyToken, messagesController.getContacts);
+
+router.get("/getUser/:id", messagesController.getContactById);
 
 module.exports = router;

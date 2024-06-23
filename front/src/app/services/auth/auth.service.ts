@@ -11,6 +11,7 @@ export class AuthService {
   private registerUrl = 'http://localhost:3000/register'; // Replace with your server's register endpoint
   private apiUrl = 'http://localhost:3000';
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated());
+  static userEmail: any;
 
   authStatus = this.loggedIn.asObservable();
 
@@ -23,6 +24,7 @@ export class AuthService {
           localStorage.setItem('token', response.token);
           localStorage.setItem('username', response.username);
           localStorage.setItem('userId', response.userId);
+          localStorage.setItem('email', response.email);
           this.loggedIn.next(true);
         }
       })
@@ -33,6 +35,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('userId');
+    localStorage.removeItem('email');
     this.loggedIn.next(false);
   }
 
@@ -64,5 +67,5 @@ export class AuthService {
   
     return this.http.post<any>(uploadUrl, formData);
   }
-  
+
 }

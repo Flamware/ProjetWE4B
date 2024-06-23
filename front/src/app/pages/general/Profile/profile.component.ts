@@ -4,6 +4,7 @@ import { CommonModule, NgIf } from "@angular/common";
 import { ProfileService } from '../../../services/profile/profile.service';
 import { Userinfo } from '../../../models/userinfo';
 import { Subscription } from 'rxjs';
+import {MesDocumentComponent} from '../../../components/mes-document/mes-document.component'
 
 type errors = {
   firstname: string,
@@ -20,7 +21,8 @@ type errors = {
   imports: [
     NgIf,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    MesDocumentComponent
   ],
   styleUrls: ['./profile.component.css']
 })

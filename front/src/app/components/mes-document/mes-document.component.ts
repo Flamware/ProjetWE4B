@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import { FormControl, FormGroup ,ReactiveFormsModule,Validators} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup ,ReactiveFormsModule,Validators} from '@angular/forms';
 import {NgForOf} from "@angular/common";
+import { catchError, throwError } from 'rxjs';
+import { MyCourseService } from '../../services/course/my/my-course.service';
 
 @Component({
   selector: 'app-mes-document',
@@ -13,28 +15,70 @@ import {NgForOf} from "@angular/common";
   styleUrl: './mes-document.component.css'
 })
 export class MesDocumentComponent {
+  baseUrl = 'http://localhost:3000'; // Ajoutez ici votre préfixe d'URL
   uploadForm: FormGroup;
+  selectedFile: { file: File | null; } | undefined
+  files: any[] = [];
 
-  files= [{name:"file1",url:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Lapin_belier_hollandais.jpg/1920px-Lapin_belier_hollandais.jpg"},{name:"file2",url:"C:\\Users\\Gachelin Estouan\\Documents\\test.txt"}];
-
-  oninit(){
-    this.files = this.getfiles();
-
-  }
-
-
-  getfiles():any{
-
-  }
-  constructor() {
-    this.uploadForm = new FormGroup({
-      file: new FormControl('', [Validators.required]),
-      namefile: new FormControl('', [Validators.required]),
-
+  constructor(private courseService: MyCourseService, private fb: FormBuilder) {
+    this.uploadForm = this.fb.group({
+      namefile: ['', [Validators.required]]
     });
   }
-    upload() {
-    console.log(this.uploadForm.value);
+
+  ngOnInit(): void {
+    this.getFiles();
   }
 
+  getFiles(): void {
+    this.courseService.getRessources().subscribe(
+      data => {
+        this.files = data;
+      },
+      error => {
+        console.error('Error fetching resources:', error);
+      }
+    );
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedFile = { file };
+    }
+  }
+
+  async upload(): Promise<void> {
+    console.log(this.selectedFile, this.uploadForm.get('namefile')?.value);
+    if (this.uploadForm.valid && this.selectedFile) {
+      const fileName = this.uploadForm.get('namefile')?.value;
+
+      try {
+        const response = await this.uploadResourceFile(this.selectedFile.file!, fileName);
+        console.log('Upload successful:', response);
+        this.getFiles(); // Mettre à jour la liste des documents après l'upload
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        // Gérer l'erreur d'upload ici
+      }
+    } else {
+      console.error('Form is invalid or file is not selected');
+      // Gérer le cas où le formulaire n'est pas else {
+      console.error('File or name is invalid');
+      // Gérer le cas où le fichier ou le nom est invalide
+    }
+  }
+
+  private async uploadResourceFile(file: File, fileName: string): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file, fileName);
+
+    return this.courseService.uploadResourceFile(formData).pipe(
+      catchError(err => {
+        console.error('Upload failed:', err);
+        return throwError(() => err); // Utilisation de la fonction factory pour throwError
+      })
+    ).toPromise();
+  }
 }

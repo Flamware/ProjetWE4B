@@ -11,7 +11,9 @@ export class MyCourseService {
 
   private apiUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) { }
+  private createdCourseId: string | undefined; // Variable pour stocker l'ID du cours créé
+
+  constructor(private http: HttpClient) {}
 
   getCoursesByUserId(userId: number): Observable<MyCourse[]> {
     return this.http.get<MyCourse[]>(`${this.apiUrl}/coursesByUserId/${userId}`, {
@@ -22,18 +24,16 @@ export class MyCourseService {
     );
   }
 
-    // Méthode pour récupérer un média via son URL
-    getMediaByUrl(mediaUrl: string): Observable<any> {
-      const headers = this.getHeaders();
-  
-      return this.http.get<any>(mediaUrl, { headers }).pipe(
-        tap(data => console.log('Media fetched successfully:', data)),
-        catchError(error => {
-          console.error('Error fetching media:', error);
-          throw error;
-        })
-      );
-    }
+  getMediaByUrl(mediaUrl: string): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.get<any>(mediaUrl, { headers }).pipe(
+      tap(data => console.log('Media fetched successfully:', data)),
+      catchError(error => {
+        console.error('Error fetching media:', error);
+        throw error;
+      })
+    );
+  }
 
   getAllCoursesFromUser(): Observable<MyCourse[]> {
     return this.http.get<MyCourse[]>(`${this.apiUrl}/allCoursesFromUser`, {
@@ -44,21 +44,54 @@ export class MyCourseService {
     );
   }
 
-  createCourse(courseData: FormData): Observable<MyCourse> {
-    // Construire le corps de la requête avec les données extraites de FormData
-    const body = {
-      date: courseData.get('date'),
-      description: courseData.get('description'),
-      image: courseData.get('image'),
-      name: courseData.get('name'),
-      theme: courseData.get('theme')
-    };
-
-    // Envoi de la requête HTTP avec le corps JSON
-    return this.http.post<MyCourse>(`${this.apiUrl}/createCourse`, body, {
+  createCourse(courseData: any): Observable<{ course: MyCourse }> {
+    return this.http.post<{ course: MyCourse }>(`${this.apiUrl}/createCourse`, courseData, {
       headers: this.getHeaders()
     }).pipe(
-      tap(data => console.log('Course created successfully:', data))
+      tap(data => {
+        console.log('Course created successfully:', data);
+        this.createdCourseId = data.course.id; // Store the created course ID
+      }),
+      catchError(this.handleError('createCourse'))
+    );
+  }
+
+  uploadFile(courseId: string, formData: FormData): Observable<any> {
+    const email = localStorage.getItem('email');
+    return this.http.post<any>(`${this.apiUrl}/uploadFile/${email}/${courseId}`, formData, {
+      headers: this.getHeaders(true) // Use multipart for file upload
+    }).pipe(
+      catchError(this.handleError('uploadFile'))
+    );
+  }
+
+  uploadResourceFile(formData: FormData): Observable<any> {
+    const email = localStorage.getItem('email');
+    return this.http.post<any>(`${this.apiUrl}/uploadFile/${email}`, formData, {
+      headers: this.getHeaders(true) // Use multipart for file upload
+    }).pipe(
+      catchError(this.handleError('uploadFile'))
+    );
+  }
+
+  // Méthode pour récupérer les ressources
+  getRessources(): Observable<any[]> {
+    const email = localStorage.getItem('email');
+    return this.http.get<any[]>(`${this.apiUrl}/resources/${email}`).pipe(
+      tap(data => console.log('Ressources loades succesfully:', data))
+    );
+  }
+
+  updateCourseMedias(courseId: string, mediaUrls: string[], imageUrl: string): Observable<any> {
+    const body = {
+      mediaUrls: mediaUrls,
+      imageUrl: imageUrl
+    };
+    return this.http.put<any>(`${this.apiUrl}/updateCourse/${courseId}`, body, {
+      headers: this.getHeaders()
+    }).pipe(
+      tap(data => console.log('Course media updated:', data)),
+      catchError(this.handleError('updateCourseMedias'))
     );
   }
 
@@ -85,7 +118,7 @@ export class MyCourseService {
 
   private handleError(operation = 'operation') {
     return (error: any): Observable<never> => {
-      console.error(`${operation} failed: ${error.message}`);
+      console.error(`${operation} failed:`, error);
       return throwError(error);
     };
   }

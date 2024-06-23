@@ -1,5 +1,3 @@
-
-
 .card-container {
   display: flex;
   flex-wrap: wrap;
@@ -13,6 +11,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 300px;
+  max-width: 400px;
   margin: 8px;
 }
 
@@ -21,6 +20,8 @@
   background-color: #c0c0c0;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  object-fit: cover;
+  width: 100%;
 }
 
 .card-content {
@@ -47,7 +48,10 @@
   color: #757575;
   font-size: 14px;
   margin: 8px 0;
+  overflow-x: auto; /* Autorise le scroll horizontal lorsque nécessaire */
+  white-space: nowrap; /* Empêche le texte de passer à la ligne */
 }
+
 
 .card-subtitle {
   font-size: 16px;
@@ -74,4 +78,60 @@
   margin-top: 16px;
   color: #6200ea;
   text-decoration: none;
+}
+
+.course-image {
+  width: 100%;
+  height: 150px; /* Ajustez la hauteur selon vos besoins */
+  object-fit: cover; /* Ajuste la taille de l'image pour remplir le conteneur */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* CSS pour styliser app-media-viewer */
+app-media-viewer {
+  display: block;
+  margin-top: 10px; /* Espace au-dessus du composant */
+  padding: 10px; /* Espacement interne du composant */
+  border: 1px solid #ccc; /* Bordure légère */
+  border-radius: 5px; /* Coins arrondis */
+  background-color: #f9f9f9; /* Couleur de fond */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+/* Stylisation des différents types de médias */
+app-media-viewer img {
+  max-width: 100%; /* Image responsive, ajustée à la largeur maximale du composant */
+  height: auto; /* Hauteur automatique */
+}
+
+app-media-viewer video {
+  max-width: 100%; /* Vidéo responsive, ajustée à la largeur maximale du composant */
+  height: auto; /* Hauteur automatique */
+}
+
+app-media-viewer iframe {
+  width: 100%; /* IFrame responsive, ajusté à la largeur maximale du composant */
+  height: 300px; /* Hauteur fixe pour l'IFrame (ajustez selon vos besoins) */
+}
+
+/* Légende ou description du média */
+app-media-viewer p {
+  margin-top: 5px; /* Espace au-dessus du texte */
+  font-size: 14px; /* Taille de police du texte */
+  color: #666; /* Couleur de texte grise */
+}
+
+
+.toggle-media-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.toggle-media-button:hover {
+  background-color: #0056b3;
 }

@@ -1,88 +1,119 @@
+.home-main {
+  padding: 40px 0;
+  background-color: #f9f9f9; /* Fond légèrement teinté de blanc */
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+  margin-bottom: 30px;
+  background-color: #fff; /* Fond blanc pour le formulaire */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Légère ombre */
+  border-radius: 8px;
+}
+
 .card-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  padding: 16px;
-  justify-content: space-between;
-  flex-direction: row;
+  justify-content: center;
+  gap: 20px; /* Espacement entre les cartes */
+}
+
+.cour {
+  margin: 10px;
+  width: 300px; /* Largeur fixe pour les éléments */
 }
 
 .card {
-  background-color: white;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: calc(50% - 16px); /* Pour deux colonnes, avec un espace de 16px entre les cartes */
-  margin-bottom: 16px;
+  overflow: hidden;
+  width: 100%; /* Carte prend toute la largeur du conteneur */
 }
 
-@media (min-width: 768px) {
-  .card {
-    width: calc(33.33% - 16px); /* Pour trois colonnes sur des écrans plus larges, avec un espace de 16px entre les cartes */
-  }
+.card-content {
+  padding: 20px;
 }
 
-@media (min-width: 1024px) {
-  .card {
-    width: calc(25% - 16px); /* Pour quatre colonnes sur des écrans encore plus larges, avec un espace de 16px entre les cartes */
-  }
-}
-
-.card-image {
-  height: 150px;
-  background-color: #c0c0c0;
+.course-image {
+  width: 100%;
+  height: auto;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
 
-.card-content {
-  padding: 16px;
-}
-
 .card-title {
-  font-size: 24px;
-  margin: 0;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #333;
 }
 
 .card-rating {
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
+  margin-bottom: 10px;
+  color: #ffd700;
 }
 
 .stars {
-  color: gold;
-  margin-right: 8px;
+  font-size: 1.5rem;
+  color: #ffd700;
+}
+
+.stars.empty {
+  color: #ccc; /* Étoiles vides en gris clair */
 }
 
 .card-text {
-  color: #757575;
-  font-size: 14px;
-  margin: 8px 0;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #555; /* Texte de la carte en gris foncé */
 }
 
-.card-subtitle {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 16px 0 8px;
-}
-
-.themes {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.theme {
-  background-color: #f0f0f0;
-  border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 14px;
+.card-theme {
+  margin-bottom: 10px;
 }
 
 .card-action {
-  display: block;
-  text-align: right;
-  margin-top: 16px;
-  color: #6200ea;
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
   text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.card-action:hover {
+  background-color: #0056b3;
+}
+
+.toggle-media-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.toggle-media-button:hover {
+  background-color: #0056b3;
+}
+
+.card-media-container {
+  padding: 10px;
+}
+
+.media-viewer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .cour {
+    width: calc(50% - 40px); /* Deux cartes par ligne sur écrans plus petits */
+  }
 }

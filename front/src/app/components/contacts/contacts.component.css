@@ -1,45 +1,125 @@
+/* Conteneur principal de la liste des contacts */
 .contacts-list {
-    border: 1px solid #ccc;
-    padding: 10px;
-  }
-  
-  .contacts-list h2 {
-    margin-bottom: 10px;
-  }
-  
-  .scrollable-panel {
-    max-height: 300px; /* Ajustez la hauteur selon vos besoins */
-    overflow-y: auto;
-  }
-  
-  .contact-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Animation de transition */
-  }
-  
-  .contact-item:hover {
-    background-color: #f0f0f0; /* Couleur de fond au survol */
-  }
-  
-  .contact-item div {
-    flex: 1;
-  }
-  
-  .contact-item button {
-    background-color: #007bff; /* Couleur de fond du bouton */
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Animation de transition */
-  }
-  
-  .contact-item button:hover {
-    background-color: #0056b3; /* Couleur de fond au survol du bouton */
-  }
-  
+  border: 1px solid #ccc; /* Bordure des contacts */
+  padding: 10px; /* Espacement intérieur */
+  background-color: #f9f9f9; /* Couleur de fond */
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombrage */
+  max-width: 400px; /* Largeur maximale */
+  margin: 0 auto; /* Centrage de la liste */
+}
+
+/* Titre de la section des contacts */
+.contacts-list h2 {
+  margin-bottom: 10px; /* Espacement sous le titre */
+  font-size: 24px; /* Taille de police */
+  color: #333; /* Couleur de texte */
+  text-align: center; /* Alignement du texte */
+}
+
+/* Panneau déroulant pour les contacts */
+.scrollable-panel {
+  max-height: 300px; /* Hauteur maximale du panneau */
+  overflow-y: auto; /* Activer le défilement vertical */
+  padding-right: 10px; /* Espacement interne */
+  scrollbar-width: thin; /* Largeur de la barre de défilement pour Firefox */
+  scrollbar-color: #ccc #f9f9f9; /* Couleurs de la barre de défilement pour Firefox */
+}
+
+/* Style des éléments individuels de contact */
+.contact-item {
+  display: flex; /* Affichage en ligne des éléments */
+  align-items: center; /* Alignement vertical centré */
+  justify-content: space-between; /* Espacement entre les éléments */
+  padding: 10px; /* Espacement interne */
+  cursor: pointer; /* Curseur pointer pour indication de clic */
+  transition: background-color 0.3s ease; /* Transition pour l'effet de survol */
+  border-bottom: 1px solid #ddd; /* Ligne de séparation entre les contacts */
+  position: relative; /* Nécessaire pour le positionnement du menu */
+}
+
+.contact-item:hover {
+  background-color: #f0f0f0; /* Couleur de fond au survol */
+}
+
+/* Informations sur le contact */
+.contact-info {
+  flex: 1; /* Prend tout l'espace disponible */
+  font-size: 16px; /* Taille de police */
+  color: #555; /* Couleur de texte */
+}
+
+/* Bouton pour écrire un message */
+.write-button {
+  background-color: #4CAF50; /* Couleur de fond du bouton */
+  color: white; /* Couleur du texte */
+  border: none; /* Pas de bordure */
+  padding: 5px 10px; /* Espacement interne */
+  border-radius: 4px; /* Coins arrondis */
+  cursor: pointer; /* Curseur pointer pour indication de clic */
+  transition: background-color 0.3s ease; /* Transition pour l'effet de survol */
+  margin-right: 10px; /* Espacement entre les boutons */
+}
+
+.write-button:hover {
+  background-color: #45a049; /* Couleur de fond au survol */
+}
+
+/* Bouton du menu */
+.menu-button {
+  background: none; /* Pas de fond */
+  border: none; /* Pas de bordure */
+  font-size: 18px; /* Taille de police */
+  cursor: pointer; /* Curseur pointer pour indication de clic */
+  color: #555; /* Couleur de texte */
+  transition: color 0.3s ease; /* Transition pour l'effet de survol */
+}
+
+.menu-button:hover {
+  color: #000; /* Couleur de texte au survol */
+}
+
+/* Menu déroulant pour les options */
+.dropdown-menu {
+  position: absolute; /* Positionnement relatif à l'élément parent */
+  top: 100%; /* Positionner sous le bouton */
+  right: 0; /* Alignement à droite */
+  background-color: white; /* Couleur de fond */
+  border: 1px solid #ddd; /* Bordure */
+  border-radius: 4px; /* Coins arrondis */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombrage */
+  padding: 10px; /* Espacement interne */
+  z-index: 1000; /* Positionnement au-dessus des autres éléments */
+}
+
+/* Options du menu */
+.menu-option {
+  display: block; /* Affichage en bloc */
+  background: none; /* Pas de fond */
+  border: none; /* Pas de bordure */
+  color: #555; /* Couleur de texte */
+  padding: 5px 10px; /* Espacement interne */
+  text-align: left; /* Alignement du texte à gauche */
+  width: 100%; /* Largeur maximale */
+  cursor: pointer; /* Curseur pointer pour indication de clic */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transition pour l'effet de survol */
+}
+
+.menu-option:hover {
+  background-color: #f1f1f1; /* Couleur de fond au survol */
+  color: #000; /* Couleur de texte au survol */
+}
+
+/* Styles pour la barre de défilement */
+.scrollable-panel::-webkit-scrollbar {
+  width: 8px; /* Largeur de la barre de défilement */
+}
+
+.scrollable-panel::-webkit-scrollbar-thumb {
+  background-color: #ccc; /* Couleur de la barre de défilement */
+  border-radius: 4px; /* Coins arrondis */
+}
+
+.scrollable-panel::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa; /* Couleur de la barre de défilement au survol */
+}

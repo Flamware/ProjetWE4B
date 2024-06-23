@@ -1,12 +1,38 @@
-<!-- src/app/components/cours/cours.component.html -->
-
 <div *ngIf="courinfo as course; else loading" class="course-header">
   <div class="course-info">
-    <a [routerLink]="['/message', course.teacher]">
+    <!-- Nom du cours -->
+    <a [routerLink]="['/message', courinfo.teacher]">
       <h2>{{ courinfo.name }}</h2>
     </a>
+
+    <!-- Titre du cours -->
     <h3>{{ courinfo.title }}</h3>
+
+    <!-- Description du cours -->
     <p>{{ courinfo.description }}</p>
+
+    <!-- Image principale du cours avec app-media-viewer -->
+    <div *ngIf="courinfo.image">
+      <app-media-viewer [mediaUrl]="baseUrl + courinfo.image" [mediaType]="'image'"></app-media-viewer>
+    </div>
+
+    <!-- Affichage des autres médias avec bouton déplier/replier -->
+    <div class="card-media-container">
+      <div *ngIf="courinfo.media_urls.length > 0">
+        <button class="toggle-media-button" (click)="toggleMedia()">
+          {{ showMedia ? 'Masquer Médias' : 'Afficher Médias' }}
+        </button>
+      </div>
+      <div *ngIf="showMedia">
+        <app-media-viewer *ngFor="let mediaUrl of courinfo.media_urls"
+                          [mediaUrl]="baseUrl + mediaUrl"
+                          [mediaType]="determineMediaType(baseUrl + mediaUrl)">
+          Médias ici !
+        </app-media-viewer>
+      </div>
+    </div>
+
+    <!-- Évaluation du cours -->
     <div class="rating">
       <button *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rate(star)">
         {{ star <= rating.get('stars')?.value ? '★' : '☆' }}
@@ -18,5 +44,3 @@
 <ng-template #loading>
   <p>Loading course details...</p>
 </ng-template>
-
-<app-mes-document></app-mes-document>

@@ -5,16 +5,9 @@
 <div class="card-container" id="form">
   <div class="cour" *ngFor="let course of ListeCours; let i = index">
     <div class="card">
-      <!-- Affichage du média -->
-      <div *ngFor="let mediaUrl of course.mediaUrls">
-        <app-media-viewer [mediaUrl]="mediaUrl"></app-media-viewer>
-      </div>
-
-      <!-- Example of how to display a single mediaUrl and mediaType -->
-      <!-- Adjust this based on your actual data structure -->
-      <!-- <app-media-viewer [mediaUrl]="course.mediaUrl" [mediaType]="course.mediaType"></app-media-viewer> -->
-
       <div class="card-content">
+        <!-- Affichage de l'image principale -->
+        <img *ngIf="course.image" [src]="baseUrl + course.image" alt="Course Image" class="course-image">
         <h2 class="card-title">{{ course.title }}</h2>
         <div class="card-rating">
           <span *ngFor="let star of [1, 2, 3, 4, 5]">
@@ -23,15 +16,31 @@
           </span>
           ({{ course.rate || 0 }})
         </div>
-        <p class="card-text">{{ course.description }}</p>
+        <p class="card-text" [innerHTML]="course.description | youtubeEmbed | linkify"></p>
         <div class="card-theme">
-          <span class="theme">{{ course.type }}</span>
+          <p class="theme" [innerHTML]="course.type | youtubeEmbed | linkify"></p>
         </div>
         <div class="themes">
           <!-- Additional theme-related content -->
         </div>
         <button class="card-action" (click)="deleteCourse(course.id)">Supprimer</button>
         <a [routerLink]="['/cours', course.id]" class="card-action">Voir cours</a>
+      </div>
+
+      <!-- Affichage des autres médias avec bouton déplier/replier -->
+      <div class="card-media-container">
+        <div *ngIf="course.mediaUrls.length > 0">
+          <button class="toggle-media-button" (click)="toggleMedia()">
+            {{ showMedia ? 'Masquer Médias' : 'Afficher Médias' }}
+          </button>
+        </div>
+        <div *ngIf="showMedia">
+          <app-media-viewer *ngFor="let mediaUrl of course.mediaUrls"
+                            [mediaUrl]="baseUrl + mediaUrl"
+                            [mediaType]="determineMediaType(baseUrl + mediaUrl)">
+            Médias ici !
+          </app-media-viewer>
+        </div>
       </div>
     </div>
   </div>
