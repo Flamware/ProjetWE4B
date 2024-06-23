@@ -65,6 +65,23 @@ export class MyCourseService {
     );
   }
 
+  uploadResourceFile(formData: FormData): Observable<any> {
+    const email = localStorage.getItem('email');
+    return this.http.post<any>(`${this.apiUrl}/uploadFile/${email}`, formData, {
+      headers: this.getHeaders(true) // Use multipart for file upload
+    }).pipe(
+      catchError(this.handleError('uploadFile'))
+    );
+  }
+
+  // Méthode pour récupérer les ressources
+  getRessources(): Observable<any[]> {
+    const email = localStorage.getItem('email');
+    return this.http.get<any[]>(`${this.apiUrl}/resources/${email}`).pipe(
+      tap(data => console.log('Ressources loades succesfully:', data))
+    );
+  }
+
   updateCourseMedias(courseId: string, mediaUrls: string[], imageUrl: string): Observable<any> {
     const body = {
       mediaUrls: mediaUrls,

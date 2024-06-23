@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import {FooterComponent} from "./footer/footer.component";
 import {RouterOutlet} from "@angular/router";
 import {HeaderComponent} from "./header/header.component";
@@ -19,6 +19,9 @@ interface UserResponse {
   ],
   styleUrls: ['./app.component.css']
 })
+
+
+
 export class AppComponent implements OnDestroy {
 
   constructor(private http: HttpClient) {}
@@ -29,5 +32,21 @@ export class AppComponent implements OnDestroy {
 
   ngOnDestroy(): void {
 
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    const footer = document.getElementById('footer');
+    if (!footer) return;
+
+    const scrollHeight = window.innerHeight + window.scrollY;
+    const documentHeight = document.body.offsetHeight;
+
+    // Afficher le footer lorsque la souris atteint le bas de la page
+    if (scrollHeight >= documentHeight) {
+      footer.style.display = 'block';
+    } else {
+      footer.style.display = 'none';
+    }
   }
 }

@@ -1,4 +1,6 @@
 const { client } = require('../config/database');
+const { validationResult } = require('express-validator');
+const path = require('path');
 
 const getCoursesByUserId = async (req, res) => {
   const userId = req.session.userId; // Retrieve user ID from session
@@ -188,10 +190,83 @@ async function updateCourseMedia(req, res) {
 
 
 // TODO: à modifier
-async function getCoursesMedias(req, res) {
+// Fonction de contrôleur pour mettre à jour les ressources (fichiers)
+async function updateRessourcesFiles(req, res) {
+  const { email } = req.params; // Récupération de l'email de l'utilisateur depuis les paramètres d'URL
+  const file = req.file; // Récupération du fichier téléchargé depuis Multer
+  console.log(file);
 
+  try {
+    // Vérifiez s'il y a des erreurs de validation dans la requête
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-};
+    if (!email) {
+      return res.status(400).json({ message: 'User email not provided' });
+    }
+
+    if (!file) {
+      return res.status(400).json({ message: 'File not uploaded' });
+    }
+
+    const { originalname, mimetype } = file;
+
+    // Créez un chemin de fichier relatif
+    const relativeFilePath = `uploads/${email}/${file.filename}`;
+    const absoluteFilePath = path.resolve(relativeFilePath);
+
+    // Insérez les informations dans la base de données
+    const insertQuery = `
+      INSERT INTO resources (title, description, file_path, created_at, user_email)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *;
+    `;
+
+    const values = [originalname, '', relativeFilePath, new Date(), email];
+
+    // Exécutez la requête d'insertion dans la base de données PostgreSQL
+    const result = await client.query(insertQuery, values);
+
+    // Si l'insertion est réussie, renvoyez la ressource insérée
+    const insertedRessource = result.rows[0];
+    res.status(201).json(insertedRessource);
+  } catch (error) {
+    console.error('Error uploading resource:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+async function getRessourcesFiles(req, res) {
+  const { email } = req.params;
+
+  try {
+    if (!email) {
+      return res.status(400).json({ message: 'User email not provided' });
+    }
+
+    // Requête pour récupérer les ressources
+    const selectQuery = `
+      SELECT * FROM resources
+      WHERE user_email = $1
+      ORDER BY created_at DESC;
+    `;
+
+    const result = await client.query(selectQuery, [email]);
+
+    // Vérifiez si des ressources ont été trouvées
+    if (result.rows.length === 0) {
+      return res.status(204).json({ message: 'No resources found for this user' });
+    }
+
+    // Renvoyez les ressources récupérées
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching resources:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 async function deleteCourse(req, res) {
   const courseId = req.params.courseId;
@@ -215,6 +290,7 @@ module.exports = {
   getCoursesByUserId,
   getAllCoursesFromUser,
   uploadCourseMedia,
-  getCoursesMedias,
+  updateRessourcesFiles,
+  getRessourcesFiles,
   updateCourseMedia
 };

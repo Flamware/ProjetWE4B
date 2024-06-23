@@ -4,4 +4,8 @@ export interface Course {
     description: string;
     teacher: string;
     title: string;
+    date: string;
+    image: string;
+    rate : number;
+    media_urls: string[];
   }

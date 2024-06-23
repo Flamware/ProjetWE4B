@@ -5,6 +5,8 @@ import {ActivatedRoute, RouterLink} from '@angular/router';
 import {FormCoursComponent} from "../../../../components/form-cours/form-cours.component";
 import {NgForOf, NgIf} from "@angular/common";
 import { MediaViewerComponent } from '../../../../components/media-viewer/media-viewer.component';
+import { LinkifyPipe } from '../../../../pipes/linkify.pipe';
+import { YoutubeEmbedPipe } from '../../../../pipes/youtube-embed.pipe';
 
 @Component({
   selector: 'app-tous-cours',
@@ -14,7 +16,9 @@ import { MediaViewerComponent } from '../../../../components/media-viewer/media-
     NgForOf,
     NgIf,
     RouterLink,
-    MediaViewerComponent
+    MediaViewerComponent,
+    LinkifyPipe,
+    YoutubeEmbedPipe
   ],
   templateUrl: './cours.component.html',
   styleUrl: './cours.component.css'
