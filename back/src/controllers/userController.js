@@ -80,6 +80,7 @@ exports.register = async (req, res) => {
 
 // Fonction pour gérer l'envoi de la photo de profil
 exports.uploadProfilePicture = async (req, res) => {
+  console.log('Uploading profile picture:', req.file);
   try {
     const { email } = req.params;
 

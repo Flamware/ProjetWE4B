@@ -5,22 +5,21 @@
     <app-recherche></app-recherche>
     <div>
       <button class="button">Search</button>
-      
+
       <!-- Bouton de login/logout -->
       <button class="button" id="boutonlogin" *ngIf="!isconnected" routerLink="/login" routerLinkActive="active">Login</button>
       <button class="button" (click)="logout()" *ngIf="isconnected" routerLink="/logout" routerLinkActive="active">Logout</button>
     </div>
   </div>
-  
+
   <!-- Navigation -->
   <nav>
     <a routerLink="/home" routerLinkActive="active">Home</a>
     <a routerLink="/profile" routerLinkActive="active">Profile</a>
     <a routerLink="/mes-cours" routerLinkActive="active">Mes Cours</a>
     <a [routerLink]="['/message', '' ]" routerLinkActive="active">Mes messages</a>
-    <a routerLink="/about" routerLinkActive="active">About</a>
   </nav>
-  
+
   <!-- Image de profil -->
   <div class="profile-picture" *ngIf="isconnected">
     <img [src]="profilePictureUrl" alt="Profile Picture">

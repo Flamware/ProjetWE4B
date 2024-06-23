@@ -1,40 +1,53 @@
-import {Renderer2, Component, ElementRef} from '@angular/core';
-import { FormControl, FormGroup ,ReactiveFormsModule,Validators} from '@angular/forms';
-import {Router, RouterLink, RouterLinkActive} from "@angular/router";
-import {AuthService} from "../../../services/auth/auth.service";
+import { Renderer2, Component, ElementRef } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { AuthService } from "../../../services/auth/auth.service";
+import { CommonModule } from '@angular/common'; // Import CommonModule for structural directives like ngIf
+
 @Component({
   selector: 'app-connexion',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    CommonModule // Import CommonModule for structural directives like ngIf
   ],
   templateUrl: './connexion.component.html',
-  styleUrl: './connexion.component.css'
+  styleUrls: ['./connexion.component.css'] // Note the correct attribute name 'styleUrls'
 })
 export class ConnexionComponent {
 
   formconnexion: FormGroup;
-  constructor( private authService: AuthService, private router: Router,private renderer: Renderer2, private el: ElementRef) {
+  errorMessage: string | null = null;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private renderer: Renderer2,
+    private el: ElementRef
+  ) {
     this.formconnexion = new FormGroup({
       email: new FormControl('', [Validators.email]),
       password: new FormControl('', [Validators.required]),
     });
-
   }
+
   submit() {
     this.authService.login(this.formconnexion.value.email, this.formconnexion.value.password)
-      .subscribe(response => {
-        console.log(response);
-        if (response && response.token) {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('username', response.username);
-          localStorage.setItem('userId', response.userId);
-          this.router.navigate(['/']).then(r => console.log(r));
-
+      .subscribe({
+        next: response => {
+          if (response && response.token) {
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('username', response.username);
+            localStorage.setItem('userId', response.userId);
+            this.router.navigate(['/']).then(r => console.log(r));
+          }
+        },
+        error: err => {
+          console.log(err);
+          this.errorMessage = 'Login incorrect. Please check your credentials.';
         }
       });
   }
-
 }

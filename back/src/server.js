@@ -45,7 +45,7 @@ app.use(session({
   secret: 'your_secret_key', // Clé secrète pour signer les cookies de session
   resave: false, // Ne pas sauvegarder la session si elle n'a pas été modifiée
   saveUninitialized: false, // Ne pas créer de session si aucune donnée n'est sauvegardée
-  cookie: { 
+  cookie: {
     secure: false, // Utiliser secure: true en production avec HTTPS
     httpOnly: true, // Empêche l'accès au cookie via JavaScript côté client
     maxAge: 30 * 24 * 60 * 60 * 1000 // Durée de vie de 30 jours
