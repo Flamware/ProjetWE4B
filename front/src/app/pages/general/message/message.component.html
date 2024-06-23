@@ -2,8 +2,8 @@
   <div class="contact-list">
     <h2>Contacts</h2>
     <app-user-search (userAdded)="addContact($event)"></app-user-search>
-    <app-contacts 
-      [contacts]="contacts" 
+    <app-contacts
+      [contacts]="contacts"
       (contactSelected)="onContactSelected($event)"
       (toggleMenu)="toggleContactMenu($event)">
     </app-contacts>
@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <div *ngIf="selectedContact">
+  <div *ngIf="selectedContact" class="message-box">
     <h2>Messages with {{ selectedContact.email }}</h2>
     <div class="chat-container">
       <div class="chat-box">
