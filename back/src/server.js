@@ -36,7 +36,7 @@ app.use(express.json({ limit: '10mb' })); // Pour gérer les requêtes JSON avec
 app.use(express.urlencoded({ limit: '10mb', extended: true })); // Pour gérer les requêtes URL-encoded
 
 // Configuration pour servir les fichiers statiques du dossier uploads -------------------
-const uploadsPath = path.resolve(__dirname, '../uploads');
+const uploadsPath = path.resolve(__dirname, './uploads');
 app.use('/uploads', express.static(uploadsPath));
 
 // Configuration de la session -----------------------------------------------------------
