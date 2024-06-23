@@ -1,0 +1,139 @@
+/* Styles for the form component */
+.contact-form {
+  display: flex;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 8px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  padding: 20px;
+  z-index: 999;
+  justify-content: center;
+  max-height: calc(100vh - 40px); /* 100% viewport height minus padding */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.contact-form h2 {
+  margin-top: 0;
+  font-size: 24px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.text-input,
+.date-input {
+  width: calc(100% - 10px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.textarea {
+  width: calc(100% - 10px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  outline: none;
+}
+
+/* Styles for media previews */
+.media-preview {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-image,
+.preview-video,
+.preview-audio {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.preview-pdf {
+  padding: 10px;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+/* Button styles */
+.btn {
+  padding: 10px 15px;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn:hover {
+  background-color: #3700b3;
+}
+
+.close-button {
+  padding: 10px 15px;
+  background-color: #ff1744; /* Couleur rouge pour le bouton Close */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: #d50000; /* Couleur plus sombre au survol */
+}
+
+/* Positionnement du bouton d'affichage */
+#bouttonafficher {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000; /* Assure la visibilité par-dessus le contenu */
+  background-color: #007bff;
+  color: #fff;
+  font-size: 24px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.add-course:hover {
+  background-color: #3700b3;
+}

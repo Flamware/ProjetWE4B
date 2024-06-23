@@ -1,0 +1,68 @@
+<main>
+  <div class="login-container">
+    <div class="login-header">
+      <h2>Créer un Compte</h2>
+    </div>
+    <div class="login-form">
+      <form id="loginForm" [formGroup]="formconnexion" (ngSubmit)="submit()" class="login-form" enctype="multipart/form-data">
+        <div class="input-group">
+          <div>
+            <label for="username" class="input-label">Username</label>
+            <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" formControlName="username" class="text-input">
+            <div *ngIf="formconnexion.get('username')?.invalid && formconnexion.get('username')?.touched" class="error-message">
+              Username must be at least 3 characters long.
+            </div>
+          </div>
+          <div>
+            <label for="email" class="input-label">Email address</label>
+            <input type="email" id="email" placeholder="Entrez votre e-mail" formControlName="email" class="text-input">
+            <div *ngIf="formconnexion.get('email')?.invalid && formconnexion.get('email')?.touched" class="error-message">
+              Please enter a valid email.
+            </div>
+          </div>
+          <div>
+            <label for="nom" class="input-label">First name</label>
+            <input type="text" id="nom" placeholder="Entrez votre nom" formControlName="nom" class="text-input">
+            <div *ngIf="formconnexion.get('nom')?.invalid && formconnexion.get('nom')?.touched" class="error-message">
+              Please enter a valid first name.
+            </div>
+          </div>
+          <div>
+            <label for="prenom" class="input-label">Last name</label>
+            <input type="text" id="prenom" placeholder="Entrez votre prénom" formControlName="prenom" class="text-input">
+            <div *ngIf="formconnexion.get('prenom')?.invalid && formconnexion.get('prenom')?.touched" class="error-message">
+              Please enter a valid last name.
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="password" class="input-label">Mot de passe</label>
+          <input type="password" id="password" placeholder="Entrez votre mot de passe" formControlName="password" class="text-input">
+          <div *ngIf="formconnexion.get('password')?.invalid && formconnexion.get('password')?.touched" class="error-message">
+            Password must be at least 6 characters long.
+          </div>
+        </div>
+        <div>
+          <label for="role" class="input-label">Role</label>
+          <select formControlName="role" class="dropdown">
+            <option value="tutor">Tutor</option>
+            <option value="student">Student</option>
+          </select>
+          <div *ngIf="formconnexion.get('role')?.invalid && formconnexion.get('role')?.touched" class="error-message">
+            Please select a role.
+          </div>
+        </div>
+
+        <div>
+          <label for="profilePicture" class="input-label">Profile Picture</label>
+          <input type="file" id="profilePicture" (change)="onFileSelected($event)" class="file-input">
+          <div *ngIf="profilePicturePreview">
+            <img [src]="profilePicturePreview" alt="Profile Picture Preview" class="image-preview">
+          </div>
+        </div>
+
+        <button type="submit" class="btn">Create account</button>
+      </form>
+    </div>
+  </div>
+</main>

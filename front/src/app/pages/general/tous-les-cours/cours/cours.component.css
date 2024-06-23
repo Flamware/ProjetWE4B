@@ -1,0 +1,128 @@
+.home-main {
+  padding: 40px 0;
+  background-color: #f9f9f9; /* Fond légèrement teinté de blanc */
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-bottom: 30px;
+  background-color: #fff; /* Fond blanc pour le formulaire */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Légère ombre */
+  border-radius: 8px;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px; /* Espacement entre les cartes */
+}
+
+.cour {
+  width: 300px; /* Largeur fixe pour les éléments */
+}
+
+.card {
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%; /* Carte prend toute la largeur du conteneur */
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.course-image {
+  width: 100%;
+  height: auto;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.card-title {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.card-rating {
+  margin-bottom: 10px;
+  color: #ffd700;
+}
+
+.stars {
+  font-size: 1.5rem;
+  color: #ffd700;
+}
+
+.stars.empty {
+  color: #ccc; /* Étoiles vides en gris clair */
+}
+
+.card-text {
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #555;
+  position: relative;
+  width: 100%;
+  overflow: hidden; /* Empêche le débordement du contenu */
+}
+
+.card-text iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.card-theme {
+  margin-bottom: 10px;
+}
+
+.card-action {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+.card-action:hover {
+  background-color: #0056b3;
+}
+
+.toggle-media-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.toggle-media-button:hover {
+  background-color: #0056b3;
+}
+
+.card-media-container {
+  padding: 10px;
+}
+
+.media-viewer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .cour {
+    width: calc(50% - 20px); /* Deux cartes par ligne sur écrans plus petits */
+  }
+}

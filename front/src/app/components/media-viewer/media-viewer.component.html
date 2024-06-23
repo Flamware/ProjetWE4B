@@ -1,0 +1,23 @@
+<div *ngIf="mediaUrl" class="card-media-container">
+  <!-- Affichage des images -->
+  <img *ngIf="mediaType === 'image'" [src]="mediaUrl" alt="Media">
+
+  <!-- Affichage des vidéos -->
+  <video *ngIf="mediaType === 'video'" [src]="mediaUrl" controls></video>
+
+  <!-- Affichage des audios -->
+  <audio *ngIf="mediaType === 'audio'" controls>
+    <source [src]="mediaUrl">
+  </audio>
+
+  <!-- Affichage des documents -->
+  <iframe *ngIf="mediaType === 'document'" [src]="getSafeUrl(mediaUrl)"></iframe>
+  <a *ngIf="mediaType === 'document' && !isPreviewableDocument(mediaUrl)"
+     [href]="mediaUrl" class="document-download" target="_blank">Télécharger le document</a>
+
+  <!-- Affichage des archives -->
+  <a *ngIf="mediaType === 'archive'" [href]="mediaUrl" class="archive-download" download>Télécharger l'archive</a>
+
+  <!-- Affichage des autres types de fichiers -->
+  <a *ngIf="mediaType === 'other'" [href]="mediaUrl" class="other-download" download>Télécharger le fichier</a>
+</div>

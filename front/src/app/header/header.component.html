@@ -1,0 +1,23 @@
+<header class="header">
+  <div class="app-bar">
+    <div class="first-section" *ngIf="isconnected">
+      <div class="profile-picture" id="profileDropdown">
+        <img [src]="profilePictureUrl" alt="Profile Picture" (click)="toggleDropdown()">
+        <div class="dropdown-content" id="dropdownContent">
+          <a routerLink="/profile" routerLinkActive="active">Profile</a>
+          <a routerLink="/mes-cours" routerLinkActive="active">Mes Cours</a>
+          <a [routerLink]="['/message', '' ]" routerLinkActive="active">Mes messages</a>
+        </div>
+      </div>
+    </div>
+    <div class="second-section">
+    <h2 class="title">Study Helper</h2>
+    <app-recherche></app-recherche>
+    <div>
+      <a routerLink="/home" routerLinkActive="active">Home</a>
+      <button class="button" *ngIf="!isconnected" routerLink="/login" routerLinkActive="active">Login</button>
+      <button class="button" (click)="logout()" *ngIf="isconnected" routerLink="/logout" routerLinkActive="active">Logout</button>
+    </div>
+  </div>
+  </div>
+</header>

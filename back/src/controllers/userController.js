@@ -1,86 +1,336 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { client } = require('../database'); // Importing the 'client' property from database.js
+const { client } = require('../config/database');
+const fs = require('fs');
 const path = require('path');
-exports.register = async (req, res) => {
-    const { username, password, email, confirmPassword } = req.body; // Added 'email'
-    if (!username) {
-        res.status(400).json({ error: 'Username is required' });
-        console.log("Username is required");
-        return;
-    }
-    if (!password) {
-        res.status(400).json({ error: 'Password is required' });
-        console.log("Password is required");
-        return;
-    }
-    if (password !== confirmPassword) {
-        res.status(400).json({ error: 'Passwords do not match' });
-        return;
-    }
-    try {
-        const { rows } = await client.query('SELECT * FROM users WHERE username = $1', [username]);
-        if (rows.length > 0) {
-            res.status(200).json({ redirect: '' });
-        } else {
-            await client.query('INSERT INTO users (username, password, email) VALUES ($1, $2, $3)', [username, password, email]);
-            res.status(201).json({ redirect: '/login' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error inserting the user into the database');
-    }
-}
 
 exports.login = async (req, res) => {
-    try {
-        const { username, password } = req.body;
+  const { email, password } = req.body;
 
-        const { rows } = await client.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
-        if (rows.length > 0) {
-            req.session.username = username; // Set the username in the session
-            const token = jwt.sign({ userId: rows[0].id, username }, '246887855145@Clundi', { expiresIn: '1h' });
-            console.log('Generated JWT token:', token);
-            console.log('username: ' + req.session.username);
-            res.status(200).json({ token });
-        } else {
-            res.status(400).json({ error: 'Invalid username or password' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error during login');
+  try {
+    const query = 'SELECT id, username, email, password FROM users WHERE email = $1';
+    const result = await client.query(query, [email]);
+    const user = result.rows[0];
+
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
     }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ error: 'Incorrect password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.id }, "your_secret_key", { expiresIn: '30d' });
+
+    // Return user data and token
+    res.status(200).json({
+      message: 'Logged in successfully',
+      token,
+      username: user.username,
+      email: user.email,
+      userId: user.id
+    });
+
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
+exports.testToken = async (req, res) => {
+  console.log('session', req.session);
+  console.log('Testing token', req.body);
+  res.status(200).json({ message: 'Token is valid' });
+};
+
+exports.register = async (req, res) => {
+  try {
+    const { username, email, password, nom, prenom, role } = req.body;
+
+    if (!username || !email || !password || !nom || !prenom || !role) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const result = await client.query(query, [email]);
+
+    if (result.rows.length > 0) {
+      return res.status(409).json({ error: 'User with this email already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const insertQuery = `
+      INSERT INTO users (username, first_name, last_name, email, password, role)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id`;
+
+    const insertedUser = await client.query(insertQuery, [username, prenom, nom, email, hashedPassword, role]);
+    const userId = insertedUser.rows[0].id;
+
+    res.status(200).json({ message: 'User registered successfully', userId });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+// Fonction pour gérer l'envoi de la photo de profil
+exports.uploadProfilePicture = async (req, res) => {
+  console.log('Uploading profile picture:', req.file);
+  try {
+    const { email } = req.params;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email must be provided in URL' });
+    }
+
+    let profilePicturePath = null;
+    if (req.file) {
+      profilePicturePath = req.file.path;
+      console.log('Uploaded profile picture:', req.file);
+    } else {
+      return res.status(400).json({ error: 'Profile picture file not provided' });
+    }
+
+    // Mettre à jour l'enregistrement utilisateur avec le chemin de la photo de profil
+    const updateQuery = `
+      UPDATE users
+      SET profile_picture = $1
+      WHERE email = $2`;
+
+    await client.query(updateQuery, [profilePicturePath, email]);
+
+    res.status(200).json({ message: 'Profile picture uploaded successfully' });
+  } catch (error) {
+    console.error('Error uploading profile picture:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getUserProfilePictureUrl = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const query = 'SELECT profile_picture FROM users WHERE id = $1';
+    const result = await client.query(query, [userId]);
+
+    if (result.rows.length === 0 || !result.rows[0].profile_picture) {
+      return res.status(404).json({ error: 'Profile picture not found' });
+    }
+
+    const profilePictureUrl = result.rows[0].profile_picture;
+    res.status(200).json(profilePictureUrl);
+  } catch (error) {
+    console.error('Error fetching profile picture:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
 exports.getAccountInfo = async (req, res) => {
-    const username = req.session.username;
-    //return user from database
-    const query = 'SELECT * FROM users WHERE username = $1';
-    client.query(query, [username], (err, results) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error fetching user information');
-            return;
-        }
-        const user = results.rows[0];
-        //change url to the profile picture
-        if (user.profile_picture) {
-            user.profile_picture = `/img/profile/${user.profile_picture}`;
-        }
-        console.log('User:', user);
-        res.status(200).json({ user });
+  let username;
+
+  // Check if username is provided in request body, otherwise fallback to req.id
+  if (req.body.username) {
+    username = req.body.username;
+  } else if (req.userId) {
+    username = req.userId; // Assuming req.id holds the user's ID
+  } else {
+    return res.status(400).json({ error: 'Username or user ID not provided' });
+  }
+
+  try {
+    // Query to fetch user information based on username or id
+    let query;
+    let queryParams;
+
+    // Check if username is a number (assuming it's an id)
+    if (!isNaN(username)) {
+      query = 'SELECT * FROM users WHERE id = $1';
+      queryParams = [username];
+    } else {
+      //Attention si il y a plusierus utilisateurs avec le même nom
+      query = 'SELECT * FROM users WHERE username = $1';
+      queryParams = [username];
+    }
+
+    const result = await client.query(query, queryParams);
+    const user = result.rows[0];
+
+    // If user not found, return 404 error
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Return formatted user information in the response
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      role: user.role,
+      created_at: user.created_at,
+      profile_picture: user.profile_picture,
     });
-}
+
+  } catch (error) {
+    console.error('Error fetching user information:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 exports.updateAccount = async (req, res) => {
-    const { email, first_name, last_name } = req.body;
-    const username = req.session.username;
+  const data = req.body; // Remove .params here
 
-    try {
-        await client.query('UPDATE users SET email = $1, first_name = $2, last_name = $3 WHERE username = $4', [email, first_name, last_name, username]);
-        res.status(200).json({ success: 'User information updated successfully' });
-    } catch (error) {
-        console.error('Error updating user information:', error);
-        res.status(500).json({ error: 'Internal server error' });
+  const { email, firstname, lastname, username, bio, role } = data;
+
+  try {
+    const query = `
+      UPDATE users
+      SET first_name = $1, last_name = $2, username = $3, bio = $4, role = $5, updated_at = current_timestamp
+      WHERE id = $6`; // Corrected to $6 for the ID placeholder
+
+    await client.query(query, [firstname, lastname, username, bio, role, req.userId]);
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Error updating user information:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.updateProfilePicture = async (req, res) => {
+  const { profile_picture } = req.body;
+  const username = req.session.username;
+
+  try {
+    const query = 'SELECT profile_picture FROM users WHERE username = $1';
+    const result = await client.query(query, [username]);
+
+    if (result.rows[0].profile_picture) {
+      const oldProfilePicture = path.join(__dirname, `../public/img/profile/${result.rows[0].profile_picture}`);
+      fs.unlink(oldProfilePicture, (err) => {
+        if (err) {
+          console.error('Error deleting profile picture:', err);
+        }
+      });
     }
+
+    const profilePictureFilename = `${username}-${Date.now()}.png`;
+    const newProfilePicture = path.join(__dirname, `../public/img/profile/${profilePictureFilename}`);
+    const base64Data = profile_picture.replace(/^data:image\/png;base64,/, '');
+    fs.writeFile(newProfilePicture, base64Data, 'base64', async (err) => {
+      if (err) {
+        console.error('Error saving profile picture:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      const updateQuery = 'UPDATE users SET profile_picture = $1 WHERE username = $2';
+      await client.query(updateQuery, [profilePictureFilename, username]);
+
+      res.status(200).json({ success: 'Profile picture updated successfully' });
+    });
+  } catch (error) {
+    console.error('Error updating profile picture:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.createUser = async (req, res) => {
+  const { email, first_name, last_name, auth0_user_id } = req.body;
+
+  try {
+    const insertQuery = `
+      INSERT INTO users (auth0_user_id, email, first_name, last_name, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, current_timestamp, current_timestamp)`;
+
+    await client.query(insertQuery, [auth0_user_id, email, first_name, last_name || '']);
+
+    res.status(200).json({ message: 'User created successfully' });
+  } catch (error) {
+    console.error('Error creating user:', error);
+
+    if (error.code === '23505') {
+      res.status(409).json({ error: 'User already exists' });
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+};
+
+exports.userLogged = async (req, res) => {
+  const token = req.body.sub;
+  const payload = jwt.decode(token);
+  const authId = payload.sub;
+  const email = payload.email;
+
+  try {
+    const query = 'SELECT * FROM users WHERE auth0_user_id = $1';
+    const result = await client.query(query, [authId]);
+
+    if (result.rows.length === 0) {
+      const insertQuery = 'INSERT INTO users (auth0_user_id, email) VALUES ($1, $2)';
+      await client.query(insertQuery, [authId, email]);
+      res.status(200).json({ existing: false });
+    } else {
+      res.status(200).json({ existing: true });
+    }
+  } catch (error) {
+    console.error('Error checking user login:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  const { email, first_name, last_name } = req.body;
+
+  try {
+    const updateQuery = `
+      UPDATE users
+      SET first_name = $2,
+          last_name  = $3,
+          updated_at = current_timestamp
+      WHERE email = $1`;
+
+    await client.query(updateQuery, [email, first_name, last_name]);
+
+    res.status(200).json({ message: 'User information updated successfully' });
+  } catch (error) {
+    console.error('Error updating user information:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const query = 'SELECT * FROM users';
+    const result = await client.query(query);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error getting all users:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.setUserRole = async (req, res) => {
+  try {
+    const authId = req.user.sub;
+    const email = req.user.email;
+    const role = req.body.role;
+
+    const updateQuery = 'UPDATE users SET role = $1 WHERE id = $2';
+    const values = [role, authId];
+
+    await client.query(updateQuery, values);
+
+    res.status(200).json({ message: 'User role updated successfully' });
+  } catch (error) {
+    console.error('Error updating user role:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };

@@ -1,0 +1,35 @@
+.searchbar {
+  padding: 10px;
+  font-size: 1em;
+  width: 250px;
+  box-sizing: border-box;
+}
+
+/* Conteneur des résultats de recherche */
+.search-results {
+  display: flex;
+  position: absolute;
+  flex-flow: column nowrap;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Carte individuelle */
+.search-result {
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 0.5em;
+  width: 100%;
+  background-color: #40ac2b;
+  color: white;
+  border-radius: 0.5em;
+  border: 1px solid white;
+}
+
+.search-result:hover {
+  background-color: #4bae4f;
+  cursor: pointer;
+}

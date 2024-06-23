@@ -1,0 +1,67 @@
+/* form-cours.component.css */
+:host ::ng-deep {
+    /* Styling for mat-dialog-title */
+    h2.mat-dialog-title {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 15px;
+      text-align: center; /* Centrage du titre */
+    }
+  
+    /* Styling for mat-dialog-content */
+    div.mat-dialog-content {
+      padding: 20px; /* Espacement intérieur du contenu */
+      text-align: center; /* Centrage du contenu */
+    }
+  
+    p {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 15px; /* Espacement en bas du paragraphe */
+    }
+  
+    mat-form-field {
+      width: 100%;
+      max-width: 400px;
+    }
+  
+    /* Styling for mat-form-field */
+    textarea.mat-input-element {
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  
+    /* Styling for mat-dialog-actions */
+    div.mat-dialog-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px; /* Espacement entre les boutons */
+      margin-top: 20px; /* Espacement au-dessus des boutons */
+    }
+  
+    /* Styling for mat-button */
+    button.mat-button {
+      min-width: 120px;
+      border-radius: 5px;
+      font-size: 16px;
+      padding: 10px 20px;
+      text-transform: uppercase;
+    }
+  
+    /* Styling for primary button (Send) */
+    button.mat-button.primary {
+      background-color: #4CAF50;
+      color: white;
+    }
+  
+    /* Styling for secondary button (Cancel) */
+    button.mat-button.secondary {
+      background-color: #ccc;
+      color: #333;
+    }
+  }
+  

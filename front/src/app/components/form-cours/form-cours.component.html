@@ -1,0 +1,67 @@
+<button (click)="afficher()" id="bouttonafficher" class="btn add-course">+</button>
+
+<div class="contact-form" id="formulaire">
+  <h2>Ajouter un cours</h2>
+  <form (ngSubmit)="submit()" [formGroup]="myForm" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="name" class="input-label">Nom du cours</label>
+      <input type="text" id="name" formControlName="name" placeholder="Nom du cours" class="text-input">
+      <div *ngIf="myForm.controls['name'].invalid && myForm.controls['name'].touched" class="error-message">
+        Le nom du cours est requis.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="theme">Thème</label>
+      <input type="text" id="theme" formControlName="theme" placeholder="Thème du cours" class="text-input">
+      <div *ngIf="myForm.controls['theme'].invalid && myForm.controls['theme'].touched" class="error-message">
+        Le thème est requis.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" rows="5" placeholder="Description du cours" class="textarea"></textarea>
+      <div *ngIf="myForm.controls['description'].invalid && myForm.controls['description'].touched" class="error-message">
+        La description est requise.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input type="date" id="date" formControlName="date" placeholder="Date du cours" class="date-input" [min]="getCurrentDate()">
+      <div *ngIf="myForm.controls['date'].invalid && myForm.controls['date'].touched" class="error-message">
+        La date est requise.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="image">Image</label>
+      <input type="file" id="image" (change)="onFileSelected($event)" class="text-input">
+    </div>
+
+    <div *ngFor="let media of selectedMedias; let i = index" class="form-group">
+      <label [for]="'media' + (i + 1)">Média {{ i + 1 }}</label>
+      <input type="file" [id]="'media' + (i + 1)" (change)="onMediaSelected($event, i)" class="text-input">
+      <button type="button" (click)="removeMediaInput(i)" class="btn">-</button>
+      <!-- Affichage de la prévisualisation -->
+      <div *ngIf="media.preview" class="media-preview">
+        <img *ngIf="media.type === 'image'" [src]="media.preview" class="preview-image">
+        <video *ngIf="media.type === 'video'" [src]="media.preview" class="preview-video" controls></video>
+        <audio *ngIf="media.type === 'audio'" [src]="media.preview" class="preview-audio" controls></audio>
+        <div *ngIf="media.type === 'application/pdf'" class="preview-pdf">PDF Preview</div>
+      </div>
+    </div>
+
+    <button type="button" (click)="addMediaInput()" class="btn" [disabled]="selectedMedias.length >= maxMediaCount">+ Ajouter un média</button>
+
+    <!-- Afficher un message si l'utilisateur essaie d'ajouter plus de 3 médias -->
+    <div *ngIf="selectedMedias.length >= maxMediaCount" class="error-message">
+      Vous ne pouvez pas ajouter plus de {{ maxMediaCount }} médias.
+    </div>
+
+    <button type="submit" [disabled]="myForm.invalid" class="btn">Créer le cours</button>
+    <button type="button" (click)="hideForm()" class="btn close-button">Close</button>
+
+    <!-- Message d'erreur général -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </form>
+</div>

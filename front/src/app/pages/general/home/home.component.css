@@ -1,0 +1,54 @@
+.home-main {
+  background-color: #f9f9f9;
+  padding: 40px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.panel {
+  background-color: #fff;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.panel h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Style spécifique pour le panel des cours récents */
+.panel-recent-courses {
+  background-color: #f3f7ff;
+}
+
+/* Style spécifique pour le panel des cours populaires */
+.panel-popular-courses {
+  background-color: #fafff3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+/* Media query pour ajuster la mise en page sur les petits écrans */
+@media (max-width: 768px) {
+  .panel {
+    padding: 20px;
+  }
+}

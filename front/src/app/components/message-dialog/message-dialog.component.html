@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Send Message</h2>
+<div mat-dialog-content>
+  <p>Send a message to {{ data.contact.name }}</p>
+  <mat-form-field>
+    <textarea matInput placeholder="Message" [(ngModel)]="data.newMessage"></textarea>
+  </mat-form-field>
+  <div mat-dialog-actions>
+    <button mat-button (click)="sendMessage()">Send</button>
+    <button mat-button (click)="closeDialog()">Cancel</button>
+  </div>
+</div>
+

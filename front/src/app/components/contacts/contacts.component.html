@@ -1,0 +1,17 @@
+<div class="contacts-list">
+    <h2>Contacts</h2>
+    <div class="scrollable-panel">
+      <div *ngFor="let contact of contacts" class="contact-item" (click)="selectContact(contact)">
+        <div>{{ contact.first_name }} {{ contact.last_name }}</div>
+        <button (click)="openMessageDialog(contact)">Write</button>
+        <button (click)="toggleMenuFunction(contact.id)" class="menu-button">⋮</button>
+        
+        <div *ngIf="isMenuOpen(contact.id)" class="dropdown-menu">
+          <button (click)="deleteContact(contact.id)">Effacer le contact</button>
+          <button (click)="deleteConversation(contact.id)">Supprimer la conversation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+

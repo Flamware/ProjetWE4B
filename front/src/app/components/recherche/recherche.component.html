@@ -1,0 +1,27 @@
+<div>
+  <input
+    type="text"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    (input)="onSearch($event)"
+    placeholder="Search..."
+    class="text-input searchbar"
+    id="searchbar"
+    autocomplete="off"
+  >
+  <div class="search-results" id="search-results" *ngIf="this.isFocused" #results>
+    <div *ngFor="let item of filteredList | slice:0:5" class="search-result" (click)="this.goToCourse(item.id??0)" >
+      <span class="result-title">{{item.title}}</span>
+      <!-- <p>{{item.description}}</p> -->
+      <span class="result-teacher">{{item.teacher}}</span>
+
+      <!-- <div class="resultats-recherche">
+
+
+
+      </div> -->
+
+    </div>
+  </div>
+
+</div>

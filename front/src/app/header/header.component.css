@@ -1,0 +1,105 @@
+.header {
+  background-color: #4bae4f; /* Your accent color */
+  color: white; /* Text color for contrast */
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.app-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  margin: 0; /* Remove default margin */
+  font-size: 1.5em; /* Larger font size */
+}
+
+.profile-picture img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.profile-picture:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.search-input {
+  flex: 1; /* Fill remaining space */
+  padding: 10px;
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #4caf50; /* Green button color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: #007afd; /* Darker green on hover */
+}
+
+.app-bar .second-section {
+  flex: 1; /* Take most of the space */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-bar .second-section form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-bar .second-section form .search-input {
+  min-width: 200px; /* Ensure search input has a minimum width */
+}
+
+.app-bar .second-section div {
+  display: flex;
+  gap: 10px;
+}
+
+.app-bar .second-section a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.app-bar .second-section a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

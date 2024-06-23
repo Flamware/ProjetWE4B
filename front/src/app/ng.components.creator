@@ -1,0 +1,12 @@
+copy and paste these commands to create pages and components
+
+
+ng generate component pages/general/contact
+ng generate component pages/general/login
+ng generate component pages/general/signup
+ng generate component pages/general/home
+ng generate component pages/general/about
+ng generate component pages/general/not-found
+
+
+ng generate service servicename

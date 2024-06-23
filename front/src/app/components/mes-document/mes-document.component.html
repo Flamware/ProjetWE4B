@@ -1,0 +1,24 @@
+<div class="container">
+  <h1>Post Your Documents</h1>
+  <div class="upload-section">
+    <form id="uploadForm" [formGroup]="uploadForm" (ngSubmit)="upload()">
+      <label for="fileUpload" class="custom-file-upload">
+        Select Document
+      </label>
+      <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.txt,.png,.jpg" (change)="onFileChange($event)">
+      <input type="text" id="documentTitle" formControlName="namefile" placeholder="Document Title">
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+  <div class="documents-section">
+    <h2>Posted Documents</h2>
+    <ul id="documentsList">
+      <li *ngFor="let document of files">
+        <div class="document">
+          <h3>{{ document.title }}</h3>
+          <a [href]="baseUrl + '/' + document.file_path" target="_blank">View Document</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
