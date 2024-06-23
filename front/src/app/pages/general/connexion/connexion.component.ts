@@ -2,7 +2,7 @@ import { Renderer2, Component, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthService } from "../../../services/auth/auth.service";
-import { CommonModule } from '@angular/common'; // Import CommonModule for structural directives like ngIf
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-connexion',
@@ -11,10 +11,10 @@ import { CommonModule } from '@angular/common'; // Import CommonModule for struc
     ReactiveFormsModule,
     RouterLink,
     RouterLinkActive,
-    CommonModule // Import CommonModule for structural directives like ngIf
+    CommonModule
   ],
   templateUrl: './connexion.component.html',
-  styleUrls: ['./connexion.component.css'] // Note the correct attribute name 'styleUrls'
+  styleUrls: ['./connexion.component.css']
 })
 export class ConnexionComponent {
 

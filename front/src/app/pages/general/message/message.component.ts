@@ -9,6 +9,8 @@ import { UserSearchComponent } from '../../../components/user-search/user-search
 import { ContactsComponent } from '../../../components/contacts/contacts.component';
 import { interval, Subscription, Observable, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { RefreshService } from '../../../services/refresh-service.service';
+import { ContactService } from '../../../services/contact/contact.service';
 
 @Component({
   selector: 'app-message',
@@ -32,23 +34,22 @@ export class MessageComponent implements OnInit, OnDestroy {
   selectedContactId: string | null = null;
   selectedContact: any;
   private refreshSubscription: Subscription | undefined;
-  userId = localStorage.getItem('userId'); // Remplacez par l'ID de l'utilisateur actuel
+  private refreshContactsSubscription: Subscription | undefined;
+  userId = localStorage.getItem('userId');
 
   constructor(
     private route: ActivatedRoute,
     private messageService: MessageService,
+    private refreshService: RefreshService,
+    private contactService: ContactService,
     private router: Router
-  ) {
-    this.sender = 'moi';
-  }
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const contactId = params.get('contactId');
       if (contactId) {
         this.loadMessagesForContact(contactId);
-
-        // Démarrez le rafraîchissement périodique des messages toutes les 10 secondes
         this.refreshSubscription = interval(10000) // 10 secondes
           .pipe(
             switchMap(() => this.messageService.getMessages(contactId))
@@ -62,22 +63,28 @@ export class MessageComponent implements OnInit, OnDestroy {
             }
           });
       } else {
-        // Logic to handle when no contact is selected
         console.log('No contact selected.');
       }
     });
     console.log(this.userId);
-    // Détecter et ajouter de nouveaux contacts
-    //this.detectAndAddNewContacts();
     this.detectContacts();
+
+    // Abonner à l'événement de rafraîchissement
+    this.refreshContactsSubscription = this.refreshService.refreshNeeded$.subscribe(() => {
+      //this.detectContacts();
+      window.location.reload();
+    });
   }
 
   ngOnDestroy(): void {
-    // Nettoyez l'abonnement au rafraîchissement périodique lors de la destruction du composant
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
+    if (this.refreshContactsSubscription) {
+      this.refreshContactsSubscription.unsubscribe();
+    }
   }
+
 
   toggleContactMenu(event: { action: string, contactId: string }): void {
     switch (event.action) {
@@ -91,24 +98,34 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
   
   removeContact(contactId: string): void {
-    // Logique pour effacer le contact
-    console.log(`Effacer le contact avec ID: ${contactId}`);
-    // Supprimer le contact de la liste
-    this.contacts = this.contacts.filter(contact => contact.id !== contactId);
+    this.contactService.removeContact(contactId).subscribe({
+      next: () => {
+        console.log(`Contact with ID: ${contactId} deleted`);
+        this.contacts = this.contacts.filter(contact => contact.id !== contactId);
+      },
+      error: (error: any) => {
+        console.error('Error deleting contact:', error);
+      }
+    });
+    this.refreshService.notifyRefresh();
   }
   
   removeConversation(contactId: string): void {
-    // Logique pour supprimer la conversation
-    console.log(`Supprimer la conversation pour le contact avec ID: ${contactId}`);
-    // Supprimer les messages associés à ce contact
-    this.messages = this.messages.filter(message => message.sender_id !== contactId && message.receiver_id !== contactId);
+    this.contactService.removeConversation(contactId).subscribe({
+      next: () => {
+        console.log(`Conversation for contact with ID: ${contactId} deleted`);
+        this.messages = this.messages.filter(message => message.sender_id !== contactId && message.receiver_id !== contactId);
+      },
+      error: (error: any) => {
+        console.error('Error deleting conversation:', error);
+      }
+    });
   }  
 
   loadMessagesForContact(contactId: string): void {
     this.messageService.getMessages(contactId).subscribe({
       next: (messages: Message[]) => {
         this.messages = messages;
-        // Find the selected contact based on contactId
         this.selectedContactId = contactId;
       },
       error: (error: any) => {
@@ -123,11 +140,8 @@ export class MessageComponent implements OnInit, OnDestroy {
     if (this.selectedContactId && this.newMessage.trim() !== '') {
       this.messageService.sendMessage(this.selectedContactId, this.newMessage).subscribe({
         next: (message: Message) => {
-          // Ajoute le message envoyé aux messages existants
           this.messages.push(message);
-          // Efface le champ de saisie après l'envoi
           this.newMessage = '';
-          // Charge à nouveau les messages pour le contact sélectionné
           this.loadMessagesForContact(this.selectedContactId!);
         },
         error: (error: any) => {
@@ -202,12 +216,13 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.messageService.addContact(contact).subscribe({
       next: (addedContact: any) => {
         this.contacts.push(addedContact);
-        this.searchQuery = ''; // Réinitialisez la recherche
+        this.searchQuery = '';
       },
       error: (error: any) => {
         console.error('Error adding contact:', error);
       }
     });
+    window.location.reload();
   }
 
   isContact(contact: any): boolean {
@@ -218,27 +233,24 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.selectedContactId = contact.id;
     this.messageService.getContactById(this.selectedContactId).subscribe(
       (data: any) => {
-        this.selectedContact = data; // Stockez les informations de l'utilisateur récupérées dans userInfo
+        this.selectedContact = data;
       },
       (error: any) => {
         console.error('Error fetching user info:', error);
-        // Gérez l'erreur comme nécessaire (par exemple, afficher un message d'erreur à l'utilisateur)
       });
 
-    this.navigateToMessage(contact.id); // Naviguer vers la conversation du contact sélectionné
+    this.navigateToMessage(contact.id);
   }
 
-  // Méthode pour sélectionner un contact depuis ContactsComponent
   onContactSelected(contact: any): void {
     this.selectedContactId = contact.id;
     this.messageService.getContactById(this.selectedContactId).subscribe(
       (data: any) => {
-        this.selectedContact = data; // Stockez les informations de l'utilisateur récupérées dans userInfo
+        this.selectedContact = data;
       },
       (error: any) => {
         console.error('Error fetching user info:', error);
-        // Gérez l'erreur comme nécessaire (par exemple, afficher un message d'erreur à l'utilisateur)
       });
-    this.loadMessagesForContact(contact.id); // Charger les messages du contact sélectionné
+    this.loadMessagesForContact(contact.id);
   }
 }

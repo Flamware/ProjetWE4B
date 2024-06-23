@@ -65,7 +65,9 @@ export class MessageService {
 
   addContact(contact: any): Observable<any> {
     const headers = this.getHeaders(); // Obtenez les headers avec le token
-    return this.http.post<any>(`${this.apiUrl}/addContact`, contact, { headers }).pipe(
+    console.log(contact);
+    const contactId = contact.contactId;
+    return this.http.post<any>(`${this.apiUrl}/addContact/${contactId}`, {contact}, { headers }).pipe(
       tap(data => console.log('Contact added successfully:', data)),
       catchError(error => {
         console.error('Error adding contact:', error);
@@ -221,7 +223,7 @@ detectAndAddNewContacts(userId: string): Observable<any[]> {
       console.log('Ajout des nouveaux contacts à la liste...');
 
       return forkJoin(newContacts.map(contact => 
-        this.addContact({ id: contact.id }).pipe(
+        this.addContact(contact).pipe(
           catchError(error => {
             console.error(`Erreur lors de l'ajout du contact ${contact.id}:`, error);
             return of(null); // Retourner null pour indiquer l'échec d'ajout

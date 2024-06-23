@@ -130,7 +130,9 @@ exports.searchUsers = async (req, res) => {
   // Ajouter un contact
   exports.addContact = async (req, res) => {
     const userId = req.userId;
-    const { contactId } = req.body;
+    const contactId = req.params.contactId;
+
+    console.log(userId, contactId);
   
     try {
       const query = `

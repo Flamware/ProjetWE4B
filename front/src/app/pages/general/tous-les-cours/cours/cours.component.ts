@@ -7,6 +7,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import { MediaViewerComponent } from '../../../../components/media-viewer/media-viewer.component';
 import { LinkifyPipe } from '../../../../pipes/linkify.pipe';
 import { YoutubeEmbedPipe } from '../../../../pipes/youtube-embed.pipe';
+import { environment } from '../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-tous-cours',
@@ -26,8 +27,9 @@ import { YoutubeEmbedPipe } from '../../../../pipes/youtube-embed.pipe';
 
 export class CoursComponent {
   ListeCours: MyCourse[] = [];
-  baseUrl = 'http://localhost:3000/src';
-  showMedia: boolean = false; // Ajoutez cette propriété
+  baseUrl: string | undefined = environment.baseUrl;
+  mediaTypeMapping: any = environment.mediaTypeMapping;
+  showMedia: boolean = false;
 
   constructor(
     private courseService: CourseService,
@@ -46,74 +48,23 @@ export class CoursComponent {
       error: (error: any) => {
         console.error('Error fetching courses:', error);
       }
-    }
-      
-    );
+    });
   }
 
   handleCourseCreated(newCourse: MyCourse): void {
-    this.ListeCours.push(newCourse); // Add newly created course to the list
+    this.ListeCours.push(newCourse);
   }
 
   determineMediaType(mediaUrl: string): string {
     if (!mediaUrl) {
-      return ''; // Gestion du cas où mediaUrl est null ou undefined
+      return '';
     }
-  
-    // Extraction de l'extension de fichier
+
     const extension = mediaUrl.split('.').pop()?.toLowerCase();
-  
-    // Liste des extensions et leur type de média associé
-    const mediaTypeMapping: { [key: string]: string } = {
-      // Images
-      'jpeg': 'image',
-      'jpg': 'image',
-      'png': 'image',
-      'gif': 'image',
-      'bmp': 'image',
-      'webp': 'image',
-  
-      // Vidéos
-      'mp4': 'video',
-      'mov': 'video',
-      'avi': 'video',
-      'mkv': 'video',
-      'flv': 'video',
-      'webm': 'video',
-  
-      // Audios
-      'mp3': 'audio',
-      'wav': 'audio',
-      'ogg': 'audio',
-  
-      // Documents
-      'pdf': 'document',
-      'doc': 'document',
-      'docx': 'document',
-      'xls': 'document',
-      'xlsx': 'document',
-      'ppt': 'document',
-      'pptx': 'document',
-      'txt': 'document',
-  
-      // Archives
-      'zip': 'archive',
-      'tar': 'archive',
-      'gz': 'archive',
-      '7z': 'archive',
-  
-      // Autres types de fichiers
-      'json': 'other',
-      'xml': 'other',
-      'bin': 'other', // fichiers binaires génériques
-    };
-  
-    // Déterminer le type de média basé sur l'extension
-    if (extension && mediaTypeMapping[extension]) {
-      return mediaTypeMapping[extension];
+    if (extension && this.mediaTypeMapping[extension]) {
+      return this.mediaTypeMapping[extension];
     }
-  
-    return ''; // Retourner une valeur par défaut si aucune correspondance n'est trouvée
+    return '';
   }
 
   toggleMedia(): void {

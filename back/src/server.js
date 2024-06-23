@@ -19,6 +19,7 @@ const userRoutes = require('./routes/users');
 const coursesRoute = require('./routes/courses');
 const userCoursesRoute = require('./routes/usercourses');
 const messageRoute = require('./routes/messages');
+const contactRoutes = require('./routes/contact');
 
 // Importations des API ------------------------------------------------------------------
 const coursesApi = require('./api/api_courses');
@@ -76,6 +77,7 @@ app.use(userRoutes); // Routes pour les utilisateurs
 app.use(coursesRoute); // Routes pour les cours
 app.use(userCoursesRoute); // Routes pour les cours utilisateur
 app.use(messageRoute); // Routes pour les messages
+app.use(contactRoutes);
 
 // Route d'exemple pour tester la session -----------------------------------------------
 app.get('/sessioninfo', (req, res) => {

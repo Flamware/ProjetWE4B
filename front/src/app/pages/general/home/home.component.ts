@@ -12,7 +12,7 @@ import { CoursComponent } from '../tous-les-cours/cours/cours.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [FormCoursComponent, CoursComponent, RecentCoursesComponent], // Assurez-vous que MesCoursComponent est ici
+  imports: [FormCoursComponent, CoursComponent, RecentCoursesComponent],
 })
 export class HomeComponent {
   showCourses = true;
@@ -25,20 +25,5 @@ export class HomeComponent {
   ) {}
 
   ngOnInit(): void {
-    /*this.loadCourses();*/
   }
-
-  /*
-  private loadCourses(): void {
-    this.courseService.getAllCoursesAndShuffle().subscribe({
-        next: (response: any) => {
-          this.ListeCours = response.courses;
-        },
-        error: (error: any) => {
-          console.error('Error fetching courses:', error);
-        }
-      }
-
-    );
-  }*/
 }

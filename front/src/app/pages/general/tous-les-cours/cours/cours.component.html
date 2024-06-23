@@ -29,16 +29,16 @@
             {{ showMedia ? 'Masquer Médias' : 'Afficher Médias' }}
           </button>
         </div>
-      </div>
 
-      <!-- Affichage des autres médias avec bouton déplier/replier -->
-      <div class="card-media-container">
-        <div *ngIf="showMedia">
-          <app-media-viewer *ngFor="let mediaUrl of course.mediaUrls"
-                            [mediaUrl]="baseUrl + mediaUrl"
-                            [mediaType]="determineMediaType(baseUrl + mediaUrl)">
-            Médias ici !
-          </app-media-viewer>
+        <!-- Affichage des autres médias avec bouton déplier/replier -->
+        <div class="card-media-container">
+          <div *ngIf="showMedia">
+            <app-media-viewer *ngFor="let mediaUrl of course.mediaUrls"
+                              [mediaUrl]="baseUrl + mediaUrl"
+                              [mediaType]="determineMediaType(baseUrl + mediaUrl)">
+              Médias ici !
+            </app-media-viewer>
+          </div>
         </div>
       </div>
     </div>

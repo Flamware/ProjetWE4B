@@ -15,7 +15,7 @@ import { MyCourseService } from '../../services/course/my/my-course.service';
   styleUrl: './mes-document.component.css'
 })
 export class MesDocumentComponent {
-  baseUrl = 'http://localhost:3000'; // Ajoutez ici votre préfixe d'URL
+  baseUrl = 'http://localhost:3000/src'; // Ajoutez ici votre préfixe d'URL
   uploadForm: FormGroup;
   selectedFile: { file: File | null; } | undefined
   files: any[] = [];

@@ -22,7 +22,7 @@ router.delete("/delete/:messageId", messagesController.deleteMessage);
 router.get("/searchUsers", messagesController.searchUsers);
 
 // Ajouter un contact
-router.post("/addContact", verifyToken, messagesController.addContact);
+router.post("/addContact/:contactId", verifyToken, messagesController.addContact);
 
 // Fetch les contacts
 router.get("/contacts", verifyToken, messagesController.getContacts);

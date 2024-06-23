@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { CourseService } from '../../../../../services/course/course.service';
 import { Course } from '../../../../../models/course';
 import { MediaViewerComponent } from '../../../../../components/media-viewer/media-viewer.component';
+import { environment } from '../../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-cours',
@@ -22,16 +23,16 @@ import { MediaViewerComponent } from '../../../../../components/media-viewer/med
   styleUrls: ['./cours.component.css']
 })
 export class CoursComponent implements OnInit {
-  baseUrl = 'http://localhost:3000/src'; // Ajoutez ici votre préfixe d'URL
+  baseUrl: string | undefined = environment.baseUrl;
+  mediaTypeMapping: any = environment.mediaTypeMapping;
   id_cours: number | undefined;
-  courinfo: Course | undefined; // Déclarez courinfo comme un type ou undefined
+  courinfo: Course | undefined;
   rating: FormGroup;
-  showMedia: boolean = false; // Ajoutez cette propriété
+  showMedia: boolean = false;
 
   constructor(
-
     private route: ActivatedRoute,
-    private courseService: CourseService // Injection du service
+    private courseService: CourseService
   ) {
     this.rating = new FormGroup({
       stars: new FormControl(0, Validators.required)
@@ -42,7 +43,6 @@ export class CoursComponent implements OnInit {
     this.showMedia = !this.showMedia;
   }
 
-  // Méthode pour gérer la notation
   rate(value: number): void {
     console.log(`Rated with ${value} stars`);
     if(!this.id_cours){
@@ -61,17 +61,16 @@ export class CoursComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.id_cours = params['id']; // Récupérer l'ID du cours
+      this.id_cours = params['id'];
       if(!this.id_cours){
         console.error('No course ID provided');
         return;
       }
 
       this.loadCourse(this.id_cours)
-    }); // Charger les détails du cours
+    });
   }
 
-  // Méthode pour charger les détails du cours
   private loadCourse(courseId: number): void {
     this.courseService.getCourseById(courseId).subscribe({
       next: (response: any) => {
@@ -87,62 +86,13 @@ export class CoursComponent implements OnInit {
 
   determineMediaType(mediaUrl: string): string {
     if (!mediaUrl) {
-      return ''; // Gestion du cas où mediaUrl est null ou undefined
+      return '';
     }
-  
-    // Extraction de l'extension de fichier
+
     const extension = mediaUrl.split('.').pop()?.toLowerCase();
-  
-    // Liste des extensions et leur type de média associé
-    const mediaTypeMapping: { [key: string]: string } = {
-      // Images
-      'jpeg': 'image',
-      'jpg': 'image',
-      'png': 'image',
-      'gif': 'image',
-      'bmp': 'image',
-      'webp': 'image',
-  
-      // Vidéos
-      'mp4': 'video',
-      'mov': 'video',
-      'avi': 'video',
-      'mkv': 'video',
-      'flv': 'video',
-      'webm': 'video',
-  
-      // Audios
-      'mp3': 'audio',
-      'wav': 'audio',
-      'ogg': 'audio',
-  
-      // Documents
-      'pdf': 'document',
-      'doc': 'document',
-      'docx': 'document',
-      'xls': 'document',
-      'xlsx': 'document',
-      'ppt': 'document',
-      'pptx': 'document',
-      'txt': 'document',
-  
-      // Archives
-      'zip': 'archive',
-      'tar': 'archive',
-      'gz': 'archive',
-      '7z': 'archive',
-  
-      // Autres types de fichiers
-      'json': 'other',
-      'xml': 'other',
-      'bin': 'other', // fichiers binaires génériques
-    };
-  
-    // Déterminer le type de média basé sur l'extension
-    if (extension && mediaTypeMapping[extension]) {
-      return mediaTypeMapping[extension];
+    if (extension && this.mediaTypeMapping[extension]) {
+      return this.mediaTypeMapping[extension];
     }
-  
-    return ''; // Retourner une valeur par défaut si aucune correspondance n'est trouvée
+    return '';
   }
 }

@@ -18,7 +18,7 @@ export class LinkifyPipe implements PipeTransform {
     // Replace URLs with secure iframes
     const linkedText = value.replace(urlRegex, (url) => {
       const safeUrl = this.getSafeUrl(url);
-      return `<iframe src="${safeUrl}" width="100%" height="315" frameborder="0" allowfullscreen></iframe>`;
+      return `<iframe src="${safeUrl}" width="100%" height="200" frameborder="0" allowfullscreen></iframe>`;
     });
 
     // Sanitize the HTML before returning

@@ -5,6 +5,7 @@ import { ProfileService } from '../../../services/profile/profile.service';
 import { Userinfo } from '../../../models/userinfo';
 import { Subscription } from 'rxjs';
 import {MesDocumentComponent} from '../../../components/mes-document/mes-document.component'
+import { environment } from '../../../../../../environments/environment';
 
 type errors = {
   firstname: string,
@@ -12,8 +13,6 @@ type errors = {
   username: string,
   email: string
 };
-
-
 @Component({
   selector: 'app-user-profile',
   templateUrl: './profile.component.html',
@@ -27,6 +26,7 @@ type errors = {
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  baseUrl: string | undefined = environment.baseUrl;
 
   formErrors: errors = {
     firstname: '',
@@ -61,11 +61,9 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfilePicture(): void {
-    // Utilisation du service ProfileService pour récupérer l'URL de l'image de profil
     this.profileService.getProfilePictureUrl().subscribe({
       next: (url: string) => {
-        // Assurez-vous que l'URL ne contient que des slashes ('/') et non des backslashes ('\')
-        this.profilePictureUrl = `http://localhost:3000/${this.userInfo?.profile_picture?.replace(/\\/g, '/')}`;
+        this.profilePictureUrl = this.baseUrl + `/${this.userInfo?.profile_picture?.replace(/\\/g, '/')}`;
       },
       error: (error: any) => {
         console.error('Error loading profile picture:', error);
