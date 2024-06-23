@@ -23,10 +23,13 @@
   flex-flow: row nowrap;
   padding: 0.5em;
   width: 100%;
-  background-color: #fff;
+  background-color: #40ac2b;
+  color: white;
+  border-radius: 0.5em;
+  border: 1px solid white;
 }
 
 .search-result:hover {
-  background-color: #ccc;
+  background-color: #4bae4f;
   cursor: pointer;
 }
