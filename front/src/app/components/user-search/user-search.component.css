@@ -1,0 +1,97 @@
+/* Conteneur principal pour la recherche d'utilisateur */
+.user-search {
+    background-color: #f9f9f9; /* Couleur de fond */
+    padding: 20px; /* Espacement interne */
+    border: 1px solid #ccc; /* Bordure */
+    border-radius: 8px; /* Coins arrondis */
+    max-width: 400px; /* Largeur maximale */
+    margin: 0 auto; /* Centrage */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombrage */
+}
+
+/* Champ de saisie pour la recherche */
+.user-search input[type="text"] {
+    width: calc(100% - 90px); /* Largeur totale moins la largeur du bouton */
+    padding: 10px; /* Espacement interne */
+    margin-right: 10px; /* Espacement à droite */
+    border: 1px solid #ccc; /* Bordure */
+    border-radius: 4px; /* Coins arrondis */
+    font-size: 16px; /* Taille de police */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transition pour l'effet de focus */
+}
+
+.user-search input[type="text"]:focus {
+    border-color: #007bff; /* Couleur de la bordure au focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Ombre au focus */
+}
+
+/* Bouton de recherche */
+.user-search button[type="button"] {
+    background-color: #007bff; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    border: none; /* Pas de bordure */
+    padding: 10px 15px; /* Espacement interne */
+    border-radius: 4px; /* Coins arrondis */
+    cursor: pointer; /* Curseur pointer pour indication de clic */
+    transition: background-color 0.3s ease; /* Transition pour l'effet de survol */
+}
+
+.user-search button[type="button"]:hover {
+    background-color: #0056b3; /* Couleur de fond au survol */
+}
+
+/* Liste des résultats de la recherche */
+.user-search ul {
+    list-style-type: none; /* Suppression des puces */
+    padding: 0; /* Pas de marge interne */
+    margin-top: 15px; /* Espacement au-dessus de la liste */
+}
+
+/* Élément individuel de la liste */
+.user-search ul li {
+    display: flex; /* Affichage en ligne */
+    justify-content: space-between; /* Espacement entre le texte et le bouton */
+    align-items: center; /* Alignement vertical centré */
+    padding: 10px; /* Espacement interne */
+    border-bottom: 1px solid #ddd; /* Ligne de séparation */
+    transition: background-color 0.3s ease; /* Transition pour l'effet de survol */
+}
+
+.user-search ul li:hover {
+    background-color: #f1f1f1; /* Couleur de fond au survol */
+}
+
+/* Texte des utilisateurs */
+.user-search ul li div {
+    font-size: 16px; /* Taille de police */
+    color: #333; /* Couleur du texte */
+}
+
+/* Bouton d'ajout pour les utilisateurs */
+.user-search ul li button {
+    background-color: #28a745; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    border: none; /* Pas de bordure */
+    padding: 5px 10px; /* Espacement interne */
+    border-radius: 4px; /* Coins arrondis */
+    cursor: pointer; /* Curseur pointer pour indication de clic */
+    transition: background-color 0.3s ease; /* Transition pour l'effet de survol */
+}
+
+.user-search ul li button:hover {
+    background-color: #218838; /* Couleur de fond au survol */
+}
+
+/* Suppression du style de la liste déroulante */
+.user-search ul::-webkit-scrollbar {
+    width: 8px; /* Largeur de la barre de défilement */
+}
+
+.user-search ul::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Couleur de la barre de défilement */
+    border-radius: 4px; /* Coins arrondis */
+}
+
+.user-search ul::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa; /* Couleur de la barre de défilement au survol */
+}

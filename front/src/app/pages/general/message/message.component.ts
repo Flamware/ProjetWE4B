@@ -79,6 +79,31 @@ export class MessageComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleContactMenu(event: { action: string, contactId: string }): void {
+    switch (event.action) {
+      case 'deleteContact':
+        this.removeContact(event.contactId);
+        break;
+      case 'deleteConversation':
+        this.removeConversation(event.contactId);
+        break;
+    }
+  }
+  
+  removeContact(contactId: string): void {
+    // Logique pour effacer le contact
+    console.log(`Effacer le contact avec ID: ${contactId}`);
+    // Supprimer le contact de la liste
+    this.contacts = this.contacts.filter(contact => contact.id !== contactId);
+  }
+  
+  removeConversation(contactId: string): void {
+    // Logique pour supprimer la conversation
+    console.log(`Supprimer la conversation pour le contact avec ID: ${contactId}`);
+    // Supprimer les messages associés à ce contact
+    this.messages = this.messages.filter(message => message.sender_id !== contactId && message.receiver_id !== contactId);
+  }  
+
   loadMessagesForContact(contactId: string): void {
     this.messageService.getMessages(contactId).subscribe({
       next: (messages: Message[]) => {

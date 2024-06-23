@@ -2,8 +2,12 @@
   <div class="contact-list">
     <h2>Contacts</h2>
     <app-user-search (userAdded)="addContact($event)"></app-user-search>
-    <app-contacts [contacts]="contacts" (contactSelected)="onContactSelected($event)"></app-contacts>
-  </div>  
+    <app-contacts 
+      [contacts]="contacts" 
+      (contactSelected)="onContactSelected($event)"
+      (toggleMenu)="toggleContactMenu($event)">
+    </app-contacts>
+  </div>
 
   <div *ngIf="!selectedContactId">
     <div class="chat-box">
@@ -15,9 +19,10 @@
     <h2>Messages with {{ selectedContact.email }}</h2>
     <div class="chat-container">
       <div class="chat-box">
-        <div *ngFor="let message of messages">
-          <div class="message received">
-            {{ message.content }}
+        <div *ngFor="let message of messages" class="message" [ngClass]="{'sent': message.sender_id === userId, 'received': message.sender_id !== userId}">
+          <div class="message-content">
+            <div class="message-text">{{ message.content }}</div>
+            <div class="message-date">{{ message.created_at | date: 'dd/MM/yyyy HH:mm' }}</div>
           </div>
         </div>
 

@@ -16,10 +16,13 @@ export class ContactsComponent implements OnInit {
 
   @Input() contacts: any[] = [];
   @Output() contactSelected: EventEmitter<any> = new EventEmitter<any>();
+  @Output() toggleMenu = new EventEmitter<any>();
+  
+  private openMenus: Map<string, boolean> = new Map();
 
   constructor(private messageService: MessageService) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
       this.messageService.getContacts().subscribe({
         next: (contacts: any[]) => {
           this.contacts = contacts;
@@ -34,6 +37,24 @@ export class ContactsComponent implements OnInit {
       this.messageService.openMessageDialog(contact);
     }
 
+    isMenuOpen(contactId: string): boolean {
+      return this.openMenus.get(contactId) || false;
+    }
+  
+    toggleMenuFunction(contactId: string): void {
+      this.openMenus.set(contactId, !this.isMenuOpen(contactId));
+    }
+  
+    deleteContact(contactId: string): void {
+      this.toggleMenu.emit({ action: 'deleteContact', contactId });
+      this.openMenus.set(contactId, false); // Close menu
+    }
+  
+    deleteConversation(contactId: string): void {
+      this.toggleMenu.emit({ action: 'deleteConversation', contactId });
+      this.openMenus.set(contactId, false); // Close menu
+    }
+  
     selectContact(contact: any): void {
       this.contactSelected.emit(contact);
     }
