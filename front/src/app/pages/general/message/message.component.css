@@ -1,4 +1,8 @@
 /* Conteneur principal */
+.message-box{
+  width: 75%;
+
+}
 .container {
   display: flex;
   gap: 20px; /* Espacement entre les sections */
@@ -18,6 +22,7 @@
   border-radius: 8px;
   max-width: 300px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 50%;
 }
 
 .contact-list h2 {
@@ -26,7 +31,7 @@
   color: #333;
 }
 
-.contact-list app-user-search, 
+.contact-list app-user-search,
 .contact-list app-contacts {
   margin-bottom: 15px;
 }
