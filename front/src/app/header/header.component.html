@@ -12,10 +12,7 @@
     </div>
     <div class="second-section">
     <h2 class="title">Study Helper</h2>
-    <form>
-      <input type="text" placeholder="Search..." class="search-input">
-      <button type="submit" class="button">Search</button>
-    </form>
+    <app-recherche></app-recherche>
     <div>
       <a routerLink="/home" routerLinkActive="active">Home</a>
       <button class="button" *ngIf="!isconnected" routerLink="/login" routerLinkActive="active">Login</button>
