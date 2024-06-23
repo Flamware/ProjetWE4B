@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit {
   isconnected: boolean = false; // Assurez-vous que cette propriété est correctement définie
   profilePictureUrl: string | undefined;
   @ViewChild('boutonlogin') boutonlogin: ElementRef | undefined;
+  baseUrl = 'http://localhost:3000/src';
 
   constructor(private authService: AuthService, private profileService: ProfileService) {}
 
@@ -44,7 +45,7 @@ export class HeaderComponent implements OnInit {
     this.profileService.getProfilePictureUrl().subscribe({
       next: (url: string) => {
         // Assurez-vous que l'URL ne contient que des slashes ('/') et non des backslashes ('\')
-        this.profilePictureUrl = `http://localhost:3000/${url.replace(/\\/g, '/')}`;
+        this.profilePictureUrl = this.baseUrl + `/${url.replace(/\\/g, '/')}`;
       },
       error: (error: any) => {
         console.error('Error loading profile picture:', error);

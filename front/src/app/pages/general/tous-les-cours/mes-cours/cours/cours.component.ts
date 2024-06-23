@@ -22,7 +22,7 @@ import { MediaViewerComponent } from '../../../../../components/media-viewer/med
   styleUrls: ['./cours.component.css']
 })
 export class CoursComponent implements OnInit {
-  baseUrl = 'http://localhost:3000'; // Ajoutez ici votre préfixe d'URL
+  baseUrl = 'http://localhost:3000/src'; // Ajoutez ici votre préfixe d'URL
   id_cours: number | undefined;
   courinfo: Course | undefined; // Déclarez courinfo comme un type ou undefined
   rating: FormGroup;
