@@ -26,7 +26,7 @@ import { YoutubeEmbedPipe } from '../../../../pipes/youtube-embed.pipe';
 
 export class CoursComponent {
   ListeCours: MyCourse[] = [];
-  baseUrl = 'http://localhost:3000';
+  baseUrl = 'http://localhost:3000/src';
   showMedia: boolean = false; // Ajoutez cette propriété
 
   constructor(
