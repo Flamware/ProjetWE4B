@@ -32,6 +32,10 @@ async function getCourseById(req, res) {
     if (!course) {
       return res.status(404).json({ error: 'Course not found' });
     }
+    // fetch usernam of techer_id
+    const query2 = 'SELECT username FROM users WHERE id = $1';
+    const result2 = await client.query(query2, [course.teacher_id]);
+    course.teacher = result2.rows[0].username;
 
     res.status(200).json({ course });
   } catch (error) {

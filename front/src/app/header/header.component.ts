@@ -53,9 +53,15 @@ export class HeaderComponent implements OnInit {
         console.log('Profile picture loading completed.');
       }
     });
-  }  
+  }
 
   logout(): void {
     this.authService.logout();
+  }
+
+  toggleDropdown() {
+    if (this.boutonlogin) {
+      this.boutonlogin.nativeElement.classList.toggle('is-active');
+    }
   }
 }

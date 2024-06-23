@@ -1,104 +1,63 @@
-/* Header and Navigation Styles */
-nav {
+.header {
+  background-color: #4bae4f; /* Your accent color */
+  color: white; /* Text color for contrast */
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.app-bar {
   display: flex;
-  background-color: var(--light-accent-color);
-  box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.1);
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-}
-
-.header > nav > * {
-  display: flex;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.2em;
-  transition: color 0.3s ease;
-  width: 100%;
-  height: 2em;
-  margin: 0.5em;
-  justify-content: center;
-  align-items: center;
-}
-
-.header > nav > a:hover {
-  text-decoration: underline;
-  background-color: rgba(255, 255, 255, 0.358);
-}
-
-.header > nav > a.active {
-  text-decoration: underline;
-}
-
-.header nav span {
-  color: #ffffff;
-  font-size: 1.2em;
-}
-
-.header nav button {
-  padding: 10px 20px;
-  background-color: #333333;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  font-size: 1em;
-  font-weight: bold;
-  display: inline-block;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.header nav button:hover {
-  background-color: var(--accent-color);
-  transform: translateY(-2px);
-}
-
-.header nav button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
-}
-
-.header nav button:active {
-  transform: translateY(0);
-}
-
-/* Main Content Styles */
-.search {
-  display: grid;
-  padding: 1em;
-  text-align: center;
-  justify-content: center;
-  grid-template-columns: 1fr 5fr 1fr;
-  background-color: var(--accent-color);
-  /* border-radius: 0.5em; */
-  box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s;
-  flex-flow: row nowrap;
-
-  /* margin: 2em auto; */
-  /* max-width: 60%; */
-}
-
-.search:hover {
-  box-shadow: 0 0 1em rgba(0, 0, 0, 0.2);
 }
 
 .title {
-  display: flex;
-  flex-grow: 0;
-  align-items: center;
-  text-wrap: nowrap;
-  padding: 0 1em;
-  color: white;
-  margin: 0;
-  text-align: center;
+  margin: 0; /* Remove default margin */
+  font-size: 1.5em; /* Larger font size */
 }
 
+.profile-picture img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
 
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.profile-picture:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.search-input {
+  flex: 1; /* Fill remaining space */
+  padding: 10px;
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 5px;
+  font-size: 1em;
+}
 
 .button {
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #4caf50; /* Green button color */
   color: white;
   border: none;
   cursor: pointer;
@@ -109,29 +68,38 @@ nav {
 }
 
 .button:hover {
-  background-color: #45a049;
+  background-color: #007afd; /* Darker green on hover */
 }
 
-.results {
-  margin-top: 20px;
+.app-bar .second-section {
+  flex: 1; /* Take most of the space */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.result-item {
+.app-bar .second-section form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-bar .second-section form .search-input {
+  min-width: 200px; /* Ensure search input has a minimum width */
+}
+
+.app-bar .second-section div {
+  display: flex;
+  gap: 10px;
+}
+
+.app-bar .second-section a {
+  color: white;
+  text-decoration: none;
   padding: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  text-align: left;
   border-radius: 5px;
-  transition: border-color 0.3s ease;
 }
 
-.result-item:hover {
-  border-color: #ccc;
-}
-
-.profile-picture img {
-  width: 40px; /* Ajustez la taille selon vos besoins */
-  height: 40px;
-  border-radius: 50%; /* Pour arrondir l'image */
-  object-fit: cover; /* Pour s'assurer que l'image s'adapte correctement */
+.app-bar .second-section a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
