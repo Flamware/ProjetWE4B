@@ -24,15 +24,15 @@
           <!-- Additional theme-related content -->
         </div>
         <a [routerLink]="['/cours', course.id]" class="card-action">Voir cours</a>
-      </div>
-
-      <!-- Affichage des autres médias avec bouton déplier/replier -->
-      <div class="card-media-container">
         <div *ngIf="course.mediaUrls.length > 0">
           <button class="toggle-media-button" (click)="toggleMedia()">
             {{ showMedia ? 'Masquer Médias' : 'Afficher Médias' }}
           </button>
         </div>
+      </div>
+
+      <!-- Affichage des autres médias avec bouton déplier/replier -->
+      <div class="card-media-container">
         <div *ngIf="showMedia">
           <app-media-viewer *ngFor="let mediaUrl of course.mediaUrls"
                             [mediaUrl]="baseUrl + mediaUrl"

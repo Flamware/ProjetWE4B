@@ -11,8 +11,8 @@
     </div>
   </div>
 
-  <div *ngIf="selectedContactId">
-    <h2>Messages with {{ selectedContactId }}</h2>
+  <div *ngIf="selectedContact">
+    <h2>Messages with {{ selectedContact.email }}</h2>
     <div class="chat-container">
       <div class="chat-box">
         <div *ngFor="let message of messages">

@@ -1,10 +1,11 @@
-<main class="profile-container">
+<div class="profile-container">
   <div *ngIf="userInfo; else noUserInfo" class="user-info">
     <div class="profile-header">
       <!-- Image de profil -->
       <img *ngIf="userInfo.profile_picture" [src]="profilePictureUrl" alt="User Image" class="userImg">
       <h2>Welcome to your profile <span>{{ userInfo.first_name }} {{ userInfo.last_name }}</span>!</h2>
     </div>
+
     <div class="user-info">
       <form *ngIf="userData" [formGroup]="userData" (ngSubmit)="onSubmit()" class="user-data-form">
         <div class="input-group">
@@ -45,7 +46,10 @@
       </form>
     </div>
   </div>
+
+  <app-mes-document class="documents"></app-mes-document>
+
   <ng-template #noUserInfo>
     <p>No user information found!</p>
   </ng-template>
-</main>
+</div>

@@ -67,6 +67,26 @@ exports.getMessagesBySender = async (req, res) => {
   }
 };
 
+// Récupérer tous les messages d'un expéditeur
+exports.getMessagesByReceiver = async (req, res) => {
+
+  const receiverId = req.params.receiverId;
+
+  try {
+    const query = `
+      SELECT * FROM messages
+      WHERE receiver_id = $1
+      ORDER BY created_at ASC
+    `;
+    const result = await client.query(query, [receiverId]);
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 // Supprimer un message par son ID
 exports.deleteMessage = async (req, res) => {
   const { messageId } = req.params;
@@ -142,6 +162,24 @@ exports.getContacts = async (req, res) => {
       const result = await client.query(query, [userId]);
   
       res.status(200).json(result.rows);
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };
+
+  exports.getContactById = async (req, res) => {
+    const userId = req.params.id;
+    console.log(userId);
+  
+    try {
+      const query = `
+        SELECT * FROM users
+        WHERE id = $1
+      `;
+      const result = await client.query(query, [userId]);
+  
+      res.status(200).json(result.rows[0]);
     } catch (error) {
       console.error("Error fetching contacts:", error);
       res.status(500).json({ error: "Internal server error" });

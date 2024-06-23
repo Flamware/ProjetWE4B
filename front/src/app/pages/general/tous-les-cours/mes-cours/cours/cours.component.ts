@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MesDocumentComponent } from '../../../../../components/mes-document/mes-document.component';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CourseService } from '../../../../../services/course/course.service';
@@ -14,7 +13,6 @@ import { MediaViewerComponent } from '../../../../../components/media-viewer/med
   templateUrl: './cours.component.html',
   standalone: true,
   imports: [
-    MesDocumentComponent,
     NgOptimizedImage,
     RouterLink,
     ReactiveFormsModule,
@@ -43,7 +41,7 @@ export class CoursComponent implements OnInit {
   toggleMedia(): void {
     this.showMedia = !this.showMedia;
   }
-  
+
   // Méthode pour gérer la notation
   rate(value: number): void {
     console.log(`Rated with ${value} stars`);

@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserSearchComponent } from '../../../components/user-search/user-search.component';
 import { ContactsComponent } from '../../../components/contacts/contacts.component';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subscription, Observable, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -30,7 +30,9 @@ export class MessageComponent implements OnInit, OnDestroy {
   interlocuteur: string = '';
   searchQuery: string = '';
   selectedContactId: string | null = null;
+  selectedContact: any;
   private refreshSubscription: Subscription | undefined;
+  userId = localStorage.getItem('userId'); // Remplacez par l'ID de l'utilisateur actuel
 
   constructor(
     private route: ActivatedRoute,
@@ -64,6 +66,10 @@ export class MessageComponent implements OnInit, OnDestroy {
         console.log('No contact selected.');
       }
     });
+    console.log(this.userId);
+    // Détecter et ajouter de nouveaux contacts
+    //this.detectAndAddNewContacts();
+    this.detectContacts();
   }
 
   ngOnDestroy(): void {
@@ -84,6 +90,8 @@ export class MessageComponent implements OnInit, OnDestroy {
         console.error('Error fetching messages:', error);
       }
     });
+
+    console.log(this.selectedContact);
   }
 
   sendMessage(): void {
@@ -122,6 +130,49 @@ export class MessageComponent implements OnInit, OnDestroy {
     }
   }
 
+  detectContacts(): void {
+    this.messageService.detectInteractedContacts(this.userId!).subscribe({
+      next: newContacts => {
+        if (newContacts.length > 0) {
+          console.log('Nouveaux contacts détectés et ajoutés:', newContacts);
+          this.contacts.push(...newContacts);
+        } else {
+          console.log('Aucun nouveau contact à ajouter.');
+        }
+      },
+      error: error => {
+        console.error('Erreur lors de la détection et de l\'ajout des nouveaux contacts:', error);
+      }
+    });
+  }
+
+  detectInteractedContacts(): void {
+    this.messageService.detectInteractedContacts(this.userId!).subscribe({
+      next: (interactedContacts: any[]) => {
+        this.contacts = interactedContacts;
+      },
+      error: (error: any) => {
+        console.error('Error detecting interacted contacts:', error);
+      }
+    });
+  }
+
+  detectAndAddNewContacts(): void {
+    this.messageService.detectAndAddNewContacts(this.userId!).subscribe({
+      next: newContacts => {
+        if (newContacts.length > 0) {
+          console.log('Nouveaux contacts détectés et ajoutés:', newContacts);
+          this.contacts.push(...newContacts);
+        } else {
+          console.log('Aucun nouveau contact à ajouter.');
+        }
+      },
+      error: error => {
+        console.error('Erreur lors de la détection et de l\'ajout des nouveaux contacts:', error);
+      }
+    });
+  }
+
   addContact(contact: any): void {
     this.messageService.addContact(contact).subscribe({
       next: (addedContact: any) => {
@@ -140,12 +191,29 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   selectContact(contact: any): void {
     this.selectedContactId = contact.id;
+    this.messageService.getContactById(this.selectedContactId).subscribe(
+      (data: any) => {
+        this.selectedContact = data; // Stockez les informations de l'utilisateur récupérées dans userInfo
+      },
+      (error: any) => {
+        console.error('Error fetching user info:', error);
+        // Gérez l'erreur comme nécessaire (par exemple, afficher un message d'erreur à l'utilisateur)
+      });
+
     this.navigateToMessage(contact.id); // Naviguer vers la conversation du contact sélectionné
   }
 
   // Méthode pour sélectionner un contact depuis ContactsComponent
   onContactSelected(contact: any): void {
     this.selectedContactId = contact.id;
+    this.messageService.getContactById(this.selectedContactId).subscribe(
+      (data: any) => {
+        this.selectedContact = data; // Stockez les informations de l'utilisateur récupérées dans userInfo
+      },
+      (error: any) => {
+        console.error('Error fetching user info:', error);
+        // Gérez l'erreur comme nécessaire (par exemple, afficher un message d'erreur à l'utilisateur)
+      });
     this.loadMessagesForContact(contact.id); // Charger les messages du contact sélectionné
   }
 }

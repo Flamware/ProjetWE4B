@@ -1,6 +1,6 @@
 .home-main {
   padding: 40px 0;
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; /* Fond légèrement teinté de blanc */
 }
 
 .form-container {
@@ -8,16 +8,21 @@
   margin: 0 auto;
   padding: 0 20px;
   margin-bottom: 30px;
+  background-color: #fff; /* Fond blanc pour le formulaire */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Légère ombre */
+  border-radius: 8px;
 }
 
 .card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 20px; /* Espacement entre les cartes */
 }
 
 .cour {
-  margin: 20px;
+  margin: 10px;
+  width: 300px; /* Largeur fixe pour les éléments */
 }
 
 .card {
@@ -25,7 +30,7 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
-  width: 300px;
+  width: 100%; /* Carte prend toute la largeur du conteneur */
 }
 
 .card-content {
@@ -55,17 +60,14 @@
   color: #ffd700;
 }
 
-.stars.full {
-  color: #ffd700;
-}
-
 .stars.empty {
-  color: #ccc;
+  color: #ccc; /* Étoiles vides en gris clair */
 }
 
 .card-text {
   line-height: 1.6;
   margin-bottom: 15px;
+  color: #555; /* Texte de la carte en gris foncé */
 }
 
 .card-theme {
@@ -111,7 +113,7 @@
 }
 
 @media (max-width: 768px) {
-  .card {
-    width: calc(50% - 40px);
+  .cour {
+    width: calc(50% - 40px); /* Deux cartes par ligne sur écrans plus petits */
   }
 }
