@@ -61,7 +61,6 @@ export class RechercheComponent implements OnInit{
     );
   }
   
-  // solution un peu nulle mais j'ai pas trouvé mieux
   private setResultsWidth() {
     setTimeout(() => {
       const searchbar: HTMLInputElement = document.getElementById('searchbar') as HTMLInputElement;

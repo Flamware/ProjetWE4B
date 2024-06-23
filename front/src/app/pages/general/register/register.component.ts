@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {FormGroup, FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
 import { AuthService } from '../../../services/auth/auth.service';
 import {NgIf} from "@angular/common";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +19,7 @@ export class RegisterComponent {
   profilePictureFile: File | null = null;
   profilePicturePreview: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.formconnexion = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -92,11 +93,14 @@ export class RegisterComponent {
         },
         complete: () => {
           console.log('Registration request complete');
+          // Redirect to login page after registering
+          this.router.navigate(['/login']);
         }
       });
     } else {
       console.error('Form is not valid');
     }
+    
   }
   
 }

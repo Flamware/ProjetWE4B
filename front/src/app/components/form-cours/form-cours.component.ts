@@ -113,7 +113,8 @@ export class FormCoursComponent implements OnInit {
         name: this.myForm.get('name')?.value,
         theme: this.myForm.get('theme')?.value,
         description: this.myForm.get('description')?.value,
-        date: this.myForm.get('date')?.value
+        date: this.myForm.get('date')?.value,
+        rate: 0
       };
 
       // Create course first
